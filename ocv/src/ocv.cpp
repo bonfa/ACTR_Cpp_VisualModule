@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <cv.h>
-#include <highgui.h>
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
+using namespace cv;
 
 int main(int argc, char *argv[])
 {

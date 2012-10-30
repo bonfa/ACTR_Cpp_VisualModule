@@ -1,4 +1,10 @@
 *~
 .metadata
-ocv/.cproject
-ocv/.project
+.cproject
+.project
+ocv/Debug/
+ocv/Release/
+BaseClass/CMakeFiles/*
+BaseClass/Debug/*
+BaseClass/.settings/*
+CMakeCache.txt

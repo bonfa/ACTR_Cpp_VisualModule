@@ -52,7 +52,7 @@ int main(int argc,char *argv[])
 {
 	
 	//-- 1. Load the cascades
-	if( !face_cascade.load( "/home/stefano/projects/opencv/haarcascade_frontalface_alt.xml" ) ){ printf("--(!)Error loading\n"); return -1; };
+	if( !face_cascade.load( "/home/enrico/develop/cpp/ocv/src/webcam/haarcascade_frontalface_alt.xml" ) ){ printf("--(!)Error loading\n"); return -1; };
 	
 	int c;
 	VideoCapture cap(0);

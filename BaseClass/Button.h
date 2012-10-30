@@ -8,9 +8,9 @@
 #ifndef BUTTON_H_
 #define BUTTON_H_
 
-#include "Parallelogram.h"
+#include "Quadrilateral.h"
 
-class Button: public Parallelogram {
+class Button: public Quadrilateral {
 public:
 	Button();
 	virtual ~Button();

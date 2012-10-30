@@ -32,3 +32,7 @@ string Button::getChunk(){
 double Button::getArea(){
 	return (b.x - a.x)*(c.y - d.y);
 }
+
+string Button::getText(){
+	return text;
+}

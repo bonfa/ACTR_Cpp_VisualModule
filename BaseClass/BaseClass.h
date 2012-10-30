@@ -20,7 +20,7 @@ using namespace std;
 class BaseClass {
 public:
 	BaseClass();
-	virtual ~BaseClass();
+	virtual ~BaseClass(); //
 	Mat getImage(String path); //return image
 	VideoCapture getStream(); //return video
 	void showVideo(VideoCapture cap);

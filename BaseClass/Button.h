@@ -17,6 +17,7 @@ public:
 	Button(int x,int y,int width, int height, string text);
 	string getChunk();
 	double getArea();
+	string getText();
 private:
 	string text;
 };

@@ -9,9 +9,10 @@
 
 int main(){
 	BaseClass *b = new BaseClass();
-	/*imshow("finestra",b->getImage("./lena.jpg"));
-	waitKey(0);
-	*/
+
+	//imshow("finestra",b->getImage("./lena.jpg"));
+	//waitKey(0);
+
 	VideoCapture cap = b->getStream();
 	b->showVideo(cap);
 

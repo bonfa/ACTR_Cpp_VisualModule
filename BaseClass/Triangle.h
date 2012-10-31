@@ -16,7 +16,6 @@ public:
 	Triangle(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy);
 	virtual ~Triangle();
 	string getChunk();
-	double getArea();
 private:
 	CvPoint a;
 	CvPoint b;

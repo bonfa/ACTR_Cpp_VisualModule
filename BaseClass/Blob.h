@@ -23,10 +23,10 @@ public:
 	Blob();
 	virtual ~Blob();
 	virtual string getChunk() =0;
-	virtual double getArea() =0;
+	virtual double getArea();
 	double erone(CvPoint a, CvPoint b, CvPoint c);
 protected:
-	int area;
+	double area;
 private:
 	//TODO: colore
 };

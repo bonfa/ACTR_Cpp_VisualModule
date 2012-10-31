@@ -7,9 +7,8 @@
 
 #include "Blob.h"
 
-Blob::Blob() {
-	// TODO Auto-generated constructor stub
-
+Blob::Blob() :area(0) {
+	//TODO verificare se non da area zero
 }
 
 Blob::~Blob() {
@@ -30,4 +29,10 @@ double Blob::erone(CvPoint a, CvPoint b, CvPoint c){
 	ac = sqrt(((a.x-c.x)^2)+ ((a.y - c.y)^2));
 	p = (ab + ac + bc)/2;
 	return sqrt(p*(p-ab)*(p-bc)*(p-ac));
+}
+
+double Blob::getArea(){
+	if(area <= 0)
+		printf("Eccezione"); //TODO
+	return area;
 }

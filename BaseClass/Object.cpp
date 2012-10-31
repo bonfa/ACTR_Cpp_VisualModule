@@ -7,23 +7,17 @@
 
 #include "Object.h"
 
-Object::Object(bool att, double rot, CvRect bb){
-	attended = att;
-	rotation = rot;
-	bbox = bb;
+Object::Object(bool att, double rot, CvRect bb):attended(att), rotation(rot), bbox(bb){
+	//TODO definire la notazione della rotazione
 }
 
-Object::Object(bool att, double rot, int xx, int yy, int widtha, int heighta){
+Object::Object(bool att, double rot, int xx, int yy, int widtha, int heighta):attended(att), rotation(rot){
 	CvRect bbox = cvRect(xx, yy, widtha, heighta);
-	attended = att;
-	rotation = rot;
 }
 
-Object::Object() {
+Object::Object():attended(false), rotation(0) {
 	// TODO Auto-generated destructor stub
 }
-
-
 
 Object::~Object() {
 	// TODO Auto-generated destructor stub

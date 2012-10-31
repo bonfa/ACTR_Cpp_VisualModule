@@ -28,9 +28,9 @@ public:
 	virtual string getChunk() =0;
 
 protected:
-	CvRect bbox;
 	bool attended;
 	double rotation;
+	CvRect bbox;
 };
 
 

@@ -22,3 +22,7 @@ Circle::Circle(int rad, int x, int y): area(0), radius(rad), xCenter(x), yCenter
 		printf("Eccezione");
 	area = rad * rad * M_PI;
 }
+
+string Circle::getChunk(){
+	return "cainadasffsd circle";
+}

@@ -9,6 +9,9 @@
 #define TRIANGLE_H_
 
 #include "Blob.h"
+#include "BaseClassException.h"
+using namespace std;
+
 
 class Triangle: public Blob {
 public:

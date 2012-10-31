@@ -10,5 +10,10 @@ class InputException: public exception
   {
     return "Input Exception";
   }
-};
+
+  virtual const char* what(string mex) const throw()
+    {
+      return ("Input Exception - " + mex);
+    }
+}inputException;
 

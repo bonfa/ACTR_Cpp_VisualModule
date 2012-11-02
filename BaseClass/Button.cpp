@@ -16,7 +16,7 @@ Button::~Button() {
 
 }
 
-Button::Button(int x,int y,int width, int height, string txt) :text(""){
+Button::Button(int x,int y, int height, int width, string txt) :text(""){
 	if(x< 0|| y < 0 || width <1 || height < 1)
 		printf("Eccezione"); //TODO
 	if(txt.length()<1)
@@ -27,6 +27,8 @@ Button::Button(int x,int y,int width, int height, string txt) :text(""){
 	d = cvPoint(x, y+ height);
 	text = txt; //TODO bisogna usare lo strcpy?
 	area = (b.x - a.x)*(c.y - d.y);
+
+	setBbox(x, y, height, width);
 }
 
 

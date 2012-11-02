@@ -12,6 +12,8 @@
 #include "opencv2/core/core.hpp"
 //#include <opencv/cxcore.h>
 #include <iostream>
+#include "BaseClassException.h"
+
 
 using namespace std;
 
@@ -28,6 +30,7 @@ public:
 	virtual string getChunk() =0;
 
 protected:
+	void setBbox(int x, int y, int height, int width);
 	bool attended;
 	double rotation;
 	CvRect bbox;

@@ -11,11 +11,9 @@
 #include <vector>
 #include <cmath>
 #include "Blob.h"
-#include <algorithm>
+#include "utils.h"
 
-	bool xComparator(CvPoint a, CvPoint b);
-	bool yComparator(CvPoint a, CvPoint b);
-	void Sort4PointsClockwise(std::vector<CvPoint> points);
+
 
 class Quadrilateral: public Blob {
 public:
@@ -29,7 +27,6 @@ protected:
 	CvPoint b;
 	CvPoint c;
 	CvPoint d;
-
 
 };
 

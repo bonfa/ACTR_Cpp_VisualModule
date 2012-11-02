@@ -1,3 +1,5 @@
+#ifndef BASE_CLASS_EXCEPTIONS_H_
+#define BASE_CLASS_EXCEPTIONS_H_
 // Exceptions
 #include <iostream>
 #include <exception>
@@ -5,15 +7,6 @@
 
 using namespace std;
 
-
-
-
-
-class DivideByZeroException : public runtime_error
-{
- public:
-     DivideByZeroException() : runtime_error( "attempted to divide by zero" ) {}
-};
 
 class InputException : public runtime_error {
 public:
@@ -26,3 +19,5 @@ class VerticalLineException: public runtime_error {
 public:
 	VerticalLineException(): runtime_error("Vertical Stright Line Exception"){}
 };
+
+#endif /* BASE_CLASS_EXCEPTIONS_H_ */

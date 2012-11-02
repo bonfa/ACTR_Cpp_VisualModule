@@ -18,9 +18,10 @@ Circle::~Circle() {
 }
 
 Circle::Circle(int rad, int x, int y): area(0), radius(rad), xCenter(x), yCenter(y){
-	if(x<0 || y < 0 || radius <= 0)
+	if(x<0 || y < 0 || radius <= 0 || x-rad <0 || y-rad <0)
 		printf("Eccezione");
 	area = rad * rad * M_PI;
+	setBbox(x-rad, y-rad, 2*rad, 2*rad);
 }
 
 string Circle::getChunk(){

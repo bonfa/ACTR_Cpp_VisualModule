@@ -8,10 +8,6 @@
 #include "Circle.h"
 #include <math.h>
 
-Circle::Circle(): area(0), radius(0), xCenter(0), yCenter(0){
-	// TODO Auto-generated constructor stub
-}
-
 Circle::~Circle() {
 	// TODO Auto-generated destructor stub
 }

@@ -7,10 +7,6 @@
 
 #include "Button.h"
 
-Button::Button() :text(""){
-	// TODO Auto-generated constructor stub
-
-}
 
 Button::~Button() {
 

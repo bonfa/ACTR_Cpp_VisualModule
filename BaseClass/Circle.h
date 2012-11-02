@@ -12,7 +12,6 @@
 
 class Circle: public Blob {
 public:
-	Circle();
 	Circle(int rad, int x, int y);
 	virtual ~Circle();
 	string getChunk();

@@ -25,5 +25,5 @@ Circle::Circle(int rad, int x, int y): area(0), radius(rad), xCenter(x), yCenter
 }
 
 string Circle::getChunk(){
-	return "cainadasffsd circle";
+	return "cianc, Circle\n";
 }

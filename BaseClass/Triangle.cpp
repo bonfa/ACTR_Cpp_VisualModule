@@ -22,7 +22,11 @@ Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy){
 
 	if((ax == bx && bx == cx) || (ay == by && by == cy))
 		throw InputException("More than two points on the same line");
-	//@TODO: gestire il caso in cui i punti siano su una stessa linea non orizzontale o verticale
+
+	StraightLine *line = new StraightLine(ax,ay,bx,by);
+	if (line->doesPointBelongTo(cx,cy))
+		throw InputException("More than two points on the same line");
+	delete line;
 
 	int maxX, minX, maxY, minY;
 

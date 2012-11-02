@@ -14,10 +14,12 @@ class StraightLine {
 public:
 	//StraightLine();
 	StraightLine(double a, double b, double c);
+	StraightLine(int xa, int ya, int xb, int yb);
 	double getSlope();
 	double getIntercept();
 	bool isVertical();
 	virtual ~StraightLine();
+	bool doesPointBelongTo(int xp,int yp);
 private:
 	double calculateSlope();
 	double calculateIntercept();

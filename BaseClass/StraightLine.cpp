@@ -23,7 +23,7 @@ double StraightLine::calculateSlope(){
 	if (this->a!=0)
 		return -(this->b/this->a);
 	else
-		throw verticalLineException;
+		throw VerticalLineException();
 }
 
 
@@ -31,7 +31,7 @@ double StraightLine::calculateIntercept(){
 	if (this->a!=0)
 		return -(this->c/this->a);
 	else
-		throw verticalLineException;
+		throw VerticalLineException();
 }
 
 

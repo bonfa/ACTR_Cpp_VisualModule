@@ -1,36 +1,28 @@
 // Exceptions
 #include <iostream>
 #include <exception>
+#include <stdexcept>
 
 using namespace std;
 
 
-class InputException: public exception
+
+
+
+class DivideByZeroException : public runtime_error
 {
-  virtual const char* what() const throw()
-  {
-    return "Input Exception";
-  }
+ public:
+     DivideByZeroException() : runtime_error( "attempted to divide by zero" ) {}
+};
 
-  virtual const char* what(string mex) const throw()
-    {
-	  return (string("Input Exception - ") + mex).c_str();
-    }
-
-}inputException;
+class InputException : public runtime_error {
+public:
+	InputException(string mex):	runtime_error(mex){}
+};
 
 
 
-class VerticalLineException: public exception
-{
-  virtual const char* what() const throw()
-  {
-    return "Vertical Stright Line Exception";
-  }
-
-  virtual const char* what(string mex) const throw()
-    {
-	  return (string("Input Exception - ") + mex).c_str();
-    }
-}verticalLineException;
-
+class VerticalLineException: public runtime_error {
+public:
+	VerticalLineException(): runtime_error("Vertical Stright Line Exception"){}
+};

@@ -11,13 +11,14 @@
 #include "utils.h"
 #include "Blob.h"
 #include "BaseClassException.h"
+#include "StraightLine.h"
 using namespace std;
 
 
 class Triangle: public Blob {
 public:
 	Triangle();
-	Triangle(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy);
+	Triangle(int ax,int ay,int bx,int by,int cx,int cy);
 	virtual ~Triangle();
 	string getChunk();
 private:

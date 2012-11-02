@@ -10,6 +10,7 @@
 
 #include "StraightLine.h"
 
+bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy );
 
 #endif /* GEOMETRICOPERATIONS_H_ */
 

@@ -14,7 +14,10 @@ EXEC := test
 
 all: del_lib lib main
 
-dyn: del_lib dyn_lib dyn_main
+dyn: del_lib dyn_lib dyn_main set_lib_path
+
+set_lib_path:
+	export LD_LIBRARY_PATH=./
 
 main:
 	$(CC) $(MAIN_SRC) $(LIBS_FLAGS) -o $(EXEC)
@@ -23,7 +26,7 @@ lib: $(OBJ_FILES)
 	ar $(AR_FLAGS) $(STATIC_LIB) $^
 
 dyn_main:
-	$(CC) $(MAIN_SRC) $(LIBS_FLAGS) -o $(EXEC)	
+	$(CC) $(MAIN_SRC) -L. -l$(MY_LIB) $(OCV_LIBS) -o $(EXEC)	
 
 dyn_lib: $(OBJ_FILES)
 	g++ -shared -o $(DYNAMIC_LIB) $^

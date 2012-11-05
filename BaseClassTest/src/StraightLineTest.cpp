@@ -98,7 +98,6 @@ void StraightLineTestFirstConstructor03(){
 }
 
 
-
 void StraightLineTestSecondConstructor01(){
 	int xa = 1, ya = 1;
 	int xb = -1, yb = -1;

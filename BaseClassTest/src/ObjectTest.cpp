@@ -3,13 +3,14 @@
 #include "cute_runner.h"
 #include "ObjectTest.h"
 
-void thisIsAObjectTestTest() {
-	ASSERTM("start writing tests", false);	
+void ObjectTest01(){
+	;
 }
+
 
 cute::suite make_suite_ObjectTest(){
 	cute::suite s;
-	s.push_back(CUTE(thisIsAObjectTestTest));
+	s.push_back(CUTE(ObjectTest01));
 	return s;
 }
 

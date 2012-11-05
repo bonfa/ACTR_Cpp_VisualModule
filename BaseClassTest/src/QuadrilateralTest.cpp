@@ -13,6 +13,7 @@ void QuadrilateralTest01(){
 	int dx = 0;
 	int dy = 2;
 
+
 	string actualChunkString = "cianc, Quadrilateral\n";
 	Quadrilateral *q = new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy);
 	string realChunkString = q->getChunk();

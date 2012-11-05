@@ -3,15 +3,27 @@
 #include "cute_runner.h"
 #include "TriangleTest.h"
 
-void thisIsADefaultSuiteNameTest() {
-	ASSERTM("start writing tests", true);
+
+void TriangleTest01(){
+	int ax = 0;
+	int ay = 0;
+	int bx = 2;
+	int by = 0;
+	int cx = 2;
+	int cy = 2;
+
+
+	string actualChunkString = "cianc, traingle\n";
+	Triangle *q = new Triangle(ax,ay,bx,by,cx,cy);
+	string realChunkString = q->getChunk();
+	ASSERT_EQUAL(actualChunkString,realChunkString);
 }
 
 
 
-cute::suite make_suite_DefaultSuiteName(){
+cute::suite make_suite_TriangleTest(){
 	cute::suite s;
-	s.push_back(CUTE(thisIsADefaultSuiteNameTest));
+	s.push_back(CUTE(TriangleTest01));
 	return s;
 }
 

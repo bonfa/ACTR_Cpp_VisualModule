@@ -6,7 +6,7 @@
  */
 
 #include "BaseClass.h"
-
+/*
 
 int main(){
 	BaseClass *b = new BaseClass();
@@ -18,7 +18,7 @@ int main(){
 	b->showVideo(cap);
 
 
-}
+}*/
 
 BaseClass::BaseClass() {
 

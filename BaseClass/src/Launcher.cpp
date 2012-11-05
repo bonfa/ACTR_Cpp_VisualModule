@@ -10,9 +10,9 @@
 #include "Quadrilateral.h"
 #include "Button.h"
 #include "Object.h"
+#include "Launcher.h"
 
-
-int main(){
+int launch(){
 	Button * b = new Button(10,2,20,20,"ciao");
 	Circle * c = new Circle(8, 10, 15);
 	Quadrilateral * q = new Quadrilateral(1,2,3,4,5,6,7,8);

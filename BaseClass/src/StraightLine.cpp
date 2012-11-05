@@ -16,8 +16,14 @@ StraightLine::StraightLine(double a, double b, double c) {
 	this->a = a;
 	this->b = b;
 	this->c = c;
-	this->slope = this->calculateSlope();
-	this->intercept = this->calculateIntercept();
+	try {
+		this->slope = this->calculateSlope();
+		this->intercept = this->calculateIntercept();
+	}
+	catch(VerticalLineException & e){
+		this->slope = NULL;
+		this->intercept = NULL;
+	}
 }
 
 StraightLine::StraightLine(int xa, int ya, int xb, int yb){
@@ -30,14 +36,14 @@ StraightLine::StraightLine(int xa, int ya, int xb, int yb){
 	else if (xa==xb && ya!=yb){
 		this->a = 0;
 		this->b = 1;
-		this->c = xa;
-		this->slope = this->calculateSlope();
-		this->intercept = this->calculateIntercept();
+		this->c = -xa;
+		this->slope = NULL;
+		this->intercept = NULL;
 	}
 	else {
 		this->a = xb-xa;
 		this->b = -(yb-ya);
-		this->c = (yb-ya)*xa + ya*(xb-xa);
+		this->c = (yb-ya)*xa - ya*(xb-xa);
 		this->slope = double(yb-ya)/double(xb-xa);
 		this->intercept = this->calculateIntercept();
 	}
@@ -52,11 +58,17 @@ double StraightLine::calculateSlope(){
 }
 
 double StraightLine::getSlope(){
-	return this->slope;
+	if (this->isVertical())
+		throw VerticalLineException();
+	else
+		return this->slope;
 }
 
 double StraightLine::getIntercept(){
-	return this->intercept;
+	if (this->isVertical())
+		throw VerticalLineException();
+	else
+		return this->intercept;
 }
 
 double StraightLine::calculateIntercept(){

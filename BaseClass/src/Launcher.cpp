@@ -21,8 +21,8 @@
 int launch(){
 	Button * b = new Button(10,2,20,20,"ciao");
 	Circle * c = new Circle(8, 10, 15);
-	Quadrilateral * q = new Quadrilateral(1,2,3,4,5,6,7,8);
-	Triangle * t = new Triangle(0,1,2,3,4,5);
+	Quadrilateral * q = new Quadrilateral(1,22,31,4,53,6,37,855);
+	Triangle * t = new Triangle(0,1,22,3,43,51);
 
 	std::cout << "Launcher\n";
 

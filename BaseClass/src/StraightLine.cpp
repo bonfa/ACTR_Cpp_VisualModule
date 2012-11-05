@@ -51,6 +51,13 @@ double StraightLine::calculateSlope(){
 		throw VerticalLineException();
 }
 
+double StraightLine::getSlope(){
+	return this->slope;
+}
+
+double StraightLine::getIntercept(){
+	return this->intercept;
+}
 
 double StraightLine::calculateIntercept(){
 	if (this->a!=0)
@@ -74,6 +81,19 @@ bool StraightLine::doesPointBelongTo(int xp,int yp){
 			return false;
 }
 
+double StraightLine::getA(){
+	return this->a;
+}
+
+
+double StraightLine::getB(){
+	return this->b;
+}
+
+
+double StraightLine::getC(){
+	return this->c;
+}
 
 StraightLine::~StraightLine() {
 	// TODO Auto-generated destructor stub

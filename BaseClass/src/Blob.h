@@ -24,7 +24,7 @@ public:
 	virtual ~Blob();
 	virtual string getChunk() =0;
 	double getArea();
-	double erone(CvPoint a, CvPoint b, CvPoint c);
+	//double erone(CvPoint a, CvPoint b, CvPoint c);
 protected:
 	double area;
 private:

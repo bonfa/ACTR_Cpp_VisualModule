@@ -19,7 +19,7 @@ string Blob::getChunk(){
 	return "cianc\n";
 }
 
-double Blob::erone(CvPoint a, CvPoint b, CvPoint c){
+/*double Blob::erone(CvPoint a, CvPoint b, CvPoint c){
 	double ab;
 	double bc;
 	double ac;
@@ -29,7 +29,7 @@ double Blob::erone(CvPoint a, CvPoint b, CvPoint c){
 	ac = sqrt(((a.x-c.x)^2)+ ((a.y - c.y)^2));
 	p = (ab + ac + bc)/2;
 	return sqrt(p*(p-ab)*(p-bc)*(p-ac));
-}
+}*/
 
 double Blob::getArea(){
 	if(area <= 0)

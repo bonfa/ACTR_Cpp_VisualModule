@@ -13,7 +13,7 @@
 //#include <opencv/cxcore.h>
 #include <iostream>
 #include "BaseClassException.h"
-#include "GeometricOperations.h"
+#include "utils.h"
 
 using namespace std;
 

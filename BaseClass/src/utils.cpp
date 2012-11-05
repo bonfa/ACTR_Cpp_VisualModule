@@ -64,3 +64,22 @@ int getMinMax(const std::vector<CvPoint>& coords, int type) {
 	return out;
 }
 
+
+bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy ){
+
+	StraightLine *line = new StraightLine(ax,ay,bx,by);
+	return line->doesPointBelongTo(cx,cy);
+}
+
+
+double erone(CvPoint a, CvPoint b, CvPoint c){
+	double ab;
+	double bc;
+	double ac;
+	double p;
+	ab = sqrt(((a.x-b.x)^2)+ ((a.y - b.y)^2));
+	bc = sqrt(((c.x-b.x)^2)+ ((c.y - b.y)^2));
+	ac = sqrt(((a.x-c.x)^2)+ ((a.y - c.y)^2));
+	p = (ab + ac + bc)/2;
+	return sqrt(p*(p-ab)*(p-bc)*(p-ac));
+}

@@ -7,6 +7,8 @@
 #include "TriangleTest.h"
 #include "ObjectTest.h"
 #include "CircleTest.h"
+#include "ButtonTest.h"
+#include "BlobTest.h"
 
 
 void runTest(){
@@ -26,6 +28,13 @@ void runTest(){
 
 	cute::suite circleTest = make_suite_CircleTest();
 	cute::makeRunner(lis)(circleTest, "CircleTest");
+
+	cute::suite buttonTest = make_suite_ButtonTest();
+	cute::makeRunner(lis)(buttonTest, "ButtonTest");
+
+	cute::suite blobTest = make_suite_BlobTest();
+	cute::makeRunner(lis)(blobTest, "BlobTest");
+
 }
 
 

@@ -16,8 +16,12 @@
 #include <opencv/cv.h>
 #include <vector>
 #include <cmath>
+#include "StraightLine.h"
+
 
 int getMinMax(const std::vector<CvPoint>& coords, int type);
 void Sort4PointsClockwise(std::vector<CvPoint> points);
+bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy );
+double erone(CvPoint a, CvPoint b, CvPoint c);
 
 #endif /* UTILS_H_ */

@@ -19,8 +19,14 @@ main:
 lib: $(OBJ_FILES)
 	ar $(AR_FLAGS) $(STATIC_LIB) $^
 
-obj/%.o: src/%.cpp
+obj/BaseClass.o: src/BaseClass.cpp 
 	$(CC) $(OCV_PATH) $(CC_FLAGS) $(OCV_LIBS) -c -o $@ $<
+	
+obj/Launcher.o: src/Launcher.cpp 
+	$(CC) $(OCV_PATH) $(CC_FLAGS) $(OCV_LIBS) -c -o $@ $<
+
+obj/%.o: src/%.cpp
+	$(CC) $(CC_FLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC)

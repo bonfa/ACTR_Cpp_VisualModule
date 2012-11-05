@@ -20,4 +20,4 @@ private:
 	string text;
 };
 
-#endif /* BUTTON_H_ */
+#endif /* BUTTON_H_                     */

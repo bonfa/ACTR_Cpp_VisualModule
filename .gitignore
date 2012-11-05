@@ -8,6 +8,8 @@ BaseClass/CMakeFiles/*
 BaseClass/Debug/*
 BaseClass/.settings/*
 CMakeCache.txt
+#file di progetto xcode
 base/
+library/
 *.o
 *.a

@@ -7,7 +7,25 @@ ocv/Release/
 BaseClass/CMakeFiles/*
 BaseClass/Debug/*
 BaseClass/.settings/*
-BaseClassTest/src/
+BaseClassTest/src/BaseClassException.h
+BaseClassTest/src/Blob.h
+BaseClassTest/src/Blob.cpp
+BaseClassTest/src/Button.h
+BaseClassTest/src/Button.cpp
+BaseClassTest/src/Circle.h
+BaseClassTest/src/Circle.cpp
+BaseClassTest/src/Geometric0perations.h
+BaseClassTest/src/Geometric0perations.cpp
+BaseClassTest/src/Object.h
+BaseClassTest/src/Object.cpp
+BaseClassTest/src/Quadrilateral.h
+BaseClassTest/src/Quadrilateral.cpp
+BaseClassTest/src/StraightLine.h
+BaseClassTest/src/StraightLine.cpp
+BaseClassTest/src/Triangle.h
+BaseClassTest/src/Triangle.cpp
+BaseClassTest/src/utils.h
+BaseClassTest/src/utils.cpp
 CMakeCache.txt
 #file di progetto xcode
 base/

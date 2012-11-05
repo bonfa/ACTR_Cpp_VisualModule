@@ -6,8 +6,7 @@
  */
 
 #include <opencv/cv.h>
-#include <cv.h>
-#include <highgui.h>
+#include <opencv/highgui.h>
 #include <opencv/cxcore.h>
 #include <iostream>
 

@@ -11,6 +11,13 @@
 #include "Button.h"
 #include "Object.h"
 #include "Launcher.h"
+#include "BaseClass.h"
+
+#include <opencv/cv.h>
+#include <cv.h>
+#include <highgui.h>
+#include <opencv/cxcore.h>
+#include <iostream>
 
 int launch(){
 	Button * b = new Button(10,2,20,20,"ciao");
@@ -29,6 +36,15 @@ int launch(){
 	Object * o = c;
 
 	std::cout << o->getChunk();
+
+	BaseClass *ba = new BaseClass();
+
+	imshow("finestra",ba->getImage("./lena.jpg"));
+	waitKey(0);
+
+	VideoCapture cap = ba->getStream();
+	ba->showVideo(cap);
+
 
 	return 0;
 

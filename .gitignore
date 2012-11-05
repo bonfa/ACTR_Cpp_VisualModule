@@ -8,9 +8,6 @@ BaseClass/CMakeFiles/*
 BaseClass/Debug/*
 BaseClass/.settings/*
 CMakeCache.txt
-<<<<<<< HEAD
 base/
-=======
 *.o
 *.a
->>>>>>> 3bc128c35e90e268457c7708c203b2dc8234c0bb

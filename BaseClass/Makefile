@@ -20,7 +20,7 @@ set_lib_path:
 	export LD_LIBRARY_PATH=./
 
 main:
-	$(CC) $(MAIN_SRC) $(LIBS_FLAGS) -o $(EXEC)
+	$(CC) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)
 
 lib: $(OBJ_FILES)
 	ar $(AR_FLAGS) $(STATIC_LIB) $^

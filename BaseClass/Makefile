@@ -4,7 +4,7 @@ MAIN_SRC := main.cpp
 OCV_LIBS := `pkg-config opencv --libs`
 OCV_PATH := `pkg-config opencv --cflags`
 MY_LIB := launcher
-LIBS_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS)
+LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS)
 CC_FLAGS := -c -fPIC
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
@@ -26,10 +26,11 @@ lib: $(OBJ_FILES)
 	ar $(AR_FLAGS) $(STATIC_LIB) $^
 
 dyn_main:
-	$(CC) $(MAIN_SRC) -L. -l$(MY_LIB) $(OCV_LIBS) -o $(EXEC)	
+	$(CC) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)	
 
 dyn_lib: $(OBJ_FILES)
 	g++ -shared $(OCV_LIBS) -o $(DYNAMIC_LIB) $^
+
 
 obj/%.o: src/%.cpp
 	$(CC) $(OCV_PATH) $(CC_FLAGS) -o $@ $<

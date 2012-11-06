@@ -29,16 +29,10 @@ dyn_main:
 	$(CC) $(MAIN_SRC) -L. -l$(MY_LIB) $(OCV_LIBS) -o $(EXEC)	
 
 dyn_lib: $(OBJ_FILES)
-	g++ -shared -o $(DYNAMIC_LIB) $^
-
-obj/BaseClass.o: src/BaseClass.cpp 
-	$(CC) $(OCV_PATH) $(CC_FLAGS) $(OCV_LIBS) -o $@ $<
-	
-obj/Launcher.o: src/Launcher.cpp 
-	$(CC) $(OCV_PATH) $(CC_FLAGS) $(OCV_LIBS) -o $@ $<
+	g++ -shared $(OCV_LIBS) -o $(DYNAMIC_LIB) $^
 
 obj/%.o: src/%.cpp
-	$(CC) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(CC_FLAGS) -o $@ $<
 
 del_lib:
 	rm -f $(STATIC_LIB) $(DYNAMIC_LIB)

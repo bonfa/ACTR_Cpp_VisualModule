@@ -9,7 +9,7 @@
 #include "CircleTest.h"
 #include "ButtonTest.h"
 #include "BlobTest.h"
-
+#include "utilsTest.h"
 
 void runTest(){
 	cute::ide_listener lis;
@@ -35,6 +35,8 @@ void runTest(){
 	cute::suite blobTest = make_suite_BlobTest();
 	cute::makeRunner(lis)(blobTest, "BlobTest");
 
+	cute::suite utilsTest = make_suite_utilsTest();
+	cute::makeRunner(lis)(utilsTest, "utilsTest");
 }
 
 

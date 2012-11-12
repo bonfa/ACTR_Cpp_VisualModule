@@ -52,7 +52,7 @@ clean:
 	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC) $(SCAN) libwrap.so libproxy.s proxy.lisp proxy-clos.lisp proxy_wrap.cxx
 
 run_image: image
-	./qr/scan_image ./debian.or.jp.qr.jpg
+	./qr/$(SCAN) ./debian.or.jp.qr.jpg
 
 image:
 	$(CC) $(MGK_PATH) $(OCV_PATH)  -o $(SCAN) $(QR_SOURCE) $(OCV_LIBS) $(MGK_LIBS) $(ZBR_LIBS)

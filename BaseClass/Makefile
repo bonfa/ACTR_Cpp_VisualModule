@@ -3,6 +3,11 @@ OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))
 MAIN_SRC := main.cpp
 OCV_LIBS := `pkg-config opencv --libs`
 OCV_PATH := `pkg-config opencv --cflags`
+MGK_PATH := `pkg-config --cflags Magick++`
+MGK_LIBS := `pkg-config --libs Magick++`
+ZBR_LIBS := `pkg-config --libs zbar`
+
+QR_SOURCE := qr/main.cpp
 QR_LIB := decodeqr
 MY_LIB := launcher
 LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS) -l$(QR_LIB)
@@ -12,6 +17,7 @@ STATIC_LIB := lib$(MY_LIB).a
 DYNAMIC_LIB := lib$(MY_LIB).so
 CC := g++
 EXEC := test
+SCAN := scan_image
 
 ifeq ($(mode),debug)
    CC := $(CC) -g -Wall
@@ -43,13 +49,13 @@ del_lib:
 	rm -f $(STATIC_LIB) $(DYNAMIC_LIB)
 
 clean:
-	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC) libwrap.so libproxy.s proxy.lisp proxy-clos.lisp proxy_wrap.cxx
+	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC) $(SCAN) libwrap.so libproxy.s proxy.lisp proxy-clos.lisp proxy_wrap.cxx
 
 run_image: image
 	./qr/scan_image ./debian.or.jp.qr.jpg
 
 image:
-	g++ `pkg-config --cflags Magick++` `pkg-config --cflags opencv`  -o scan_image qr/main.cpp `pkg-config --libs Magick++ opencv` -lzbar
+	$(CC) $(MGK_PATH) $(OCV_PATH)  -o $(SCAN) $(QR_SOURCE) $(OCV_LIBS) $(MGK_LIBS) $(ZBR_LIBS)
 
 mk_proxy: proxy_lib swig swig_lib
 

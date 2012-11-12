@@ -43,10 +43,25 @@ del_lib:
 	rm -f $(STATIC_LIB) $(DYNAMIC_LIB)
 
 clean:
-	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC)
+	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC) libwrap.so libproxy.s proxy.lisp proxy-clos.lisp proxy_wrap.cxx
 
 run_image: image
 	./qr/scan_image ./debian.or.jp.qr.jpg
 
 image:
 	g++ `pkg-config --cflags Magick++` `pkg-config --cflags opencv`  -o scan_image qr/main.cpp `pkg-config --libs Magick++ opencv` -lzbar
+
+mk_proxy: proxy_lib swig swig_lib
+
+proxy.o:
+
+proxy_lib:
+	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy.cpp -o libproxy.so
+
+swig:
+	swig -cffi -c++ proxy.i
+	nano proxy_wrap.cxx
+
+swig_lib:
+	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy_wrap.cxx -o libwrap.so
+

@@ -3,14 +3,19 @@ OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))
 MAIN_SRC := main.cpp
 OCV_LIBS := `pkg-config opencv --libs`
 OCV_PATH := `pkg-config opencv --cflags`
+QR_LIB := decodeqr
 MY_LIB := launcher
-LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS)
+LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS) -l$(QR_LIB)
 CC_FLAGS := -c -fPIC 
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
 DYNAMIC_LIB := lib$(MY_LIB).so
 CC := g++
 EXEC := test
+
+ifeq ($(mode),debug)
+   CC := $(CC) -g -Wall
+endif
 
 all: del_lib lib main
 
@@ -31,7 +36,6 @@ dyn_main:
 dyn_lib: $(OBJ_FILES)
 	$(CC) -shared $(OCV_LIBS) -o $(DYNAMIC_LIB) $^
 
-
 obj/%.o: src/%.cpp
 	$(CC) $(OCV_PATH) $(CC_FLAGS) -o $@ $<
 
@@ -40,3 +44,9 @@ del_lib:
 
 clean:
 	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC)
+
+run_image: image
+	./qr/scan_image ./debian.or.jp.qr.jpg
+
+image:
+	g++ `pkg-config --cflags Magick++` `pkg-config --cflags opencv`  -o scan_image qr/main.cpp `pkg-config --libs Magick++ opencv` -lzbar

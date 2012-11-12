@@ -8,7 +8,7 @@ LIBS_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS)
 CC_FLAGS := -c -fPIC
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
-DYNAMIC_LIB := lib$(MY_LIB).so
+DYNAMIC_LIB := lib$(MY_LIB).dylib
 CC := g++
 EXEC := test
 
@@ -29,7 +29,7 @@ dyn_main:
 	$(CC) $(MAIN_SRC) -L. -l$(MY_LIB) $(OCV_LIBS) -o $(EXEC)	
 
 dyn_lib: $(OBJ_FILES)
-	g++ -shared $(OCV_LIBS) -o $(DYNAMIC_LIB) $^
+	g++ -dynamiclib $(OCV_LIBS) -o $(DYNAMIC_LIB) -install_name ./$(DYNAMIC_LIB) $^
 
 obj/%.o: src/%.cpp
 	$(CC) $(OCV_PATH) $(CC_FLAGS) -o $@ $<
@@ -38,4 +38,20 @@ del_lib:
 	rm -f $(STATIC_LIB) $(DYNAMIC_LIB)
 
 clean:
-	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC)
+	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC) libwrap.so libproxy.s proxy.lisp proxy-clos.lisp proxy_wrap.cxx
+	
+PROXY_LIBS= /opt/local/lib/libopencv_core.dylib /opt/local/lib/libopencv_highgui.dylib
+
+mk_proxy: proxy_lib swig swig_lib
+
+proxy.o:
+
+proxy_lib:
+	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy.cpp -o libproxy.so
+
+swig:
+	swig -cffi -c++ proxy.i
+	nano proxy_wrap.cxx
+
+swig_lib:
+	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy_wrap.cxx -o libwrap.so

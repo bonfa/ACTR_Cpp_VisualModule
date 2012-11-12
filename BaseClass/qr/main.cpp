@@ -11,7 +11,7 @@ using namespace zbar;
 
 int main (int argc, char **argv)
 {
-	CvMat *cv_matrix = cvLoadImageM("../debian.or.jp.qr.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+	CvMat *cv_matrix = cvLoadImageM("./debian.or.jp.qr.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 
 	int width = cv_matrix->width;
 	int height= cv_matrix->height;

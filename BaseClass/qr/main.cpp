@@ -56,29 +56,4 @@ int main (int argc, char **argv)
 }
 
 
-/*#include <opencv/cv.h>
-#include <opencv/highgui.h>
-#include <opencv/cxcore.h>
-#include <iostream>
-#include <zbar.h>
 
-int main(){
-	CvMat *cv_matrix = cvLoadImageM("/home/enrico/develop/cpp/BaseClass/debian.or.jp.qr.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-	int width = cv_matrix->width;
-	int height= cv_matrix->height;
-	char *raw = (char*)cv_matrix->data.ptr;
-
-	ImageScanner scanner;
-	scanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1);  
- 
-	Image image(width, height, "Y800", raw, width * height);
-	int n = scanner.scan(image);
-
-	for(Image::SymbolIterator symbol = image.symbol_begin();
-        symbol != image.symbol_end();
-        ++symbol) {
-        // do something useful with results
-        cout << "decoded " << symbol->get_type_name()
-             << " symbol \"" << symbol->get_data() << '"' << endl;
-    }
-}*/

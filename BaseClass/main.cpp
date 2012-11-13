@@ -1,8 +1,8 @@
 #include "src/Launcher.h"
 
 
-int main(){
-
-	launch();
-
-}
+//int main(){
+//
+//	launch();
+//
+//}

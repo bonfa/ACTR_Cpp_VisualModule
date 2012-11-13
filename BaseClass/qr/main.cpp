@@ -2,6 +2,7 @@
 #include <Magick++.h>
 #include <zbar.h>
 
+
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <opencv/cxcore.h>

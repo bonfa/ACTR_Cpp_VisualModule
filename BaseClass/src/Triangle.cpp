@@ -6,6 +6,7 @@
  */
 
 #include "Triangle.h"
+#include "utils.h"
 
 
 Triangle::~Triangle() {
@@ -45,3 +46,4 @@ Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy){
 string Triangle::getChunk(){
 	return "cianc, traingle\n";
 }
+

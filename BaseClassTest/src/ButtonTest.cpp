@@ -2,7 +2,8 @@
 #include "ide_listener.h"
 #include "cute_runner.h"
 #include "ButtonTest.h"
-
+#include <iostream>
+#include <string>
 
 void ButtonTest01(){
 	int ax = 0;

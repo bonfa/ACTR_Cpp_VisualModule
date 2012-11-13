@@ -3,14 +3,25 @@ OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))
 MAIN_SRC := main.cpp
 OCV_LIBS := `pkg-config opencv --libs`
 OCV_PATH := `pkg-config opencv --cflags`
+MGK_PATH := `pkg-config --cflags Magick++`
+MGK_LIBS := `pkg-config --libs Magick++`
+ZBR_LIBS := `pkg-config --libs zbar`
+
+QR_SOURCE := qr/main.cpp
+QR_LIB := decodeqr
 MY_LIB := launcher
-LIBS_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS)
-CC_FLAGS := -c -fPIC
+LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS) -l$(QR_LIB)
+CC_FLAGS := -c -fPIC 
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
 DYNAMIC_LIB := lib$(MY_LIB).so
 CC := g++
 EXEC := test
+SCAN := scan_image
+
+ifeq ($(mode),debug)
+   CC := $(CC) -g -Wall
+endif
 
 all: del_lib lib main
 
@@ -20,28 +31,43 @@ set_lib_path:
 	export LD_LIBRARY_PATH=./
 
 main:
-	$(CC) $(MAIN_SRC) $(LIBS_FLAGS) -o $(EXEC)
+	$(CC) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)
 
 lib: $(OBJ_FILES)
 	ar $(AR_FLAGS) $(STATIC_LIB) $^
 
 dyn_main:
-	$(CC) $(MAIN_SRC) -L. -l$(MY_LIB) $(OCV_LIBS) -o $(EXEC)	
+	$(CC) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)	
 
 dyn_lib: $(OBJ_FILES)
-	g++ -shared -o $(DYNAMIC_LIB) $^
-
-obj/BaseClass.o: src/BaseClass.cpp 
-	$(CC) $(OCV_PATH) $(CC_FLAGS) $(OCV_LIBS) -o $@ $<
-	
-obj/Launcher.o: src/Launcher.cpp 
-	$(CC) $(OCV_PATH) $(CC_FLAGS) $(OCV_LIBS) -o $@ $<
+	$(CC) -shared $(OCV_LIBS) -o $(DYNAMIC_LIB) $^
 
 obj/%.o: src/%.cpp
-	$(CC) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(CC_FLAGS) -o $@ $<
 
 del_lib:
 	rm -f $(STATIC_LIB) $(DYNAMIC_LIB)
 
 clean:
-	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC)
+	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC) $(SCAN) libwrap.so libproxy.s proxy.lisp proxy-clos.lisp proxy_wrap.cxx
+
+run_image: image
+	./qr/$(SCAN) ./debian.or.jp.qr.jpg
+
+image:
+	$(CC) $(MGK_PATH) $(OCV_PATH)  -o $(SCAN) $(QR_SOURCE) $(OCV_LIBS) $(MGK_LIBS) $(ZBR_LIBS)
+
+mk_proxy: proxy_lib swig swig_lib
+
+proxy.o:
+
+proxy_lib:
+	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy.cpp -o libproxy.so
+
+swig:
+	swig -cffi -c++ proxy.i
+	nano proxy_wrap.cxx
+
+swig_lib:
+	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy_wrap.cxx -o libwrap.so
+

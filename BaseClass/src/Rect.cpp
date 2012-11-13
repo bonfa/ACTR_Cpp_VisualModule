@@ -7,9 +7,11 @@
 
 #include "Rect.h"
 
-Rect::Rect() {
-	// TODO Auto-generated constructor stub
-
+Rect::Rect(){
+	x = 0;
+	y = 0;
+	height = 0;
+	width = 0;
 }
 
 Rect::Rect(int x_, int y_, int height_, int width_) {

@@ -12,8 +12,8 @@ Object::Object(bool att, double rot, Rect bb):attended(att), rotation(rot), bbox
 	//TODO definire la notazione della rotazione
 }
 
-Object::Object(bool att, double rot, int xx, int yy, int widtha, int heighta):attended(att), rotation(rot){
-	Rect bbox = Rect(xx, yy, widtha, heighta);
+Object::Object(bool att, double rot, int xx, int yy, int widtha, int heighta):attended(att), rotation(rot), bbox(xx, yy, widtha, heighta){
+	//Rect bbox = Rect(xx, yy, widtha, heighta);
 }
 
 Object::Object():attended(false), rotation(0) {

@@ -5,17 +5,12 @@
  *      Author: enrico
  */
 
-#include <opencv/cv.h>
-#include "opencv2/objdetect/objdetect.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/core/core.hpp"
-#include <opencv/cxcore.h>
-#include <iostream>
+
 
 #ifndef BLOB_H_
 #define BLOB_H_
 
+#include <iostream>
 #include "Object.h"
 
 class Blob: public Object {
@@ -24,7 +19,6 @@ public:
 	virtual ~Blob();
 	virtual string getChunk() =0;
 	double getArea();
-	//double erone(CvPoint a, CvPoint b, CvPoint c);
 protected:
 	double area;
 private:

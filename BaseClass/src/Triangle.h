@@ -21,9 +21,9 @@ public:
 	virtual ~Triangle();
 	string getChunk();
 private:
-	CvPoint a;
-	CvPoint b;
-	CvPoint c;
+	Point a;
+	Point b;
+	Point c;
 };
 
 #endif /* TRIANGLE_H_ */

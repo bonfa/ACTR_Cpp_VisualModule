@@ -13,15 +13,18 @@
 #define MIN_X 3
 #define MIN_Y 4
 
-#include <opencv/cv.h>
+
+//#include <opencv/cv.h>
 #include <vector>
-#include <cmath>
+#include <math.h>
+#include "MyPoint.h"
 #include "StraightLine.h"
 
 
-int getMinMax(const std::vector<CvPoint>& coords, int type);
-vector<CvPoint> Sort4PointsClockwise(std::vector<CvPoint> points);
+
+int getMinMax(const std::vector<Point>& coords, int type);
+vector<Point> Sort4PointsClockwise(std::vector<Point> points);
 bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy );
-double erone(CvPoint a, CvPoint b, CvPoint c);
+double erone(Point a, Point b, Point c);
 
 #endif /* UTILS_H_ */

@@ -9,9 +9,10 @@
 #define Quadrilateral_H_
 
 #include <vector>
-#include <cmath>
 #include "Blob.h"
 #include "utils.h"
+#include "MyPoint.h"
+
 
 
 
@@ -23,10 +24,10 @@ public:
 	string getChunk();
 
 protected:
-	CvPoint a;
-	CvPoint b;
-	CvPoint c;
-	CvPoint d;
+	Point a;
+	Point b;
+	Point c;
+	Point d;
 
 };
 

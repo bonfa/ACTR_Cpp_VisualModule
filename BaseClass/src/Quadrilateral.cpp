@@ -10,7 +10,6 @@
 
 Quadrilateral::Quadrilateral() {
 	// TODO Auto-generated constructor stub
-
 }
 
 Quadrilateral::~Quadrilateral() {
@@ -29,12 +28,12 @@ Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,in
 
 	int maxX, minX, maxY, minY;
 
-	a = cvPoint(ax, ay);
-	b = cvPoint(bx, by);
-	c = cvPoint(cx, cy);
-	d = cvPoint(dx, dy);
+	a = Point(ax, ay);
+	b = Point(bx, by);
+	c = Point(cx, cy);
+	d = Point(dx, dy);
 
-	std::vector<CvPoint> coords;
+	std::vector<Point> coords;
 	coords.push_back(a);
 	coords.push_back(b);
 	coords.push_back(c);

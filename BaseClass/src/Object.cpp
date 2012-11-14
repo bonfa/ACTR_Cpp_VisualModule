@@ -24,6 +24,11 @@ Object::~Object() {
 	// TODO Auto-generated destructor stub
 }
 
+Rect Object::getBbox(){
+	return this->bbox;
+}
+
+
 void Object::setBbox(int x, int y, int height, int width){
 	if(x<0 || y < 0 || height <=0 || width <= 0)
 		throw InputException("Negative values in the points coordinates");

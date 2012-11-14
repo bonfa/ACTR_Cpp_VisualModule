@@ -39,7 +39,29 @@ void PointTest_ParametersCheck_02() {
 }
 
 
+void PointTest_Operators_01(){
+	int ax = 5;
+	int ay = 4;
+	Point *p1 = new Point(ax,ay);
+	Point *p2 = new Point(ax,ay);
+	ASSERT(*p1==*p2);
+}
 
+
+void PointTest_Operators_02(){
+	int ax = 5;
+	int ay = 4;
+	Point *p1 = new Point(ax,ay);
+	Point *p2 = new Point(ax,ay);
+	ASSERT_EQUAL(*p1,*p2);
+}
+
+
+void PointTest_Operators_03(){
+	Point p1 = Point(0,0);
+	Point p2 = Point(0,0);
+	ASSERT_EQUAL(p1,p2);
+}
 
 cute::suite make_suite_MyPointTest(){
 	cute::suite s;
@@ -48,7 +70,9 @@ cute::suite make_suite_MyPointTest(){
 	s.push_back(CUTE(PointTest_Constructor_03));
 	s.push_back(CUTE(PointTest_ParametersCheck_01));
 	s.push_back(CUTE(PointTest_ParametersCheck_02));
-
+	s.push_back(CUTE(PointTest_Operators_01));
+	s.push_back(CUTE(PointTest_Operators_02));
+	s.push_back(CUTE(PointTest_Operators_03));
 	return s;
 }
 

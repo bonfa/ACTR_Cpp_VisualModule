@@ -18,7 +18,7 @@ void TriangleTest_Constructor_01(){
 
 
 void TriangleTest_Parameters_01(){
-	/*int ax = 0;
+	int ax = 0;
 	int ay = 0;
 	int bx = 4;
 	int by = 0;
@@ -30,10 +30,10 @@ void TriangleTest_Parameters_01(){
 	ASSERT_EQUAL(Point(ax,ay),t->getA());
 	ASSERT_EQUAL(Point(bx,by),t->getB());
 	ASSERT_EQUAL(Point(cx,cy),t->getC());
-	ASSERT_EQUAL(4,t->getArea());
-	//Rect *expectedBbox = new Rect(0,2,2,4);
-	//ASSERT_EQUAL(expectedBbox,t->bbox);
-	ASSERT_EQUAL(expectedChunkString,t->getChunk());*/
+	ASSERT_EQUAL(4.0,t->getArea());
+	Rect bbox = t->getBbox();
+	ASSERT_EQUAL(Rect(0,0,2,4),bbox);
+	ASSERT_EQUAL(expectedChunkString,t->getChunk());
 }
 
 

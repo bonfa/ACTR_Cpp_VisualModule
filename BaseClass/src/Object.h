@@ -30,7 +30,7 @@ public:
 	Object(bool attended, double rotation, int x, int y, int width, int height);
 	virtual ~Object();
 	virtual string getChunk() =0;
-
+	Rect getBbox();
 protected:
 	void setBbox(int x, int y, int height, int width);
 	bool attended;

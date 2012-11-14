@@ -17,7 +17,7 @@ public:
 	string getQRCode();
 	bool QRDetected();
 private:
-	zbar::Image * image;
+	zbar::Image * myImage;
 	int numLines;
 };
 

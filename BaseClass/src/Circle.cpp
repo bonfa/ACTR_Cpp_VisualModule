@@ -8,9 +8,7 @@
 #include "Circle.h"
 #include <math.h>
 
-Circle::~Circle() {
-	// TODO Auto-generated destructor stub
-}
+
 
 Circle::Circle(int rad, int x, int y) {
 	if(x < 0 || y < 0 || rad <= 0 || x-rad <0 || y-rad <0)
@@ -24,4 +22,23 @@ Circle::Circle(int rad, int x, int y) {
 
 string Circle::getChunk(){
 	return "cianc, Circle\n";
+}
+
+
+int Circle::getXCenter(){
+	return this->xCenter;
+}
+
+
+int Circle::getYCenter(){
+	return this->yCenter;
+}
+
+int Circle::getRadius(){
+	return this->radius;
+}
+
+
+Circle::~Circle() {
+	// TODO Auto-generated destructor stub
 }

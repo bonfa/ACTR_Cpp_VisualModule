@@ -7,17 +7,17 @@
 #include <cmath>
 
 void utilsTest01(){
-	CvPoint a = cvPoint(1, 1);
-	CvPoint b = cvPoint(-1, -1);
-	CvPoint d = cvPoint(-1, 1);
-	CvPoint c = cvPoint(1, -1);
+	Point a = Point(1, 1);
+	Point b = Point(-1, -1);
+	Point d = Point(-1, 1);
+	Point c = Point(1, -1);
 
-	std::vector<CvPoint> coords;
+	std::vector<Point> coords;
 	coords.push_back(a);
 	coords.push_back(b);
 	coords.push_back(c);
 	coords.push_back(d);
-	std::vector<CvPoint> sorted = Sort4PointsClockwise(coords);
+	std::vector<Point> sorted = Sort4PointsClockwise(coords);
 
 	std::stringstream out;
 
@@ -29,12 +29,12 @@ void utilsTest01(){
 }
 
 void utilsTest02(){
-	CvPoint a = cvPoint(10, 22);
-	CvPoint b = cvPoint(-12, 11);
-	CvPoint d = cvPoint(-1, -6);
-	CvPoint c = cvPoint(0, -4);
+	Point a = Point(10, 22);
+	Point b = Point(-12, 11);
+	Point d = Point(-1, -6);
+	Point c = Point(0, -4);
 
-	std::vector<CvPoint> coords;
+	std::vector<Point> coords;
 	coords.push_back(a);
 	coords.push_back(b);
 	coords.push_back(c);
@@ -56,18 +56,18 @@ void utilsTest03(){
 }
 
 void utilsTest04(){
-	CvPoint a = cvPoint(0, 0);
-	CvPoint b = cvPoint(1,0);
-	CvPoint c = cvPoint(0, 2);
+	Point a = Point(0, 0);
+	Point b = Point(1,0);
+	Point c = Point(0, 2);
 
 	ASSERT_EQUAL(1,erone(a,b,c));
 	ASSERT_EQUAL(1,erone(b,a,c));
 	ASSERT_EQUAL(1,erone(c,a,b));
 	ASSERT_EQUAL(0,erone(a,a,c));
 
-	a = cvPoint(1, 3);
-	b = cvPoint(2,1);
-	c = cvPoint(4, 2);
+	a = Point(1, 3);
+	b = Point(2,1);
+	c = Point(4, 2);
 	ASSERT_EQUAL(2.5,erone(a,b,c));
 	ASSERT_EQUAL(2.5,erone(b,a,c));
 	ASSERT_EQUAL(2.5,erone(c,a,b));

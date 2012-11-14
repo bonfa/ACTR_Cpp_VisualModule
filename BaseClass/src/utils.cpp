@@ -8,11 +8,11 @@
 
 
 
-vector<CvPoint> Sort4PointsClockwise(std::vector<CvPoint> points){
-	CvPoint& a = points[0];
-	CvPoint& b = points[1];
-	CvPoint& c = points[2];
-	CvPoint& d = points[3];
+vector<Point> Sort4PointsClockwise(std::vector<Point> points){
+	Point& a = points[0];
+	Point& b = points[1];
+	Point& c = points[2];
+	Point& d = points[3];
 
 	double abc = a.x * b.y - a.y * b.x + b.x * c.y - b.y * c.x + c.x * a.y - c.y * a.x;
 	if(abc < 0.0){
@@ -45,7 +45,7 @@ vector<CvPoint> Sort4PointsClockwise(std::vector<CvPoint> points){
     		std::swap(a, c);
     	}
     }
-	std::vector<CvPoint> out;
+	std::vector<Point> out;
 	out.push_back(a);
 	out.push_back(b);
 	out.push_back(c);
@@ -54,7 +54,7 @@ vector<CvPoint> Sort4PointsClockwise(std::vector<CvPoint> points){
 }
 
 
-int getMinMax(const std::vector<CvPoint>& coords, int type) {
+int getMinMax(const std::vector<Point>& coords, int type) {
 	int out;
 	unsigned int i;
 
@@ -84,7 +84,7 @@ bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy ){
 }
 
 
-double erone(CvPoint a, CvPoint b, CvPoint c){
+double erone(Point a, Point b, Point c){
 	double ab;
 	double bc;
 	double ac;

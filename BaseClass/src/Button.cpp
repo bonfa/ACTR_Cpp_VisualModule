@@ -18,10 +18,10 @@ Button::Button(int x,int y, int height, int width, string txt) :text(""){
 	if(txt.length()<1)
 		throw InputException(("Text is empty"));
 
-	a = cvPoint(x, y);
-	b = cvPoint(x + width, y);
-	c = cvPoint(x + width, y+ height);
-	d = cvPoint(x, y+ height);
+	a = Point(x, y);
+	b = Point(x + width, y);
+	c = Point(x + width, y+ height);
+	d = Point(x, y+ height);
 	text = txt; //TODO bisogna usare lo strcpy?
 	area = (b.x - a.x)*(c.y - d.y);
 

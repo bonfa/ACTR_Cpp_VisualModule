@@ -8,12 +8,12 @@
 #include "Object.h"
 
 
-Object::Object(bool att, double rot, CvRect bb):attended(att), rotation(rot), bbox(bb){
+Object::Object(bool att, double rot, Rect bb):attended(att), rotation(rot), bbox(bb){
 	//TODO definire la notazione della rotazione
 }
 
-Object::Object(bool att, double rot, int xx, int yy, int widtha, int heighta):attended(att), rotation(rot){
-	CvRect bbox = cvRect(xx, yy, widtha, heighta);
+Object::Object(bool att, double rot, int xx, int yy, int widtha, int heighta):attended(att), rotation(rot), bbox(xx, yy, widtha, heighta){
+	//Rect bbox = Rect(xx, yy, widtha, heighta);
 }
 
 Object::Object():attended(false), rotation(0) {
@@ -27,5 +27,5 @@ Object::~Object() {
 void Object::setBbox(int x, int y, int height, int width){
 	if(x<0 || y < 0 || height <=0 || width <= 0)
 		throw InputException("Negative values in the points coordinates");
-	bbox = cvRect(x, y, height, width);
+	bbox = Rect(x, y, height, width);
 }

@@ -25,12 +25,12 @@ Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy){
 
 	int maxX, minX, maxY, minY;
 
-	a = cvPoint(ax, ay);
-	b = cvPoint(bx, by);
-	c = cvPoint(cx, cy);
+	a = Point(ax, ay);
+	b = Point(bx, by);
+	c = Point(cx, cy);
 	area = erone(a, b, c);
 
-	std::vector<CvPoint> coords;
+	std::vector<Point> coords;
 	coords.push_back(a);
 	coords.push_back(b);
 	coords.push_back(c);

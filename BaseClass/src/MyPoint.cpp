@@ -12,10 +12,10 @@ Point::Point(int x_,int y_) {
 	y = y_;
 }
 
+
 Point::Point() {
-	// TODO Auto-generated constructor stub
-	x = -1;
-	y = -1;
+	x = 0;
+	y = 0;
 }
 
 Point::~Point() {

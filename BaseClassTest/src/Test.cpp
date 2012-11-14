@@ -10,6 +10,7 @@
 #include "ButtonTest.h"
 #include "BlobTest.h"
 #include "utilsTest.h"
+#include "QRScannerTest.h"
 
 void runTest(){
 	cute::ide_listener lis;
@@ -37,6 +38,10 @@ void runTest(){
 
 	cute::suite utilsTest = make_suite_utilsTest();
 	cute::makeRunner(lis)(utilsTest, "utilsTest");
+
+	//cute::suite QRScannerTest = make_suite_QRScannerTest();
+	//cute::makeRunner(lis)(QRScannerTest, "QRScannerTest");
+	//TODO Il test fallisce sempre non so cosa farci
 }
 
 

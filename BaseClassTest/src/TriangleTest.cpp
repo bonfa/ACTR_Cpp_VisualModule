@@ -121,6 +121,18 @@ void TriangleTest_Error_07(){
 }
 
 
+void TriangleTest_Error_08(){
+	int ax = 1;
+	int ay = 1;
+	int bx = 1;
+	int by = 1;
+	int cx = 1;
+	int cy = 1;
+
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+}
+
+
 
 cute::suite make_suite_TriangleTest(){
 	cute::suite s;
@@ -133,6 +145,7 @@ cute::suite make_suite_TriangleTest(){
 	s.push_back(CUTE(TriangleTest_Error_05));
 	s.push_back(CUTE(TriangleTest_Error_06));
 	s.push_back(CUTE(TriangleTest_Error_07));
+	s.push_back(CUTE(TriangleTest_Error_08));
 	return s;
 }
 

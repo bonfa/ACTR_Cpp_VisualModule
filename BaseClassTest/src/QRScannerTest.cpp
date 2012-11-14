@@ -16,14 +16,12 @@
 using namespace std;
 
 void QRScannerTest01(){
-	QRScanner * qrs = new QRScanner("./debian.or.jp.qr.jpg");
-	string check = "decoded QR-Code symbol \"http://www.debian.or.jp \n\n\n\nMEBKM:TITLE:DebianJP;URL:http\\://www.debian.or.jp;;";
-	string str = qrs->getQRCode();
-	str.erase(std::remove_if(str.begin(), str.end(), (int(*)(int))isspace), str.end());
+	QRScanner * qrs = new QRScanner("./qrtest.png");
 
-	check.erase(std::remove_if(check.begin(), check.end(), (int(*)(int))isspace), check.end());
-//	str.erase(std::remove_if(str.begin(), str.end(), (int(*)(int))'\"'), str.end());
-//	ASSERT_EQUAL(",str);//
+
+	string check = "Test";
+
+	ASSERT_EQUAL(qrs->getQRCode(),"QR-CodeTest");
 
 }
 

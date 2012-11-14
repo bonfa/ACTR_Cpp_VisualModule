@@ -18,6 +18,7 @@ using namespace std;
 void QRScannerTest01(){
 	QRScanner * qrs = new QRScanner("./qrtest.png");
 
+
 	string check = "Test";
 
 	ASSERT_EQUAL(qrs->getQRCode(),"QR-CodeTest");

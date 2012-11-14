@@ -1,0 +1,1 @@
+../../BaseClass/src/QRScanner.h

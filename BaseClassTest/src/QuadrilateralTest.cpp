@@ -154,7 +154,7 @@ void QuadrilateralTest_Error_08(){
 }
 
 
-void QuadrilateralTest_Allineated_Error_01(){
+void QuadrilateralTest_Coincident_ThreePoints_Error_01(){
 	int ax = 0;
 	int ay = 0;
 	int bx = 0;
@@ -168,7 +168,7 @@ void QuadrilateralTest_Allineated_Error_01(){
 }
 
 
-void QuadrilateralTest_Allineated_Error_02(){
+void QuadrilateralTest_Coincident_ThreePoints_Error_02(){
 	int ax = 0;
 	int ay = 0;
 	int bx = 0;
@@ -182,7 +182,7 @@ void QuadrilateralTest_Allineated_Error_02(){
 }
 
 
-void QuadrilateralTest_Allineated_Error_03(){
+void QuadrilateralTest_Coincident_ThreePoints_Error_03(){
 	int ax = 0;
 	int ay = 0;
 	int bx = 1;
@@ -196,7 +196,7 @@ void QuadrilateralTest_Allineated_Error_03(){
 }
 
 
-void QuadrilateralTest_Allineated_Error_04(){
+void QuadrilateralTest_Coincident_ThreePoints_Error_04(){
 	int ax = 1;
 	int ay = 1;
 	int bx = 0;
@@ -213,28 +213,156 @@ void QuadrilateralTest_Allineated_Error_04(){
 void QuadrilateralTest_CoincidentPoints_Error_01(){
 	int ax = 1;
 	int ay = 1;
+	int bx = 1;
+	int by = 1;
+	int cx = 0;
+	int cy = 0;
+	int dx = 4;
+	int dy = 5;
+
+	ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+}
+
+void QuadrilateralTest_CoincidentPoints_Error_02(){
+	int ax = 1;
+	int ay = 1;
 	int bx = 0;
 	int by = 0;
 	int cx = 1;
 	int cy = 1;
-	int dx = 0;
-	int dy = 0;
+	int dx = 4;
+	int dy = 5;
 
 	ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
 }
 
 
+void QuadrilateralTest_CoincidentPoints_Error_03(){
+	int ax = 1;
+	int ay = 1;
+	int bx = 0;
+	int by = 0;
+	int cx = 4;
+	int cy = 5;
+	int dx = 1;
+	int dy = 1;
+
+	ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+}
+
+
+void QuadrilateralTest_CoincidentPoints_Error_04(){
+	int ax = 0;
+	int ay = 0;
+	int bx = 1;
+	int by = 1;
+	int cx = 1;
+	int cy = 1;
+	int dx = 4;
+	int dy = 5;
+
+	ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+}
+
+
+void QuadrilateralTest_CoincidentPoints_Error_05(){
+	int ax = 0;
+	int ay = 0;
+	int bx = 1;
+	int by = 1;
+	int cx = 4;
+	int cy = 5;
+	int dx = 1;
+	int dy = 1;
+
+	ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+}
+
+
+void QuadrilateralTest_CoincidentPoints_Error_06(){
+	int ax = 0;
+	int ay = 0;
+	int bx = 1;
+	int by = 1;
+	int cx = 4;
+	int cy = 5;
+	int dx = 4;
+	int dy = 5;
+
+	ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+}
+
+
+void QuadrilateralTest_AllineatedPoints_Error_01(){
+	int ax = 0;
+	int ay = 0;
+	int bx = 1;
+	int by = 1;
+	int cx = 2;
+	int cy = 2;
+	int dx = 4;
+	int dy = 5;
+
+	ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+}
+
+
+void QuadrilateralTest_AllineatedPoints_Error_02(){
+	int ax = 0;
+	int ay = 0;
+	int bx = 1;
+	int by = 1;
+	int cx = 4;
+	int cy = 5;
+	int dx = 2;
+	int dy = 2;
+
+	ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+}
+
+
+void QuadrilateralTest_AllineatedPoints_Error_03(){
+	int ax = 0;
+	int ay = 0;
+	int bx = 4;
+	int by = 5;
+	int cx = 1;
+	int cy = 1;
+	int dx = 2;
+	int dy = 2;
+
+	ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+}
+
+
+void QuadrilateralTest_AllineatedPoints_Error_04(){
+	int ax = 4;
+	int ay = 5;
+	int bx = 1;
+	int by = 1;
+	int cx = 3;
+	int cy = 3;
+	int dx = 2;
+	int dy = 2;
+
+	ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+}
 
 
 cute::suite make_suite_QuadrilateralTest(){
 	cute::suite s;
 	s.push_back(CUTE(QuadrilateralTest_Constructor_01));
 	s.push_back(CUTE(QuadrilateralTest_Parameters_01));
-	s.push_back(CUTE(QuadrilateralTest_Allineated_Error_01));
-	s.push_back(CUTE(QuadrilateralTest_Allineated_Error_02));
-	s.push_back(CUTE(QuadrilateralTest_Allineated_Error_03));
-	s.push_back(CUTE(QuadrilateralTest_Allineated_Error_04));
+	s.push_back(CUTE(QuadrilateralTest_Coincident_ThreePoints_Error_01));
+	s.push_back(CUTE(QuadrilateralTest_Coincident_ThreePoints_Error_02));
+	s.push_back(CUTE(QuadrilateralTest_Coincident_ThreePoints_Error_03));
+	s.push_back(CUTE(QuadrilateralTest_Coincident_ThreePoints_Error_04));
 	s.push_back(CUTE(QuadrilateralTest_CoincidentPoints_Error_01));
+	s.push_back(CUTE(QuadrilateralTest_CoincidentPoints_Error_02));
+	s.push_back(CUTE(QuadrilateralTest_CoincidentPoints_Error_03));
+	s.push_back(CUTE(QuadrilateralTest_CoincidentPoints_Error_04));
+	s.push_back(CUTE(QuadrilateralTest_CoincidentPoints_Error_05));
+	s.push_back(CUTE(QuadrilateralTest_CoincidentPoints_Error_06));
 	s.push_back(CUTE(QuadrilateralTest_Error_01));
 	s.push_back(CUTE(QuadrilateralTest_Error_02));
 	s.push_back(CUTE(QuadrilateralTest_Error_03));
@@ -243,6 +371,11 @@ cute::suite make_suite_QuadrilateralTest(){
 	s.push_back(CUTE(QuadrilateralTest_Error_06));
 	s.push_back(CUTE(QuadrilateralTest_Error_07));
 	s.push_back(CUTE(QuadrilateralTest_Error_08));
+	s.push_back(CUTE(QuadrilateralTest_AllineatedPoints_Error_01));
+	s.push_back(CUTE(QuadrilateralTest_AllineatedPoints_Error_02));
+	s.push_back(CUTE(QuadrilateralTest_AllineatedPoints_Error_03));
+	s.push_back(CUTE(QuadrilateralTest_AllineatedPoints_Error_04));
+
 	return s;
 }
 

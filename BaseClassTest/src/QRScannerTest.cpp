@@ -23,7 +23,7 @@ void QRScannerTest01(){
 
 	check.erase(std::remove_if(check.begin(), check.end(), (int(*)(int))isspace), check.end());
 //	str.erase(std::remove_if(str.begin(), str.end(), (int(*)(int))'\"'), str.end());
-	ASSERT_EQUAL(",str);//
+//	ASSERT_EQUAL(",str);//
 
 }
 

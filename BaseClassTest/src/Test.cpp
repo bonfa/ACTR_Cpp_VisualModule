@@ -45,9 +45,9 @@ void runTest(){
 	cute::makeRunner(lis)(utilsTest, "utilsTest");
 
 
-	//cute::suite QRScannerTest = make_suite_QRScannerTest();
-	//cute::makeRunner(lis)(QRScannerTest, "QRScannerTest");
-	//TODO Il test fallisce sempre non so cosa farci
+	cute::suite QRScannerTest = make_suite_QRScannerTest();
+	cute::makeRunner(lis)(QRScannerTest, "QRScannerTest");
+
 
 	cute::suite PointTest = make_suite_MyPointTest();
 	cute::makeRunner(lis)(PointTest, "PointTest");

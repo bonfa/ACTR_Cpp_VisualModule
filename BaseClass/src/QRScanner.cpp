@@ -49,7 +49,7 @@ string QRScanner::getQRCode()
     for(Image::SymbolIterator symbol = image->symbol_begin();
     		symbol != image->symbol_end();
     		++symbol) {
-    	out << "decoded " << symbol->get_type_name() << " symbol \"" << symbol->get_data() << endl;
+    	out << symbol->get_type_name() << symbol->get_data();
     	// do something useful with results
     	//cout << "decoded " << symbol->get_type_name()
         //     << " symbol \"" << symbol->get_data() << '"' << endl;

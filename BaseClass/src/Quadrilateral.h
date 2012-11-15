@@ -22,7 +22,10 @@ public:
 	Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy);
 	virtual ~Quadrilateral();
 	string getChunk();
-
+	Point getA();
+	Point getB();
+	Point getC();
+	Point getD();
 protected:
 	Point a;
 	Point b;

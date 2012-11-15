@@ -15,6 +15,7 @@ public:
 	Rect();
 	Rect(int x, int y, int height, int width);
 	virtual ~Rect();
+	bool operator==(const Rect &other) const;
 	int x;
 	int y;
 	int height;

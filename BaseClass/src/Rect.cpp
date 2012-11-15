@@ -23,6 +23,12 @@ Rect::Rect(int x_, int y_, int height_, int width_) {
 	width = width_;
 }
 
+
+bool Rect::operator==(const Rect &other) const {
+	return ((this->x==other.x) && (this->y == other.y) && (this->height == other.height) && (this->width == other.width));
+}
+
+
 Rect::~Rect() {
 	// TODO Auto-generated destructor stub
 }

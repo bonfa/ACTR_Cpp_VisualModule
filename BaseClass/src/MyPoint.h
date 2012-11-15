@@ -15,8 +15,12 @@ public:
 	Point(int x,int y);
 	Point();
 	virtual ~Point();
+	bool operator==(const Point &other) const;
 	int x;
 	int y;
 };
 
 #endif /* MYPOINT_H_ */
+
+
+

@@ -57,6 +57,28 @@ Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,in
 }
 
 
+Point Quadrilateral::getA(){
+	return this->a;
+}
+
+
+
+Point Quadrilateral::getB(){
+	return this->b;
+}
+
+
+
+Point Quadrilateral::getC(){
+	return this->c;
+}
+
+
+Point Quadrilateral::getD(){
+	return this->d;
+}
+
+
 
 string Quadrilateral::getChunk(){
 	return "cianc, Quadrilateral\n";

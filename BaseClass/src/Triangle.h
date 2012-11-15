@@ -20,10 +20,14 @@ public:
 	Triangle(int ax,int ay,int bx,int by,int cx,int cy);
 	virtual ~Triangle();
 	string getChunk();
+	Point getA();
+	Point getB();
+	Point getC();
 private:
 	Point a;
 	Point b;
 	Point c;
+	void setBoundingBox();
 };
 
 #endif /* TRIANGLE_H_ */

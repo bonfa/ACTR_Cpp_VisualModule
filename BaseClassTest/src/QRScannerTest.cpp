@@ -96,6 +96,26 @@ void QRScannerTest08(){
 
 }
 
+void QRScannerTest09(){
+	QRScanner * qrs = new QRScanner("./qrcamtest8.jpg"); //foto scattata dallo schermo di Francesco verso il muro dietro Enrico
+
+
+	string check = "Test";
+
+	ASSERT_EQUAL("QR-CodeTest",qrs->getQRCode());
+
+}
+
+void QRScannerTest10(){
+	QRScanner * qrs = new QRScanner("./qrcamtest9.jpg"); //foto scattata dallo schermo di Francesco verso il muro dietro Enrico
+
+
+	string check = "Test";
+
+	ASSERT_EQUAL("QR-CodeTest",qrs->getQRCode());
+
+}
+
 cute::suite make_suite_QRScannerTest(){
 	cute::suite s;
 	s.push_back(CUTE(QRScannerTest01));
@@ -106,5 +126,7 @@ cute::suite make_suite_QRScannerTest(){
 	s.push_back(CUTE(QRScannerTest06));
 	s.push_back(CUTE(QRScannerTest07));
 	s.push_back(CUTE(QRScannerTest08));
+	s.push_back(CUTE(QRScannerTest09));
+	s.push_back(CUTE(QRScannerTest10));
 	return s;
 }

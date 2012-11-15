@@ -20,11 +20,13 @@ QRScanner::QRScanner(string path){
 	Rect roi(10, 20, 100, 50);
 	//Point a cv::Mat header at it (no allocation is done)
 
-	/*cv::Mat image(cv_matrix);
+	/*
+	cv::Mat image(cv_matrix);
 	cv::Rect myROI(0, 0, (cv_matrix->width)/2, (cv_matrix->height)/2);
 	cv::Mat croppedImage = image(myROI);
 	CvMat cvmat = croppedImage;
-	CvMat *cvm = &cvmat;*/
+	CvMat *cvm = &cvmat;
+	cvSaveImage	*/
 
 	int width = cv_matrix->width;
 	int height= cv_matrix->height;

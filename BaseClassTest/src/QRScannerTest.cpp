@@ -107,12 +107,12 @@ void QRScannerTest09(){
 }
 
 void QRScannerTest10(){
-	QRScanner * qrs = new QRScanner("./qrcamtest9.jpg"); //foto scattata dallo schermo di Francesco verso il muro dietro Enrico
+	QRScanner * qrs = new QRScanner("./qrcamtest9.jpg");
 
 
 	string check = "Test";
 
-	ASSERT_EQUAL("QR-CodeTest",qrs->getQRCode());
+	ASSERT_EQUAL(false,qrs->QRDetected());
 
 }
 

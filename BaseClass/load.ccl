@@ -1,7 +1,0 @@
-(ql:quickload "cffi")
-(open-shared-library "./libwrap.so")
-(load "./proxy.lisp")
-(load "./proxy-clos.lisp")
-
-(setf asd (make-instance 'proxy))
-(CCL::CALL-IN-INITIAL-PROCESS (demo asd))

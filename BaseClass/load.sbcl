@@ -1,8 +1,0 @@
-(ql:quickload "cffi")
-(sb-alien:load-shared-object "./libwrap.so")
-(load "./proxy.lisp")
-(load "./proxy-clos.lisp")
-
-(setf asd (make-instance 'proxy))
-(demo asd)
-(quit)

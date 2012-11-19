@@ -43,7 +43,7 @@ del_lib:
 	rm -f $(STATIC_LIB) $(DYNAMIC_LIB)
 
 clean:
-	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC) libwrap.so libproxy.s proxy.lisp proxy-clos.lisp proxy_wrap.cxx
+	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC) libwrap.so libproxy.so proxy.lisp proxy-clos.lisp proxy_wrap.cxx
 
 run_image: image
 	./qr/scan_image ./debian.or.jp.qr.jpg

@@ -10,5 +10,14 @@
 #include "proxy.h"
 
 void Proxy::demo() {
-	launch();
+	BaseClass *ba = new BaseClass();
+
+	imshow("finestra",ba->getImage("./lena.jpg"));
+	waitKey(0);
+
+	VideoCapture cap = ba->getStream();
+	ba->showVideo(cap);
+	
+	cv::destroyAllWindows();
+	delete ba;
 }

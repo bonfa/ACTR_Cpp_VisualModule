@@ -7,15 +7,13 @@
  *
  */
 
-
+#ifndef _PROXY_H
+#define _PROXY_H
 #include "src/BaseClass.h"
-
-#ifndef proxy
-#define proxy
 
 class Proxy {
 public:
-	void demo(); //return image
+	void demo();
 };
 
 #endif

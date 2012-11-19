@@ -9,18 +9,22 @@
 #define CIRCLE_H_
 
 #include "Blob.h"
+#include "MyPoint.h"
+
 
 class Circle: public Blob {
 public:
 	Circle(int rad, int x, int y);
 	string getChunk();
+	int getXCenter();
+	int getYCenter();
+	int getRadius();
+	Point getCenter();
 	virtual ~Circle();
-
 private:
 	double area;
+	Point center;
 	int radius;
-	int xCenter;
-	int yCenter;
 };
 
 #endif /* CIRCLE_H_ */

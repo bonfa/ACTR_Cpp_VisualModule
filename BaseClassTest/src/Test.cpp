@@ -11,6 +11,12 @@
 #include "BlobTest.h"
 #include "utilsTest.h"
 
+#include "QRScannerTest.h"
+
+#include "MyPointTest.h"
+#include "RectTest.h"
+
+
 void runTest(){
 	cute::ide_listener lis;
 
@@ -37,6 +43,18 @@ void runTest(){
 
 	cute::suite utilsTest = make_suite_utilsTest();
 	cute::makeRunner(lis)(utilsTest, "utilsTest");
+
+
+	cute::suite QRScannerTest = make_suite_QRScannerTest();
+	cute::makeRunner(lis)(QRScannerTest, "QRScannerTest");
+
+
+	cute::suite PointTest = make_suite_MyPointTest();
+	cute::makeRunner(lis)(PointTest, "PointTest");
+
+	cute::suite RectTest = make_suite_RectTest();
+	cute::makeRunner(lis)(RectTest, "RectTest");
+
 }
 
 

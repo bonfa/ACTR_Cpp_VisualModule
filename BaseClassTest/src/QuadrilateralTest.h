@@ -14,3 +14,4 @@
 extern cute::suite make_suite_QuadrilateralTest();
 
 #endif /* QUADRILATERALTEST_H_ */
+

@@ -42,8 +42,11 @@ dyn_main:
 dyn_lib: $(OBJ_FILES)
 	$(CC) -shared $(OCV_LIBS) -o $(DYNAMIC_LIB) $^
 
+obj/QRScanner.o: src/QRScanner.cpp
+	$(CC) $(OCV_PATH) $(MGK_PATH) $(CC_FLAGS) -o $@ $<
+
 obj/%.o: src/%.cpp
-	$(CC) $(OCV_PATH) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH)  $(CC_FLAGS) -o $@ $<
 
 del_lib:
 	rm -f $(STATIC_LIB) $(DYNAMIC_LIB)

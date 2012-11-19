@@ -11,8 +11,7 @@ using namespace zbar;
 
 int main (int argc, char **argv)
 {
-	CvMat *cv_matrix = cvLoadImageM("/home/enrico/develop/cpp/BaseClass/debian.or.jp.qr.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-    if(argc < 2) return(1);
+	CvMat *cv_matrix = cvLoadImageM("../debian.or.jp.qr.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 	int width = cv_matrix->width;
 	int height= cv_matrix->height;
 	char *raw = (char*)cv_matrix->data.ptr;

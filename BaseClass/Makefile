@@ -59,7 +59,7 @@ proxy_lib:
 	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy.cpp -o libproxy.so
 
 swig:
-	swig -cffi -c++ proxy.i
+	swig -allegrocl -c++ proxy.i
 	nano proxy_wrap.cxx
 
 swig_lib:

@@ -14,6 +14,7 @@
 class Proxy {
 public:
 	void demo();
+	int test();
 };
 
 #endif

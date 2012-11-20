@@ -21,3 +21,8 @@ void Proxy::demo() {
 	cv::destroyAllWindows();
 	delete ba;
 }
+
+int Proxy::test() {
+
+	return 10;
+}

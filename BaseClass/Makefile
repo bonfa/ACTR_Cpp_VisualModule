@@ -10,7 +10,7 @@ ZBR_LIBS := `pkg-config --libs zbar`
 QR_SOURCE := qr/main.cpp
 QR_LIB := decodeqr
 MY_LIB := launcher
-LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS) -l$(QR_LIB)
+LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS)
 CC_FLAGS := -c -fPIC 
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
@@ -40,7 +40,7 @@ dyn_main:
 	$(CC) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)	
 
 dyn_lib: $(OBJ_FILES)
-	$(CC) -shared $(OCV_LIBS) -o $(DYNAMIC_LIB) $^
+	$(CC) -shared $(OCV_LIBS) $(ZBR_LIBS) -o $(DYNAMIC_LIB) $^
 
 obj/QRScanner.o: src/QRScanner.cpp
 	$(CC) $(OCV_PATH) $(MGK_PATH) $(CC_FLAGS) -o $@ $<

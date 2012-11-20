@@ -30,36 +30,36 @@ BaseClass::~BaseClass() {
 	// TODO Auto-generated destructor stub
 }
 
+//FIXME : sostituire le cv:String con le stringhe di c++
+cv::Mat BaseClass::getImage(cv::String path){
+	cv::Mat img;
 
-Mat BaseClass::getImage(String path){
-	Mat img;
-
-	img=imread(path);     // carica l'immagine
+	img=cv::imread(path);     // carica l'immagine
 
 	return img;
 } //return image
 
 
-void BaseClass::showVideo(VideoCapture cap){
-	Mat edges;
-	namedWindow("edges",1);
+void BaseClass::showVideo(cv::VideoCapture cap){
+	cv::Mat edges;
+	cv::namedWindow("edges",1);
 
 	for(;;)
 	{
-		Mat frame;
+		cv::Mat frame;
 		cap >> frame; // get a new frame from camera
-		cvtColor(frame, edges, CV_BGR2GRAY);
-		GaussianBlur(edges, edges, Size(7,7), 1.5, 1.5);
-		Canny(edges, edges, 0, 50, 3);
-		imshow("edges", edges);
-		if(waitKey(30) >= 0) break;
+		cv::cvtColor(frame, edges, CV_BGR2GRAY);
+		cv::GaussianBlur(edges, edges, cv::Size(7,7), 1.5, 1.5);
+		cv::Canny(edges, edges, 0, 50, 3);
+		cv::imshow("edges", edges);
+		if(cv::waitKey(30) >= 0) break;
 	}
 
 }
 
 
-VideoCapture BaseClass::getStream(){
-	VideoCapture cap(0);
+cv::VideoCapture BaseClass::getStream(){
+	cv::VideoCapture cap(0);
 	return cap;
 } //return video
 

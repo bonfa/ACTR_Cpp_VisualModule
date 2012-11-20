@@ -13,16 +13,15 @@
 #ifndef BASECLASS_H_
 #define BASECLASS_H_
 
-using namespace cv;
 using namespace std;
 
 class BaseClass {
 public:
 	BaseClass();
 	virtual ~BaseClass(); //
-	Mat getImage(String path); //return image
-	VideoCapture getStream(); //return video
-	void showVideo(VideoCapture cap);
+	cv::Mat getImage(cv::String path); //return image
+	cv::VideoCapture getStream(); //return video
+	void showVideo(cv::VideoCapture cap);
 };
 
 #endif /* BASECLASS_H_ */

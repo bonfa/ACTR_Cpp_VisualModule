@@ -12,10 +12,10 @@
 void Proxy::demo() {
 	BaseClass *ba = new BaseClass();
 
-	imshow("finestra",ba->getImage("./lena.jpg"));
-	waitKey(0);
+	cv::imshow("finestra",ba->getImage("./lena.jpg"));
+	cv::waitKey(0);
 
-	VideoCapture cap = ba->getStream();
+	cv::VideoCapture cap = ba->getStream();
 	ba->showVideo(cap);
 	
 	cv::destroyAllWindows();
@@ -25,4 +25,9 @@ void Proxy::demo() {
 int Proxy::test() {
 
 	return 10;
+}
+
+double Proxy::area(){
+	Triangle * tri = new Triangle(0,0,2,0,0,2);
+	return tri->getArea();
 }

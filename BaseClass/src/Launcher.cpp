@@ -42,9 +42,9 @@ int launch(){
 
 
 	imshow("finestra",ba->getImage("./lena.jpg"));
-	waitKey(0);
+	cv::waitKey(0);
 
-	VideoCapture cap = ba->getStream();
+	cv::VideoCapture cap = ba->getStream();
 	ba->showVideo(cap);
 
 

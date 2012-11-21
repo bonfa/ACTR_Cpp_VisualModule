@@ -10,7 +10,7 @@ ZBR_LIBS := `pkg-config --libs zbar`
 QR_SOURCE := qr/main.cpp
 QR_LIB := decodeqr
 MY_LIB := launcher
-LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS) -l$(QR_LIB)
+LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS)
 CC_FLAGS := -c -fPIC 
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
@@ -40,16 +40,19 @@ dyn_main:
 	$(CC) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)	
 
 dyn_lib: $(OBJ_FILES)
-	$(CC) -shared $(OCV_LIBS) -o $(DYNAMIC_LIB) $^
+	$(CC) -shared $(OCV_LIBS) $(ZBR_LIBS) -o $(DYNAMIC_LIB) $^
+
+obj/QRScanner.o: src/QRScanner.cpp
+	$(CC) $(OCV_PATH) $(MGK_PATH) $(CC_FLAGS) -o $@ $<
 
 obj/%.o: src/%.cpp
-	$(CC) $(OCV_PATH) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH)  $(CC_FLAGS) -o $@ $<
 
 del_lib:
 	rm -f $(STATIC_LIB) $(DYNAMIC_LIB)
 
 clean:
-	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC) $(SCAN) libwrap.so libproxy.s proxy.lisp proxy-clos.lisp proxy_wrap.cxx
+	rm -f $(OBJ_FILES) $(STATIC_LIB) $(EXEC) $(SCAN) libwrap.so libproxy.so proxy.lisp proxy-clos.lisp proxy_wrap.cxx
 
 run_image: image
 	./qr/$(SCAN) ./debian.or.jp.qr.jpg

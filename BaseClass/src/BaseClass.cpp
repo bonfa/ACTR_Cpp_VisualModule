@@ -31,7 +31,7 @@ BaseClass::~BaseClass() {
 }
 
 //FIXME : sostituire le cv:String con le stringhe di c++
-cv::Mat BaseClass::getImage(cv::String path){
+cv::Mat BaseClass::getImage(string path){
 	cv::Mat img;
 
 	img=cv::imread(path);     // carica l'immagine

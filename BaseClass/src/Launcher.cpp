@@ -37,7 +37,7 @@ int launch(){
 
 	std::cout << o->getChunk();
 
-	BaseClass *ba = new BaseClass();
+	FeatureGetter *ba = new FeatureGetter();
 
 
 

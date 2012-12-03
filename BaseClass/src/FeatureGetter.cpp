@@ -6,32 +6,20 @@
  */
 
 #include "BaseClass.h"
-/*
-
-int main(){
-	BaseClass *b = new BaseClass();
-
-	//imshow("finestra",b->getImage("./lena.jpg"));
-	//waitKey(0);
-	
-	VideoCapture cap = b->getStream();
-	b->showVideo(cap);
 
 
-}*/
-
-BaseClass::BaseClass() {
+FeatureGetter::FeatureGetter() {
 
 	// TODO Auto-generated constructor stub
 
 }
 
-BaseClass::~BaseClass() {
+FeatureGetter::~FeatureGetter() {
 	// TODO Auto-generated destructor stub
 }
 
 //FIXME : sostituire le cv:String con le stringhe di c++
-cv::Mat BaseClass::getImage(string path){
+cv::Mat FeatureGetter::getImage(string path){
 	cv::Mat img;
 
 	img=cv::imread(path);     // carica l'immagine
@@ -40,7 +28,7 @@ cv::Mat BaseClass::getImage(string path){
 } //return image
 
 
-void BaseClass::showVideo(cv::VideoCapture cap){
+void FeatureGetter::showVideo(cv::VideoCapture cap){
 	cv::Mat edges;
 	cv::namedWindow("edges",1);
 
@@ -58,7 +46,7 @@ void BaseClass::showVideo(cv::VideoCapture cap){
 }
 
 
-cv::VideoCapture BaseClass::getStream(){
+cv::VideoCapture FeatureGetter::getStream(){
 	cv::VideoCapture cap(0);
 	return cap;
 } //return video

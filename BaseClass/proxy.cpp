@@ -10,7 +10,7 @@
 #include "proxy.h"
 
 void Proxy::demo() {
-	BaseClass *ba = new BaseClass();
+	FeatureGetter *ba = new FeatureGetter();
 
 	cv::imshow("finestra",ba->getImage("./lena.jpg"));
 	cv::waitKey(0);

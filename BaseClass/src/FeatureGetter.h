@@ -15,10 +15,10 @@
 
 using namespace std;
 
-class BaseClass {
+class FeatureGetter {
 public:
-	BaseClass();
-	virtual ~BaseClass(); //
+	FeatureGetter();
+	virtual ~FeatureGetter(); //
 	cv::Mat getImage(cv::String path); //return image
 	cv::VideoCapture getStream(); //return video
 	void showVideo(cv::VideoCapture cap);

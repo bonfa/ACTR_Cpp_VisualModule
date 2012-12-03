@@ -8,7 +8,7 @@
 #ifndef MYPOINT_H_
 #define MYPOINT_H_
 
-#include "BaseClassException.h"
+#include "FeatureGetterExceptions.h"
 
 class Point {
 public:

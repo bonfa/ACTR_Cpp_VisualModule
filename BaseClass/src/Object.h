@@ -12,7 +12,7 @@
 #include "opencv2/core/core.hpp"
 */
 #include <iostream>
-#include "BaseClassException.h"
+//#include "FeatureGetterExceptions.h"
 #include "utils.h"
 #include "MyPoint.h"
 #include "Rect.h"

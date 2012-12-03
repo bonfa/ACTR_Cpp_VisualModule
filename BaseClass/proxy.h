@@ -9,7 +9,7 @@
 
 #ifndef _PROXY_H
 #define _PROXY_H
-#include "src/BaseClass.h"
+#include "src/FeatureGetter.h"
 #include "src/Triangle.h"
 
 class Proxy {

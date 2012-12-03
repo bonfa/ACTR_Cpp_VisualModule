@@ -8,7 +8,7 @@
 #ifndef STRAIGHTLINE_H_
 #define STRAIGHTLINE_H_
 
-#include "BaseClassException.h"
+#include "FeatureGetterExceptions.h"
 
 class StraightLine {
 public:

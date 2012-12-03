@@ -8,7 +8,7 @@
 #ifndef RECT_H_
 #define RECT_H_
 
-#include "BaseClassException.h"
+#include "FeatureGetterExceptions.h"
 
 class Rect {
 public:

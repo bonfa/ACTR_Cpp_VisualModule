@@ -11,7 +11,7 @@
 #include "Button.h"
 #include "Object.h"
 #include "Launcher.h"
-#include "BaseClass.h"
+#include "FeatureGetter.h"
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>

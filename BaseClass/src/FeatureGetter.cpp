@@ -5,7 +5,7 @@
  *      Author: enrico
  */
 
-#include "BaseClass.h"
+#include "FeatureGetter.h"
 
 
 FeatureGetter::FeatureGetter() {

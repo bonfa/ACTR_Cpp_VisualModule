@@ -10,7 +10,7 @@
 
 #include "utils.h"
 #include "Blob.h"
-#include "BaseClassException.h"
+#include "FeatureGetterExceptions.h"
 #include "StraightLine.h"
 using namespace std;
 

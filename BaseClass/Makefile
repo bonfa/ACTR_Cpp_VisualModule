@@ -5,12 +5,12 @@ OCV_LIBS := `pkg-config opencv --libs`
 OCV_PATH := `pkg-config opencv --cflags`
 MGK_PATH := `pkg-config --cflags Magick++`
 MGK_LIBS := `pkg-config --libs Magick++`
-ZBR_LIBS := `pkg-config --libs zbar`
+ZBR_LIBS := /usr/local/lib/libzbar.dylib
 
 QR_SOURCE := qr/main.cpp
 QR_LIB := decodeqr
 MY_LIB := launcher
-LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS)
+LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS) $(OCV_PATH)
 CC_FLAGS := -c -fPIC 
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a

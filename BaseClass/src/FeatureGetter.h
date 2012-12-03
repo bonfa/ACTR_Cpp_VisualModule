@@ -22,9 +22,9 @@ public:
 	virtual ~FeatureGetter(); //
 	void updateImage();
 	void startVideoCapture();
-	void showVideo(cv::VideoCapture cap);
-	void showImage();
 	void terminate();
+	//da cancellare una volta finito lo sviluppo
+	void showImage();
 	void showVideo();
 private:
 	Input *inputModule;

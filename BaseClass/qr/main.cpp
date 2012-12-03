@@ -9,6 +9,7 @@
 using namespace std;
 using namespace zbar;
 
+/*
 int main (int argc, char **argv)
 {
 	CvMat *cv_matrix = cvLoadImageM("../debian.or.jp.qr.jpg",CV_LOAD_IMAGE_GRAYSCALE);
@@ -23,14 +24,14 @@ int main (int argc, char **argv)
     scanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1);
 
     // obtain image data
-/*
-    Magick::Image magick;  // read an image file
+
+//    Magick::Image magick;  // read an image file
     //int width = magick.columns();   // extract dimensions
     //int height = magick.rows();
-    Magick::Blob blob;              // extract the raw data
-    magick.modifyImage();
-    magick.write(&blob, "GRAY", 8);
-    //const void *raw = blob.data();*/
+//    Magick::Blob blob;              // extract the raw data
+ //   magick.modifyImage();
+  //  magick.write(&blob, "GRAY", 8);
+    //const void *raw = blob.data();
 
     // wrap image data
     Image image(width, height, "Y800", raw, width * height);
@@ -52,7 +53,7 @@ int main (int argc, char **argv)
 
     return(0);
 }
-
+*/
 
 /*#include <opencv/cv.h>
 #include <opencv/highgui.h>

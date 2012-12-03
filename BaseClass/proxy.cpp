@@ -31,3 +31,11 @@ double Proxy::area(){
 	Triangle * tri = new Triangle(0,0,2,0,0,2);
 	return tri->getArea();
 }
+
+
+
+/**Main di prova*/
+int main(){
+	Proxy *p = new Proxy();
+	p->demo();
+}

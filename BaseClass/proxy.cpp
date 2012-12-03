@@ -35,8 +35,4 @@ double Proxy::area(){
 
 
 
-/**Main di prova*/
-int main(){
-	Proxy *p = new Proxy();
-	p->demo();
-}
+

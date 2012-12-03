@@ -10,16 +10,17 @@
 #include "proxy.h"
 
 void Proxy::demo() {
-	FeatureGetter *ba = new FeatureGetter();
+	FeatureGetter *fg = new FeatureGetter();
 
-	cv::imshow("finestra",ba->getImage("./lena.jpg"));
-	cv::waitKey(0);
+	fg->updateImage();
+	fg->showImage();
 
-	cv::VideoCapture cap = ba->getStream();
-	ba->showVideo(cap);
-	
-	cv::destroyAllWindows();
-	delete ba;
+	fg->startVideoCapture();
+	fg->showVideo();
+
+	fg->terminate();
+
+	delete fg;
 }
 
 int Proxy::test() {

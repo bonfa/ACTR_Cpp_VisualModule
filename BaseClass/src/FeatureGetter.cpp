@@ -9,45 +9,52 @@
 
 
 FeatureGetter::FeatureGetter() {
-
-	// TODO Auto-generated constructor stub
-
+	inputModule = new Input();
 }
+
 
 FeatureGetter::~FeatureGetter() {
 	// TODO Auto-generated destructor stub
 }
 
-//FIXME : sostituire le cv:String con le stringhe di c++
-cv::Mat FeatureGetter::getImage(string path){
-	cv::Mat img;
-
-	img=cv::imread(path);     // carica l'immagine
-
-	return img;
-} //return image
 
 
-void FeatureGetter::showVideo(cv::VideoCapture cap){
+void FeatureGetter::updateImage(){
+	//delete img;
+	img = inputModule->getImage("./lena.jpg");
+}
+
+
+void FeatureGetter::showImage(){
+	cv::imshow("finestra",img);
+	cv::waitKey(0);
+}
+
+
+void FeatureGetter::startVideoCapture(){
+	video = inputModule->getStream();
+
+}
+
+void FeatureGetter::showVideo(){
 	cv::Mat edges;
 	cv::namedWindow("edges",1);
 
 	for(;;)
 	{
 		cv::Mat frame;
-		cap >> frame; // get a new frame from camera
+		video >> frame; // get a new frame from camera
 		cv::cvtColor(frame, edges, CV_BGR2GRAY);
 		cv::GaussianBlur(edges, edges, cv::Size(7,7), 1.5, 1.5);
 		cv::Canny(edges, edges, 0, 50, 3);
 		cv::imshow("edges", edges);
 		if(cv::waitKey(30) >= 0) break;
 	}
-
 }
 
 
-cv::VideoCapture FeatureGetter::getStream(){
-	cv::VideoCapture cap(0);
-	return cap;
-} //return video
+void FeatureGetter::terminate(){
+	cv::destroyAllWindows();
+}
+
 

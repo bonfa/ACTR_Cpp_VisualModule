@@ -9,6 +9,7 @@
 #include <opencv/highgui.h>
 #include <opencv/cxcore.h>
 #include <iostream>
+#include "Input.h"
 
 #ifndef BASECLASS_H_
 #define BASECLASS_H_
@@ -19,9 +20,16 @@ class FeatureGetter {
 public:
 	FeatureGetter();
 	virtual ~FeatureGetter(); //
-	cv::Mat getImage(cv::String path); //return image
-	cv::VideoCapture getStream(); //return video
+	void updateImage();
+	void startVideoCapture();
 	void showVideo(cv::VideoCapture cap);
+	void showImage();
+	void terminate();
+	void showVideo();
+private:
+	Input *inputModule;
+	cv::Mat img;
+	cv::VideoCapture video;
 };
 
 #endif /* BASECLASS_H_ */

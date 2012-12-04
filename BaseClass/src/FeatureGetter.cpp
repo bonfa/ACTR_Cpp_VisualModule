@@ -21,7 +21,7 @@ FeatureGetter::~FeatureGetter() {
 
 void FeatureGetter::updateImage(){
 	//delete img;
-	img = inputModule->getImage("./lena.jpg");
+	img = inputModule->getImage("./shapes.png");
 }
 
 
@@ -57,4 +57,9 @@ void FeatureGetter::terminate(){
 	cv::destroyAllWindows();
 }
 
+
+void FeatureGetter::getFeatureList(){
+	featureExtractor = new FeatureExtractor(this->img);
+	featureExtractor->getExtractedFeature();
+}
 

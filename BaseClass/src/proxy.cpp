@@ -15,8 +15,9 @@ void Proxy::demo() {
 	fg->updateImage();
 	fg->showImage();
 
-	fg->startVideoCapture();
-	fg->showVideo();
+	fg->getFeatureList();
+	//fg->startVideoCapture();
+	//fg->showVideo();
 
 	fg->terminate();
 

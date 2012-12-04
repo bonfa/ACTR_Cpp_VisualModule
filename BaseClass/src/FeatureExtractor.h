@@ -5,6 +5,8 @@
  *      Author: francesco
  */
 
+using namespace std;
+
 #ifndef FEATUREEXTRACTOR_H_
 #define FEATUREEXTRACTOR_H_
 
@@ -23,11 +25,14 @@ public:
 	FeatureExtractor(cv::Mat img);
 	void getExtractedFeature(); //@TODO: trasformare il tipo ritornato in una lista di oggetti
 	virtual ~FeatureExtractor();
+	string getColor(int x, int y, cv::Mat image);
 private:
+	cv::Point3_<uchar>* getPixel(int x, int y, cv::Mat image);
 	void recognizeCircles();
 	void recognizeSquares();
 	void recognizeTriangles();
 	cv::Mat image;
+
 };
 
 #endif /* FEATUREEXTRACTOR_H_ */

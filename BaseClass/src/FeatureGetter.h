@@ -17,7 +17,6 @@
 #include "FeatureExtractor.h"
 
 
-
 using namespace std;
 
 class FeatureGetter {

@@ -58,3 +58,8 @@ void FeatureGetter::terminate(){
 }
 
 
+void FeatureGetter::getFeatureList(){
+	featureExtractor = new FeatureExtractor(this->img);
+	featureExtractor->getExtractedFeature();
+}
+

@@ -86,6 +86,24 @@ void FeatureExtractor::recognizeCircles(){
 
 
 void FeatureExtractor::recognizeSquares(){
+	 cv::Mat edge,color,gray;
+
+	/// Convert it to gray
+	cv::cvtColor( image, gray, CV_BGR2GRAY );
+
+	cv::Canny(gray, edge, 50, 200, 3);
+	cv::cvtColor(edge, color, CV_GRAY2BGR);
+
+	cv::vector<cv::Vec4i> lines;
+	cv::HoughLinesP(edge, lines, 1, CV_PI/180, 30, 35, 3);
+	for( size_t i = 0; i < lines.size(); i++ ) 	{
+		cv::Vec4i l = lines[i];
+		cv::line( color, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0,0,255), 3, CV_AA);
+	}
+
+	cv::imshow("detected lines", color);
+	cv::waitKey(0);
+
 
 }
 
@@ -98,5 +116,5 @@ void FeatureExtractor::recognizeTriangles(){
 
 void FeatureExtractor::getExtractedFeature(){
 	this->recognizeCircles();
-
+	this->recognizeSquares();
 }

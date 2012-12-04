@@ -5,7 +5,7 @@
  *      Author: francesco
  */
 
-#include "src/proxy.cpp"
+#include "src/proxy.h"
 
 int main(){
 	Proxy *p = new Proxy();

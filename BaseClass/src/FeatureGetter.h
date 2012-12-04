@@ -5,14 +5,18 @@
  *      Author: enrico
  */
 
+
+#ifndef BASECLASS_H_
+#define BASECLASS_H_
+
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <opencv/cxcore.h>
 #include <iostream>
 #include "Input.h"
+#include "FeatureExtractor.h"
 
-#ifndef BASECLASS_H_
-#define BASECLASS_H_
+
 
 using namespace std;
 

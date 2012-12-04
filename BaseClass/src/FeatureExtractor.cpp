@@ -7,9 +7,8 @@
 
 #include "FeatureExtractor.h"
 
-FeatureExtractor::FeatureExtractor() {
-	// TODO Auto-generated constructor stub
-
+FeatureExtractor::FeatureExtractor(cv::Mat img) {
+	image = img;
 }
 
 FeatureExtractor::~FeatureExtractor() {

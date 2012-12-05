@@ -21,8 +21,8 @@ FeatureGetter::~FeatureGetter() {
 
 void FeatureGetter::updateImage(){
 	//delete img;
-	//img = inputModule->getImage("./shapes.png");
-	img = inputModule->getImage("./01_02_1030797656577.bmp");
+	img = inputModule->getImage("./shapes.png");
+	//img = inputModule->getImage("./01_02_1030797656577.bmp");
 }
 
 

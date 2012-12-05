@@ -11,100 +11,6 @@
 #define MRG 25
 
 
-double angle( cv::Point pt1, cv::Point pt2, cv::Point pt0 ) {
-    double dx1 = pt1.x - pt0.x;
-    double dy1 = pt1.y - pt0.y;
-    double dx2 = pt2.x - pt0.x;
-    double dy2 = pt2.y - pt0.y;
-    return (dx1*dx2 + dy1*dy2)/sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
-}
-
-
-
-cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> > squareList)
-{
-	for ( unsigned int i = 0; i< squareList.size()-1; i++ ) {
-		for ( unsigned int j = i+1; j< squareList.size(); j++ ) {
-			if ((squareList.at(
-					i).at(0).x > squareList.at(j).at(0).x)
-					|| ((squareList.at(i).at(0).x == squareList.at(j).at(0).x) && (squareList.at(i).at(0).y > squareList.at(j).at(0).y))){
-				cv::vector<cv::Point> t = squareList.at(j);
-				squareList.at(j) = squareList.at(i);
-				squareList.at(i) = t;
-			}
-		}
-	}
-	return squareList;
-}
-
-
-double myDistance(cv::Point a, cv::Point b){
-	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
-}
-
-
-bool similar(vector<cv::Point> a, vector<cv::Point> b){
-	if (myDistance(a.at(0),b.at(0)) > 3)
-		return false;
-
-	double totalDistance = 0;
-	for ( unsigned int i = 0; i< a.size(); i++ )
-		totalDistance += myDistance(a.at(i),b.at(i));
-	totalDistance /= 4;
-	if (totalDistance > 4)
-		return false;
-
-	double aArea = fabs(contourArea(cv::Mat(a)));
-	double bArea = fabs(contourArea(cv::Mat(b)));
-	if (aArea/bArea < 0.95  || aArea/bArea > 1.05)
-		return false;
-
-	double aPerimeter = fabs(cv::arcLength(a,1));
-	double bPerimeter = fabs(cv::arcLength(b,1));
-	if (aPerimeter/bPerimeter < 0.95  || aPerimeter/bPerimeter > 1.05)
-		return false;
-
-	return true;
-}
-
-
-
-cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList){
-	cv::vector<cv::vector<cv::Point> > withoutDuplicates;
-	withoutDuplicates.push_back(oldList.at(0));
-
-	for (unsigned int i = 1; i< oldList.size(); i++ ) {
-		bool isSimilar = false;
-		for ( unsigned int j = 0; j< withoutDuplicates.size(); j++ )
-			if (similar(oldList.at(i),withoutDuplicates.at(j))){
-				isSimilar = true;
-				break;
-			}
-		if (isSimilar == false)
-			withoutDuplicates.push_back(oldList.at(i));
-	}
-	return withoutDuplicates;
-}
-
-/*
-cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > squareList){
-	std::vector indexesToDelete;
-	for ( unsigned int i = 0; i< squareList.size()-1; i++ )
-		for ( unsigned int j = i+1; j< squareList.size(); j++ )
-			if (similar(squareList.at(i),squareList.at(j)))
-				indexesToDelete.add(j);
-	for ( unsigned int k = 0; k< indexesToDelete.size(); k++ )
-		squareList.erase(squareList.at(k));
-	return squareList;
-}*/
-
-
-
-
-
-
-
-
 
 FeatureExtractor::FeatureExtractor(cv::Mat img) {
 	image = img;
@@ -311,7 +217,7 @@ void FeatureExtractor::recognizeSquares(){
 								maxCosine = MAX(maxCosine, cosine);
 						}
 
-						if (maxCosine < 0.3)
+						//if (maxCosine < 0.3)
 								squares.push_back(approx);
 					}
 			}
@@ -330,13 +236,35 @@ void FeatureExtractor::recognizeSquares(){
 		squares.at(i) = Sort4cvPointsClockwise(squares.at(i));
 	}
 
+
+	//controllo che non ci siano quadrati con punti quasi coincidenti
+	squares = deleteFalseSquares(squares);
+
 	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
 	squares = squaresSort(squares);
 
 	//elimino i quadrati sovrapposti
 	squares = deleteOverlapped(squares);
 
+
 	//@todo: controllare doppioni nella lista di punti
+	cv::vector <cv::vector<cv::Point> > prova;
+	cv::vector<cv::Point> p1;
+	p1.push_back(cv::Point(525,146));
+	p1.push_back(cv::Point(565,87));
+	p1.push_back(cv::Point(523,30));
+	p1.push_back(cv::Point(485,90));
+	prova.push_back(p1);
+
+	cv::vector<cv::Point> p2;
+	p2.push_back(cv::Point(526,142));
+	p2.push_back(cv::Point(562,86));
+	p2.push_back(cv::Point(524,33));
+	p2.push_back(cv::Point(487,88));
+
+	prova.push_back(p2);
+
+	prova = deleteOverlapped(prova);
 
 
 	for (unsigned int i = 0; i< squares.size(); i++ ) {

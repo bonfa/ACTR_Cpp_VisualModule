@@ -66,18 +66,22 @@ bool similar(vector<cv::Point> a, vector<cv::Point> b){
 }
 
 
+/*
 cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList){
-	/*for ( unsigned int i = 0; i< oldList.size()-1; i++ ) {
+	for ( unsigned int i = 0; i< oldList.size()-1; i++ ) {
 			for ( unsigned int j = i+1; j< oldList.size(); j++ )
-				//if (similar(oldList.at(i),oldList.at(j))){
-					//oldList.at(j).erase(remove_if(similar));
-					//oldList.at(j).erase();
-				//}
-
-	}*/
+				if (similar(oldList.at(i),oldList.at(j)))
+					oldList.erase(j);
+	}
 	return oldList;
+}*/
+cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > squareList){
+	/*for ( unsigned int i = 0; i< squareList.size()-1; i++ )
+		for ( unsigned int j = i+1; j< squareList.size(); j++ )
+			if (similar(squareList.at(i),squareList.at(j)))
+				squareList.erase(j);*/
+	return squareList;
 }
-
 
 
 

@@ -95,3 +95,52 @@ double erone(Point a, Point b, Point c){
 	p = (ab + ac + bc)/2;
 	return sqrt(p*(p-ab)*(p-bc)*(p-ac));
 }
+
+
+
+
+
+cv::vector<cv::Point> Sort4cvPointsClockwise(cv::vector<cv::Point> points){
+	cv::Point& a = points[0];
+	cv::Point& b = points[1];
+	cv::Point& c = points[2];
+	cv::Point& d = points[3];
+
+	double abc = a.x * b.y - a.y * b.x + b.x * c.y - b.y * c.x + c.x * a.y - c.y * a.x;
+	if(abc < 0.0){
+		double acd = a.x * c.y - a.y * c.x + c.x * d.y - c.y * d.x + d.x * a.y - d.y * a.x;
+		if(acd < 0.0){
+    		return points;
+    	}
+    	else {
+    		double abd = a.x * b.y - a.y * b.x + b.x * d.y - b.y * d.x + d.x * a.y - d.y * a.x;
+    		if(abd < 0){
+    			std::swap(d, c);
+    		}
+    		else{
+    			std::swap(a, d);
+    		}
+    	}
+    }
+    else {
+    	double acd = a.x * c.y - a.y * c.x + c.x * d.y - c.y * d.x + d.x * a.y - d.y * a.x;
+    	if(acd < 0.0){
+    		double abd = a.x * b.y - a.y * b.x + b.x * d.y - b.y * d.x + d.x * a.y - d.y * a.x;
+    		if(abd < 0.0){
+    			std::swap(b, c);
+    		}
+    		else{
+    			std::swap(a, b);
+    		}
+    	}
+    	else {
+    		std::swap(a, c);
+    	}
+    }
+	cv::vector<cv::Point> out;
+	out.push_back(a);
+	out.push_back(b);
+	out.push_back(c);
+	out.push_back(d);
+	return out;
+}

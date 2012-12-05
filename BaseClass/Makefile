@@ -6,11 +6,13 @@ OCV_PATH := `pkg-config opencv --cflags`
 MGK_PATH := `pkg-config --cflags Magick++`
 MGK_LIBS := `pkg-config --libs Magick++`
 ZBR_LIBS := /usr/local/lib/libzbar.dylib
+JSN_LIBS := `pkg-config --libs jsoncpp`
+JSN_PATH := `pkg-config --cflags jsoncpp`
 
 QR_SOURCE := qr/main.cpp
 QR_LIB := decodeqr
 MY_LIB := launcher
-LD_FLAGS := -L. -l$(MY_LIB) $(OCV_LIBS) $(OCV_PATH)
+LD_FLAGS := -L. -l$(MY_LIB) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH)
 CC_FLAGS := -c -fPIC 
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
@@ -44,6 +46,9 @@ dyn_lib: $(OBJ_FILES)
 
 obj/QRScanner.o: src/QRScanner.cpp
 	$(CC) $(OCV_PATH) $(MGK_PATH) $(CC_FLAGS) -o $@ $<
+	
+obj/Server.o: src/Server.cpp
+	$(CC) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
 
 obj/%.o: src/%.cpp
 	$(CC) $(OCV_PATH)  $(CC_FLAGS) -o $@ $<

@@ -105,5 +105,5 @@ r2 = (struct c_struct *) malloc (sizeof(struct c_struct));
        r2->s = "a C string";
        return 0;
 
-
 }
+

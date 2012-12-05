@@ -44,14 +44,14 @@ double myDistance(cv::Point a, cv::Point b){
 
 
 bool similar(vector<cv::Point> a, vector<cv::Point> b){
-	if (myDistance(a.at(0),b.at(0)) > 4)
+	if (myDistance(a.at(0),b.at(0)) > 3)
 		return false;
 
 	double totalDistance = 0;
 	for ( unsigned int i = 0; i< a.size(); i++ )
 		totalDistance += myDistance(a.at(i),b.at(i));
 	totalDistance /= 4;
-	if (totalDistance > 2)
+	if (totalDistance > 4)
 		return false;
 
 	double aArea = fabs(contourArea(cv::Mat(a)));
@@ -68,22 +68,35 @@ bool similar(vector<cv::Point> a, vector<cv::Point> b){
 }
 
 
-/*
+
 cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList){
-	for ( unsigned int i = 0; i< oldList.size()-1; i++ ) {
-			for ( unsigned int j = i+1; j< oldList.size(); j++ )
-				if (similar(oldList.at(i),oldList.at(j)))
-					oldList.erase(j);
+	cv::vector<cv::vector<cv::Point> > withoutDuplicates;
+	withoutDuplicates.push_back(oldList.at(0));
+
+	for (unsigned int i = 1; i< oldList.size(); i++ ) {
+		bool isSimilar = false;
+		for ( unsigned int j = 0; j< withoutDuplicates.size(); j++ )
+			if (similar(oldList.at(i),withoutDuplicates.at(j))){
+				isSimilar = true;
+				break;
+			}
+		if (isSimilar == false)
+			withoutDuplicates.push_back(oldList.at(i));
 	}
-	return oldList;
-}*/
+	return withoutDuplicates;
+}
+
+/*
 cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > squareList){
-	/*for ( unsigned int i = 0; i< squareList.size()-1; i++ )
+	std::vector indexesToDelete;
+	for ( unsigned int i = 0; i< squareList.size()-1; i++ )
 		for ( unsigned int j = i+1; j< squareList.size(); j++ )
 			if (similar(squareList.at(i),squareList.at(j)))
-				squareList.erase(j);*/
+				indexesToDelete.add(j);
+	for ( unsigned int k = 0; k< indexesToDelete.size(); k++ )
+		squareList.erase(squareList.at(k));
 	return squareList;
-}
+}*/
 
 
 
@@ -369,7 +382,7 @@ void FeatureExtractor::getExtractedFeature(){
 	cout<<"color: "+this->getColor(200, 100)+"\n";
 	cout<<"color: "+this->getColor(100, 250)+"\n";
 	cout<<"color: "+this->getColor(240, 240)+"\n";*/
-	init(0);
+	//init(0);
 	this->recognizeSquares();
 }
 

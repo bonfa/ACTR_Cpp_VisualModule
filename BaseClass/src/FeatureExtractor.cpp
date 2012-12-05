@@ -6,6 +6,8 @@
  */
 
 #include "FeatureExtractor.h"
+#include "Server.h"
+
 #define MRG 25
 
 
@@ -102,16 +104,81 @@ FeatureExtractor::~FeatureExtractor() {
 }
 
 
-cv::Point3_<uchar>* FeatureExtractor::getPixel(int x, int y, cv::Mat image){
+cv::Point3_<uchar>* FeatureExtractor::getPixel(int x, int y){
 	return image.ptr<cv::Point3_<uchar> >(y,x); //Point3_<uchar>* p
 }
 
+string FeatureExtractor::getColor(int x, int y){
+	// Convert image to HSV.
 
-string FeatureExtractor::getColor(int x, int y, cv::Mat image){
 
-	cv::Point3_<uchar>* p;
-	p = getPixel(x, y, image);
 
+	cv::Mat hsl;
+
+	cv::cvtColor(image, hsl, CV_RGB2HSV);
+
+	cv::Mat hslChannels[3];
+	cv::split(hsl, hslChannels);
+
+	hslChannels[0];
+
+
+
+	/*
+
+
+
+	cv::Mat hsvImage;
+	cvtColor( image, hsvImage, CV_BGR2HSV );
+	cv::imshow("d",hsvImage);
+	cv::waitKey();
+	CvScalar s;
+	s=cv::get2D(imgRGB,i,j);
+
+	p = hsvImage.ptr<cv::Point3_<uchar> >(y,x);
+	// extract hue
+	/*cv::Mat* hueImage = cv::createImage( size, 8, 1 );
+	cv::setImageCOI( hsvImage, 1 );
+	cv::copy( hsvImage, hueImage );
+
+	cv::imshow("der",hueImage);
+	cv::waitKey();*/
+
+/*
+	cv::Mat hsv;
+	cv::Mat hue;
+	cv::Mat sat;
+	cv::Mat val;
+
+	cvtColor( image, hsv, CV_BGR2HSV );
+
+	cv::imshow("d",hsv);
+	cv::waitKey();
+
+	hue.create( hsv.size(), hsv.depth() );
+	int ch[] = { 0, 0 };
+	mixChannels( &hsv, 1, &hue, 1, ch, 1 );
+
+
+
+*/
+	if(hslChannels[1].at<uchar>(x,y) <30.0 *180.0 /360.0 )
+		return "red";
+	else if(hslChannels[0].at<uchar>(x,y)<90*180.0 /360.0)
+		return "yellow";
+	else if(hslChannels[0].at<uchar>(x,y)<150*180.0 /360.0)
+		return "green";
+	else if(hslChannels[0].at<uchar>(x,y)<210*180.0 /360.0)
+		return "cyan";
+	else if(hslChannels[0].at<uchar>(x,y)<270*180.0 /360.0)
+		return "blue";
+	else if(hslChannels[0].at<uchar>(x,y)<330*180.0 /360.0)
+			return "pink";
+	else return "unknown";
+
+	//cout << p->y ;
+	//cout << p->z ;
+	/*
 	if(p->z > 250 - MRG && p->y < MRG && p->x < MRG)
 		return "red";
 	else if(p->z < MRG && p->y < 167 + MRG && p->y > 167 - MRG && p->x > 230 - MRG)
@@ -297,6 +364,12 @@ void FeatureExtractor::recognizeTriangles(){
 
 void FeatureExtractor::getExtractedFeature(){
 	this->recognizeCircles();
+	/*
+	cout<<"color: "+this->getColor(100, 100)+"\n";
+	cout<<"color: "+this->getColor(200, 100)+"\n";
+	cout<<"color: "+this->getColor(100, 250)+"\n";
+	cout<<"color: "+this->getColor(240, 240)+"\n";*/
+	init(0);
 	this->recognizeSquares();
 }
 

@@ -25,9 +25,9 @@ public:
 	FeatureExtractor(cv::Mat img);
 	void getExtractedFeature(); //@TODO: trasformare il tipo ritornato in una lista di oggetti
 	virtual ~FeatureExtractor();
-	string getColor(int x, int y, cv::Mat image);
+	string getColor(int x, int y);
 private:
-	cv::Point3_<uchar>* getPixel(int x, int y, cv::Mat image);
+	cv::Point3_<uchar>* getPixel(int x, int y);
 	void recognizeCircles();
 	void recognizeSquares();
 	void recognizeTriangles();

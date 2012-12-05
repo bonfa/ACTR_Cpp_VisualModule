@@ -12,6 +12,7 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <opencv/cxcore.h>
+
 #include <iostream>
 #include "Input.h"
 #include "FeatureExtractor.h"

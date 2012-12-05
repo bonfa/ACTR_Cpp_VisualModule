@@ -19,6 +19,27 @@ double angle( cv::Point pt1, cv::Point pt2, cv::Point pt0 ) {
 
 
 
+cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> > squareList)
+{
+	for ( unsigned int i = 0; i< squareList.size(); i++ ) {
+		for ( unsigned int j = i; j< squareList.size(); j++ ) {
+			if ((squareList.at(i).at(0).x > squareList.at(j).at(0).x)
+					|| ((squareList.at(i).at(0).x == squareList.at(j).at(0).x) && (squareList.at(i).at(0).y > squareList.at(j).at(0).y))){
+				cv::vector<cv::Point> t = squareList.at(j);
+				squareList.at(j) = squareList.at(i);
+				squareList.at(i) = t;
+			}
+		}
+	}
+	return squareList;
+}
+
+
+cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > squareList){
+
+}
+
+
 FeatureExtractor::FeatureExtractor(cv::Mat img) {
 	image = img;
 }
@@ -97,43 +118,26 @@ void FeatureExtractor::recognizeCircles(){
 
 
 void FeatureExtractor::recognizeSquares(){
-	/*
-	cv::Mat edge,color,gray;
-
-	/// Convert it to gray
-	cv::cvtColor( image, gray, CV_BGR2GRAY );
-
-	cv::Canny(gray, edge, 50, 200, 3);
-	cv::cvtColor(edge, color, CV_GRAY2BGR);
-
-	cv::vector<cv::Vec4i> lines;
-	cv::HoughLinesP(edge, lines, 1, CV_PI/180, 30, 35, 3);
-	for( size_t i = 0; i < lines.size(); i++ ) 	{
-		cv::Vec4i l = lines[i];
-		cv::line( color, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0,0,255), 1, CV_AA);
-	}
-
-	cv::imshow("detected lines", color);
-	cv::waitKey(0);
-	*/
-
-
-
+	// create the structure that contains the squares
 	cv::vector<cv::vector<cv::Point> > squares;
-    // blur will enhance edge detection
+
+	// blur will enhance edge detection
 	cv::Mat blurred(image);
 	cv::medianBlur(image, blurred, 9);
 
+	// create two gray images
 	cv::Mat gray0(blurred.size(), CV_8U), gray;
+	// create the structure that contains contours
 	cv::vector<cv::vector<cv::Point> > contours;
 
-	// find squares in every color plane of the image
+	// find squares in every color plane of the image (only gray plane)
 	for (int c = 0; c < 3; c++)
 	{
 		int ch[] = {c, 0};
+		// extract the single colour level in gray0
 		cv::mixChannels(&blurred, 1, &gray0, 1, ch, 1);
 
-		// try several threshold levels
+		// try several threshold levels (0,1 and 2)
 		const int threshold_level = 2;
 		for (int l = 0; l < threshold_level; l++)
 		{
@@ -148,7 +152,7 @@ void FeatureExtractor::recognizeSquares(){
 			}
 			else
 			{
-					gray = gray0 >= (l+1) * 255 / threshold_level;
+				gray = gray0 >= (l+1) * 255 / threshold_level;
 			}
 
 			// Find contours and store them in a list
@@ -156,25 +160,28 @@ void FeatureExtractor::recognizeSquares(){
 
 			// Test contours
 			cv::vector<cv::Point> approx;
+			cout << contours.size();
 			for (size_t i = 0; i < contours.size(); i++) {
 					// approximate contour with accuracy proportional to the contour perimeter
 					cv::approxPolyDP(cv::Mat(contours[i]), approx, arcLength(cv::Mat(contours[i]), true)*0.02, true);
 
 					// Note: absolute value of an area is used because area may be positive or negative - in accordance with the
 					// contour orientation
-					if (approx.size() == 4 && fabs(contourArea(cv::Mat(approx))) > 1000 && cv::isContourConvex(cv::Mat(approx)))
+					//if (approx.size() == 4 && fabs(contourArea(cv::Mat(approx))) > 1000 && cv::isContourConvex(cv::Mat(approx)))
+					if (approx.size() == 4 && cv::isContourConvex(cv::Mat(approx)))
 					{
+
 						//@todo: capire a cosa serve il controllo sull'angolo (per adesso è commentato e il programma va bene lo stesso)
-							double maxCosine = 0;
+						double maxCosine = 0;
 
-							for (int j = 2; j < 5; j++)
-							{
-									double cosine = fabs(angle(approx[j%4], approx[j-2], approx[j-1]));
-									maxCosine = MAX(maxCosine, cosine);
-							}
+						for (int j = 2; j < 5; j++)
+						{
+								double cosine = fabs(angle(approx[j%4], approx[j-2], approx[j-1]));
+								maxCosine = MAX(maxCosine, cosine);
+						}
 
-							//if (maxCosine < 0.3)
-									squares.push_back(approx);
+						if (maxCosine < 0.3)
+								squares.push_back(approx);
 					}
 			}
 		}
@@ -186,11 +193,23 @@ void FeatureExtractor::recognizeSquares(){
 	cv::Mat rects;
 	rects = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
 
+
+	//ordino in verso antiorario ogni quaterna di vettori
+	for ( unsigned int i = 0; i< squares.size(); i++ ) {
+		squares.at(i) = Sort4cvPointsClockwise(squares.at(i));
+	}
+
+	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
+	squares = squaresSort(squares);
+
+	//elimino i quadrati sovrapposti
+	squares = deleteOverlapped(squares);
+
 	//@todo: controllare doppioni nella lista di punti
 
 
+	for (unsigned int i = 0; i< squares.size(); i++ ) {
 
-	for ( int i = 0; i< squares.size(); i++ ) {
 		// draw contour
 		cv::drawContours(rects, squares, i, cv::Scalar(255,0,0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point()); //blue
 
@@ -207,7 +226,7 @@ void FeatureExtractor::recognizeSquares(){
 			cv::line( rects, rect_points[j], rect_points[(j+1)%4], cv::Scalar(0,0,255), 1, 8 ); // red
 		}*/
 		printf("F %d: ",i+1);
-		for (int j=0;j<squares.at(i).size();j++){
+		for (unsigned int j=0;j<squares.at(i).size();j++){
 			printf("(%d,%d)  ",squares.at(i).at(j).x,squares.at(i).at(j).y);
 		}
 		printf("\n\n");

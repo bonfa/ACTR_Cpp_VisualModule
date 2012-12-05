@@ -21,9 +21,10 @@ double angle( cv::Point pt1, cv::Point pt2, cv::Point pt0 ) {
 
 cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> > squareList)
 {
-	for ( unsigned int i = 0; i< squareList.size(); i++ ) {
-		for ( unsigned int j = i; j< squareList.size(); j++ ) {
-			if ((squareList.at(i).at(0).x > squareList.at(j).at(0).x)
+	for ( unsigned int i = 0; i< squareList.size()-1; i++ ) {
+		for ( unsigned int j = i+1; j< squareList.size(); j++ ) {
+			if ((squareList.at(
+					i).at(0).x > squareList.at(j).at(0).x)
 					|| ((squareList.at(i).at(0).x == squareList.at(j).at(0).x) && (squareList.at(i).at(0).y > squareList.at(j).at(0).y))){
 				cv::vector<cv::Point> t = squareList.at(j);
 				squareList.at(j) = squareList.at(i);
@@ -35,9 +36,55 @@ cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> 
 }
 
 
-cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > squareList){
-
+double myDistance(cv::Point a, cv::Point b){
+	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 }
+
+
+bool similar(vector<cv::Point> a, vector<cv::Point> b){
+	if (myDistance(a.at(0),b.at(0)) > 4)
+		return false;
+
+	double totalDistance = 0;
+	for ( unsigned int i = 0; i< a.size(); i++ )
+		totalDistance += myDistance(a.at(i),b.at(i));
+	totalDistance /= 4;
+	if (totalDistance > 2)
+		return false;
+
+	double aArea = fabs(contourArea(cv::Mat(a)));
+	double bArea = fabs(contourArea(cv::Mat(b)));
+	if (aArea/bArea < 0.95  || aArea/bArea > 1.05)
+		return false;
+
+	double aPerimeter = fabs(cv::arcLength(a,1));
+	double bPerimeter = fabs(cv::arcLength(b,1));
+	if (aPerimeter/bPerimeter < 0.95  || aPerimeter/bPerimeter > 1.05)
+		return false;
+
+	return true;
+}
+
+
+cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList){
+	/*for ( unsigned int i = 0; i< oldList.size()-1; i++ ) {
+			for ( unsigned int j = i+1; j< oldList.size(); j++ )
+				//if (similar(oldList.at(i),oldList.at(j))){
+					//oldList.at(j).erase(remove_if(similar));
+					//oldList.at(j).erase();
+				//}
+
+	}*/
+	return oldList;
+}
+
+
+
+
+
+
+
+
 
 
 FeatureExtractor::FeatureExtractor(cv::Mat img) {

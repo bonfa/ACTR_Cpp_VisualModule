@@ -25,7 +25,7 @@ struct c_struct
 int *init (int i)
 {
 
-
+	///-------------- PRESO COME ERA --------------
 
     int status;
     struct addrinfo host_info;       // The struct that getaddrinfo() fills up with data.
@@ -83,6 +83,9 @@ int *init (int i)
 new_sd << std::endl;
     }
 
+	///-------------- FINE --------------
+
+    //gestione delle richieste del client
     while(true){
     	int status = respond( new_sd);
     	if (status == 0) {
@@ -94,22 +97,18 @@ new_sd << std::endl;
     	    		break;
     	    	}
     }
+
+    //chiusura socket
     freeaddrinfo(host_info_list);
     close(new_sd);
     close(socketfd);
 
-    //return 0 ;
-
-
-    //struct c_struct *r2;
-    //r2 = (struct c_struct *) malloc (sizeof(struct c_struct));
-    //r2->x = i + 5;
-    //r2->s = "a C string";
     return 0;
 
 
 }
 
+//funzione di decodifica del JSON
 std::string decodeJson(std::string json){
 	std::stringstream stream;
 
@@ -125,6 +124,7 @@ std::string decodeJson(std::string json){
 		stream<<"Failed to parse JSON"<<std::endl <<reader.getFormatedErrorMessages() <<std::endl;
 	}
 
+	//suppongo che ci sia un campo chiamato "data" ed estraggo il relativo valore
 	const Json::Value notAnArray = root["data"];
 
 	if(not notAnArray.isNull())
@@ -141,8 +141,9 @@ int respond(int new_sd){
 	std::cout << "Waiting to recieve data..."  << std::endl;
 	std::cout << "In telnet type: '{\"data\": \"Contenuto\"}' and hit return, close telnet to terminate\n";
 
-			ssize_t bytes_recieved;
+	ssize_t bytes_recieved;
 	char incomming_data_buffer[1000];
+	//TODO: perchè il buffer di 1000?
 	bytes_recieved = recv(new_sd, incomming_data_buffer,1000, 0);
 
 	// If no data arrives, the program will just wait here until some data arrives.
@@ -162,7 +163,8 @@ int respond(int new_sd){
 
 	std::cout << "send()ing back a message...";
 
-	char *msg = "Respond";
+	char msg[decoded.size()+1];
+	strcpy(msg, decoded.c_str());
 	int len;
 	ssize_t bytes_sent;
 	len = strlen(msg);

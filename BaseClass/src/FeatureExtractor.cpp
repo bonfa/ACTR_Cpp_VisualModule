@@ -369,6 +369,7 @@ void FeatureExtractor::getExtractedFeature(){
 	cout<<"color: "+this->getColor(200, 100)+"\n";
 	cout<<"color: "+this->getColor(100, 250)+"\n";
 	cout<<"color: "+this->getColor(240, 240)+"\n";*/
+
 	init(0);
 	this->recognizeSquares();
 }

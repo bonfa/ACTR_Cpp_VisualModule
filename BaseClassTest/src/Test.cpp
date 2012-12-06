@@ -10,6 +10,7 @@
 #include "ButtonTest.h"
 #include "BlobTest.h"
 #include "utilsTest.h"
+#include "extractorUtilsTest.h"
 
 #include "QRScannerTest.h"
 
@@ -54,6 +55,9 @@ void runTest(){
 
 	cute::suite RectTest = make_suite_RectTest();
 	cute::makeRunner(lis)(RectTest, "RectTest");
+
+	cute::suite extractorUtilsTest = make_suite_extractorUtilsTest();
+	cute::makeRunner(lis)(extractorUtilsTest, "RectTest");
 
 }
 

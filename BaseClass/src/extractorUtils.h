@@ -19,7 +19,7 @@
 double angle( cv::Point pt1, cv::Point pt2, cv::Point pt0 );
 cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> > squareList);
 double myDistance(cv::Point a, cv::Point b);
-bool similar(vector<cv::Point> a, vector<cv::Point> b);
+bool similar(cv::vector<cv::Point> a, cv::vector<cv::Point> b);
 cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList);
 bool tooClose(cv::Point a, cv::Point b);
 bool isFalse(cv::vector<cv::Point> square);

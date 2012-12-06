@@ -248,23 +248,7 @@ void FeatureExtractor::recognizeSquares(){
 
 
 	//@todo: controllare doppioni nella lista di punti
-	cv::vector <cv::vector<cv::Point> > prova;
-	cv::vector<cv::Point> p1;
-	p1.push_back(cv::Point(525,146));
-	p1.push_back(cv::Point(565,87));
-	p1.push_back(cv::Point(523,30));
-	p1.push_back(cv::Point(485,90));
-	prova.push_back(p1);
 
-	cv::vector<cv::Point> p2;
-	p2.push_back(cv::Point(526,142));
-	p2.push_back(cv::Point(562,86));
-	p2.push_back(cv::Point(524,33));
-	p2.push_back(cv::Point(487,88));
-
-	prova.push_back(p2);
-
-	prova = deleteOverlapped(prova);
 
 
 	for (unsigned int i = 0; i< squares.size(); i++ ) {

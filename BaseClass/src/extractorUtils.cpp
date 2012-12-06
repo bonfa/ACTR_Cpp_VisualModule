@@ -16,8 +16,7 @@ cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> 
 {
 	for ( unsigned int i = 0; i< squareList.size()-1; i++ ) {
 		for ( unsigned int j = i+1; j< squareList.size(); j++ ) {
-			if ((squareList.at(
-					i).at(0).x > squareList.at(j).at(0).x)
+			if ((squareList.at(i).at(0).x > squareList.at(j).at(0).x)
 					|| ((squareList.at(i).at(0).x == squareList.at(j).at(0).x) && (squareList.at(i).at(0).y > squareList.at(j).at(0).y))){
 				cv::vector<cv::Point> t = squareList.at(j);
 				squareList.at(j) = squareList.at(i);
@@ -34,8 +33,9 @@ double myDistance(cv::Point a, cv::Point b){
 }
 
 
-bool similar(vector<cv::Point> a, vector<cv::Point> b){
-	if (myDistance(a.at(0),b.at(0)) > 4)
+bool similar(cv::vector<cv::Point> a, cv::vector<cv::Point> b){
+	double distance = myDistance(a.at(0),b.at(0));
+	if (distance > 5)
 		return false;
 
 	double totalDistance = 0;
@@ -47,12 +47,12 @@ bool similar(vector<cv::Point> a, vector<cv::Point> b){
 
 	double aArea = fabs(contourArea(cv::Mat(a)));
 	double bArea = fabs(contourArea(cv::Mat(b)));
-	if (aArea/bArea < 0.95  || aArea/bArea > 1.05)
+	if (aArea/bArea < 0.80  || aArea/bArea > 1.20)
 		return false;
 
 	double aPerimeter = fabs(cv::arcLength(a,1));
 	double bPerimeter = fabs(cv::arcLength(b,1));
-	if (aPerimeter/bPerimeter < 0.95  || aPerimeter/bPerimeter > 1.05)
+	if (aPerimeter/bPerimeter < 0.85  || aPerimeter/bPerimeter > 1.15)
 		return false;
 
 	return true;

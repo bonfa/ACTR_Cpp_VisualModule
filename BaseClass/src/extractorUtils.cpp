@@ -116,6 +116,30 @@ cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::
 }
 
 
+
+cv::vector<cv::vector<cv::Point> > deleteFalseTriangles(cv::vector<cv::vector<cv::Point> > oldList){
+	cv::vector<cv::vector<cv::Point> > withoutFalseSquares;
+
+	for (unsigned int i = 0; i< oldList.size(); i++ ){ //@TODO
+		if (isTriangle(oldList.at(i))){
+			withoutFalseSquares.push_back(oldList.at(i));
+		}
+	}
+
+	return withoutFalseSquares;
+}
+
+
+
+bool isTriangle(cv::vector<cv::Point> terna){
+	double area = fabs(contourArea(cv::Mat(terna)));
+	if (area > 350)
+		return true;
+	return false;
+}
+
+
+
 cv::vector<cv::Point>  sort4PointsClockwise(cv::vector<cv::Point> points){
 	FourPointsSorter *fps = new FourPointsSorter(points);
 	points = fps->getSortedRotatedClockwise();
@@ -138,7 +162,7 @@ FourPointsSorter::~FourPointsSorter(){
 void FourPointsSorter::setCenter(){
 	int xCenter = 0;
 	int yCenter = 0;
-	for (int i=0; i<4;i++){
+	for (unsigned int i=0; i<points.size();i++){
 		xCenter += points.at(i).x;
 		yCenter += points.at(i).y;
 	}

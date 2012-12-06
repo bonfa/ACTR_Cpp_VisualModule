@@ -224,8 +224,6 @@ void FeatureExtractor::recognizeSquares(){
 		}
 	}
 
-	//printf("ciao");
-
 	//disegno i quadrati
 	cv::Mat rects;
 	rects = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
@@ -245,9 +243,6 @@ void FeatureExtractor::recognizeSquares(){
 
 	//elimino i quadrati sovrapposti
 	squares = deleteOverlapped(squares);
-
-
-	//@todo: controllare doppioni nella lista di punti
 
 
 
@@ -283,7 +278,114 @@ void FeatureExtractor::recognizeSquares(){
 
 
 void FeatureExtractor::recognizeTriangles(){
+	// create the structure that contains the triangles
+	cv::vector<cv::vector<cv::Point> > triangles;
 
+	// blur will enhance edge detection
+	cv::Mat blurred(image);
+	cv::medianBlur(image, blurred, 9);
+
+	// create two gray images
+	cv::Mat gray0(blurred.size(), CV_8U), gray;
+	// create the structure that contains contours
+	cv::vector<cv::vector<cv::Point> > contours;
+
+	// find triangles in every color plane of the image
+	for (int c = 0; c < 3; c++)
+	{
+		int ch[] = {c, 0};
+		// extract the single colour level in gray0
+		cv::mixChannels(&blurred, 1, &gray0, 1, ch, 1);
+
+		// try several threshold levels (0,1 and 2)
+		const int threshold_level = 2;
+		for (int l = 0; l < threshold_level; l++)
+		{
+			// Use Canny instead of zero threshold level!
+			// Canny helps to catch squares with gradient shading
+			if (l == 0)
+			{
+				Canny(gray0, gray, 10, 20, 3); //
+
+				// Dilate helps to remove potential holes between edge segments
+				cv::dilate(gray, gray, cv::Mat(), cv::Point(-1,-1));
+			}
+			else
+			{
+				gray = gray0 >= (l+1) * 255 / threshold_level;
+			}
+
+			// Find contours and store them in a list
+			cv::findContours(gray, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+
+			// Test contours
+			cv::vector<cv::Point> approx;
+			cout << contours.size();
+			for (size_t i = 0; i < contours.size(); i++) {
+					// approximate contour with accuracy proportional to the contour perimeter
+					cv::approxPolyDP(cv::Mat(contours[i]), approx, arcLength(cv::Mat(contours[i]), true)*0.02, true);
+
+					// Note: absolute value of an area is used because area may be positive or negative - in accordance with the
+					// contour orientation
+					//if (approx.size() == 4 && fabs(contourArea(cv::Mat(approx))) > 1000 && cv::isContourConvex(cv::Mat(approx)))
+					if (approx.size() == 3 && cv::isContourConvex(cv::Mat(approx)))
+					{
+
+						//@todo: capire a cosa serve il controllo sull'angolo (per adesso è commentato e il programma va bene lo stesso)
+						double maxCosine = 0;
+
+						for (int j = 2; j < 5; j++)
+						{
+								double cosine = fabs(angle(approx[j%4], approx[j-2], approx[j-1]));
+								maxCosine = MAX(maxCosine, cosine);
+						}
+
+						//if (maxCosine < 0.3)
+							triangles.push_back(approx);
+					}
+			}
+		}
+	}
+
+	//disegno i triangoli
+	cv::Mat rects;
+	rects = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
+
+
+	//ordino in verso antiorario ogni quaterna di vettori
+	for ( unsigned int i = 0; i< triangles.size(); i++ ) {
+		triangles.at(i) = sort4PointsClockwise(triangles.at(i));
+	}
+
+
+	//controllo che non ci siano quadrati con punti quasi coincidenti
+	triangles = deleteFalseTriangles(triangles);
+
+	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
+	triangles = squaresSort(triangles);
+
+	//elimino i quadrati sovrapposti
+	triangles = deleteOverlapped(triangles);
+
+	for (unsigned int i = 0; i< triangles.size(); i++ ) {
+
+		// draw contour
+		cv::drawContours(rects, triangles, i, cv::Scalar(255,0,0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point()); //blue
+
+		// draw bounding rect
+		cv::Rect rect = boundingRect(cv::Mat(triangles[i]));
+		cv::rectangle(rects, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
+
+		printf("F %d: ",i+1);
+		for (unsigned int j=0;j<triangles.at(i).size();j++){
+			printf("(%d,%d)  ",triangles.at(i).at(j).x,triangles.at(i).at(j).y);
+		}
+		printf("\n\n");
+	}
+
+
+	cv::imshow("triangles",rects);
+	cv::waitKey(0);
 }
 
 
@@ -297,7 +399,8 @@ void FeatureExtractor::getExtractedFeature(){
 
 	//init(0);
 
-	this->recognizeSquares();
+	this->recognizeTriangles();
+	//this->recognizeSquares();
 }
 
 

@@ -25,6 +25,8 @@ bool tooClose(cv::Point a, cv::Point b);
 bool isFalse(cv::vector<cv::Point> square);
 cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::Point> > oldList);
 cv::vector<cv::Point> sort4PointsClockwise(cv::vector<cv::Point> squareList);
+cv::vector<cv::vector<cv::Point> > deleteFalseTriangles(cv::vector<cv::vector<cv::Point> > oldList);
+bool isTriangle(cv::vector<cv::Point> terna);
 
 
 class FourPointsSorter{

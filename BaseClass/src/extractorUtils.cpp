@@ -35,14 +35,14 @@ double myDistance(cv::Point a, cv::Point b){
 
 bool similar(cv::vector<cv::Point> a, cv::vector<cv::Point> b){
 	double distance = myDistance(a.at(0),b.at(0));
-	if (distance > 5)
+	if (distance > 10)
 		return false;
 
 	double totalDistance = 0;
 	for ( unsigned int i = 0; i< a.size(); i++ )
 		totalDistance += myDistance(a.at(i),b.at(i));
 	//totalDistance /= 4.0;
-	if (totalDistance > 16)
+	if (totalDistance > 25)
 		return false;
 
 	double aArea = fabs(contourArea(cv::Mat(a)));
@@ -81,7 +81,7 @@ cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Po
 
 
 bool tooClose(cv::Point a, cv::Point b){
-	if (myDistance(a,b) < 5)
+	if (myDistance(a,b) < 15)
 			return true;
 	return false;
 }

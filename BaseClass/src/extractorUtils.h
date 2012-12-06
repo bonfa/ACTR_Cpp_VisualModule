@@ -31,11 +31,16 @@ class FourPointsSorter{
 public:
 	FourPointsSorter(cv::vector<cv::Point> points_);
 	~FourPointsSorter();
-	cv::vector<cv::Point> getSortedClockwise();
+	cv::vector<cv::Point> getSortedRotatedClockwise();
 private:
 	cv::Point center;
 	cv::vector<cv::Point> points;
 	void setCenter();
+	void sortClockWise();
+	void rotateUntilMinXFirst();
+	int getFirstPointPosition();
+	double getDistance(cv::Point p);
+	void rotate(int shiftValue);
 	bool lessPoint(cv::Point a, cv::Point b);
 };
 

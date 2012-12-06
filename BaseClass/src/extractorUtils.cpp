@@ -118,7 +118,7 @@ cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::
 
 cv::vector<cv::Point>  sort4PointsClockwise(cv::vector<cv::Point> points){
 	FourPointsSorter *fps = new FourPointsSorter(points);
-	points = fps->getSortedClockwise();
+	points = fps->getSortedRotatedClockwise();
 	return points;
 }
 
@@ -146,16 +146,55 @@ void FourPointsSorter::setCenter(){
 }
 
 
-cv::vector<cv::Point> FourPointsSorter::getSortedClockwise(){
+void FourPointsSorter::sortClockWise(){
 	for ( unsigned int i = 0; i< points.size(); i++ ) {
-			for ( unsigned int j = i+1; j< points.size(); j++ ) {
-				if (lessPoint(points.at(j),points.at(i))){
-					cv::Point t = points.at(i);
-					points.at(i) = points.at(j);
-					points.at(j) = t;
-				}
+		for ( unsigned int j = i+1; j< points.size(); j++ ) {
+			if (lessPoint(points.at(j),points.at(i))){
+				cv::Point t = points.at(i);
+				points.at(i) = points.at(j);
+				points.at(j) = t;
 			}
 		}
+	}
+}
+
+
+void FourPointsSorter::rotateUntilMinXFirst(){
+	int shiftValue = this->getFirstPointPosition();
+	this->rotate(shiftValue);
+}
+
+
+void FourPointsSorter::rotate(int shiftValue){
+	std::rotate(points.begin(),points.begin()+shiftValue,points.end());
+}
+
+
+/**Il primo punto è quello con la distanza dall'origine minore, a parità di distanza si prende quello con la x minore*/
+int FourPointsSorter::getFirstPointPosition(){
+	int shiftValue = 0;
+
+	double minDistance = this->getDistance(points.at(0));
+	int minX = points.at(0).x;
+	for ( unsigned int i = 1; i< points.size(); i++ ){
+		double distance = this->getDistance(points.at(i));
+		if (((distance < minDistance)) || ((distance == minDistance) && (points.at(i).x < minX))){
+			shiftValue = i;
+			minDistance = distance;
+			minX = points.at(i).x;
+		}
+	}
+	return shiftValue;
+}
+
+
+double FourPointsSorter::getDistance(cv::Point p){
+	return (sqrt(pow(p.x,2)+pow(p.y,2)));
+}
+
+cv::vector<cv::Point> FourPointsSorter::getSortedRotatedClockwise(){
+	this->sortClockWise();
+	this->rotateUntilMinXFirst();
 	return points;
 }
 

@@ -8,7 +8,7 @@
 
 
 
-vector<Point> Sort4PointsClockwise(std::vector<Point> points){
+std::vector<Point> Sort4PointsClockwise(std::vector<Point> points){
 	Point& a = points[0];
 	Point& b = points[1];
 	Point& c = points[2];
@@ -100,7 +100,7 @@ double erone(Point a, Point b, Point c){
 
 
 
-cv::vector<cv::Point> Sort4cvPointsClockwise(cv::vector<cv::Point> points){
+/*cv::vector<cv::Point> Sort4cvPointsClockwise(cv::vector<cv::Point> points){
 	cv::Point& a = points[0];
 	cv::Point& b = points[1];
 	cv::Point& c = points[2];
@@ -144,3 +144,4 @@ cv::vector<cv::Point> Sort4cvPointsClockwise(cv::vector<cv::Point> points){
 	out.push_back(d);
 	return out;
 }
+*/

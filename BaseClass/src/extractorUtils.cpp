@@ -114,3 +114,71 @@ cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::
 
 	return withoutFalseSquares;
 }
+
+
+cv::vector<cv::Point>  sort4PointsClockwise(cv::vector<cv::Point> points){
+	FourPointsSorter *fps = new FourPointsSorter(points);
+	points = fps->getSortedClockwise();
+	return points;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+FourPointsSorter::FourPointsSorter(cv::vector<cv::Point> points_){
+	points = points_;
+	setCenter();
+}
+
+
+FourPointsSorter::~FourPointsSorter(){
+	//@TODO
+}
+
+
+void FourPointsSorter::setCenter(){
+	int xCenter = 0;
+	int yCenter = 0;
+	for (int i=0; i<4;i++){
+		xCenter += points.at(i).x;
+		yCenter += points.at(i).y;
+	}
+	center = cv::Point(xCenter/4,yCenter/4);
+}
+
+
+cv::vector<cv::Point> FourPointsSorter::getSortedClockwise(){
+	for ( unsigned int i = 0; i< points.size(); i++ ) {
+			for ( unsigned int j = i+1; j< points.size(); j++ ) {
+				if (lessPoint(points.at(j),points.at(i))){
+					cv::Point t = points.at(i);
+					points.at(i) = points.at(j);
+					points.at(j) = t;
+				}
+			}
+		}
+	return points;
+}
+
+
+
+
+bool FourPointsSorter::lessPoint(cv::Point a, cv::Point b)
+{
+    if (a.x >= 0 && b.x < 0)
+        return true;
+    if (a.x == 0 && b.x == 0)
+        return a.y > b.y;
+
+    // compute the cross product of vectors (center -> a) x (center -> b)
+    int det = (a.x-center.x) * (b.y-center.y) - (b.x - center.x) * (a.y - center.y);
+    if (det < 0)
+        return true;
+    if (det > 0)
+        return false;
+
+    // points a and b are on the same line from the center
+    // check which point is closer to the center
+    int d1 = (a.x-center.x) * (a.x-center.x) + (a.y-center.y) * (a.y-center.y);
+    int d2 = (b.x-center.x) * (b.x-center.x) + (b.y-center.y) * (b.y-center.y);
+    return d1 > d2;
+}

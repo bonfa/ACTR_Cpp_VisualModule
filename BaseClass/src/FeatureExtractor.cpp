@@ -233,7 +233,7 @@ void FeatureExtractor::recognizeSquares(){
 
 	//ordino in verso antiorario ogni quaterna di vettori
 	for ( unsigned int i = 0; i< squares.size(); i++ ) {
-		squares.at(i) = Sort4cvPointsClockwise(squares.at(i));
+		squares.at(i) = sort4PointsClockwise(squares.at(i));
 	}
 
 

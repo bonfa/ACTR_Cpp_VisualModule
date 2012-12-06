@@ -24,6 +24,22 @@ cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Po
 bool tooClose(cv::Point a, cv::Point b);
 bool isFalse(cv::vector<cv::Point> square);
 cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::Point> > oldList);
+cv::vector<cv::Point> sort4PointsClockwise(cv::vector<cv::Point> squareList);
+
+
+class FourPointsSorter{
+public:
+	FourPointsSorter(cv::vector<cv::Point> points_);
+	~FourPointsSorter();
+	cv::vector<cv::Point> getSortedClockwise();
+private:
+	cv::Point center;
+	cv::vector<cv::Point> points;
+	void setCenter();
+	bool lessPoint(cv::Point a, cv::Point b);
+};
+
+
 
 
 #endif /* OCVUTILS_H_ */

@@ -115,7 +115,7 @@ string FeatureExtractor::getColorString(double gimpHue, double gimpSaturation, d
 		return "black";
 	else if (((gimpValue >= 95) && (gimpValue <= 100)) && ((gimpSaturation>=0) && (gimpSaturation<=5)))
 		return "white";
-	else if (((gimpValue >= 30) && (gimpValue <= 60)) && ((gimpSaturation>=5) && (gimpSaturation<=15)))
+	else if (((gimpValue >= 30) && (gimpValue <= 60)) && ((gimpSaturation>=0) && (gimpSaturation<=15)))
 		return "gray";
 	else if ((gimpHue < 15.0) || ((gimpHue > 330.0) && (gimpHue < 360.0)))
 		return "red";
@@ -378,7 +378,7 @@ void FeatureExtractor::recognizeTriangles(){
 	//controllo che non ci siano quadrati con punti quasi coincidenti
 	triangles = deleteFalseTriangles(triangles);
 
-	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
+	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto  --> crash!!!!
 	triangles = squaresSort(triangles);
 
 	//elimino i quadrati sovrapposti
@@ -424,8 +424,9 @@ void FeatureExtractor::getExtractedFeature(){
 	p1.push_back(cv::Point(127,130));
 	cout<<"color: "+this->getRegionColor(p1)+"\n";	//rosso
 
-	//this->recognizeTriangles();
-	//this->recognizeSquares();
+	this->recognizeSquares();
+	this->recognizeTriangles();
+
 }
 
 

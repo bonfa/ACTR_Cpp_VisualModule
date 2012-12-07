@@ -38,56 +38,94 @@ string FeatureExtractor::getPointColor(int x, int y){
 	//cv::Mat colorBlob = hueLevel(roi);
 	//printf("%.2f\n",normColor(colorBlob.data[colorBlob.step*2+2]));
 
-	double hue = this->normColor(hueLevel.data[hueLevel.step*y+x]);
+	double hue = this->normHue(hueLevel.data[hueLevel.step*y+x]);
+	double sat = this->normSV(hslChannels[1].data[hslChannels[1].step*y+x]);
+	double val = this->normSV(hslChannels[2].data[hslChannels[2].step*y+x]);
+
 	printf("%.2f\n",hue);
-	return this->getColorString(hue);
+	printf("%.2f\n",sat);
+	printf("%.2f\n",val);
+	return this->getColorString(hue,sat,val);
 }
 
 
-string FeatureExtractor::getRegionColor(int x, int y){
-	/*
-	 *  @TODO: pensare a come capire cosa è interno alla regione e cosa è esterno
-	 // Convert image to HSV.
-	cv::Mat hsv;
-	cv::cvtColor(image, hsv, CV_BGR2HSV);
+string FeatureExtractor::getRegionColor(cv::vector<cv::Point> points){
+	//imposto il roi nella bounding box della forma
+	cv::Rect boundingBox = boundingRect(cv::Mat(points));
+	cv::Mat boundedImg = image(boundingBox);
 
-	cv::Mat hslChannels[3];
-	cv::split(hsv, hslChannels);
+	//converto l'immagine in immagine binaria.
+	cv::Mat binary,gray;
+	cv::cvtColor(boundedImg, gray, CV_BGR2GRAY);
+	int thresholdValue = 128;
+	cv::threshold(gray, binary, thresholdValue, 255, CV_THRESH_BINARY);
+	//cv::imshow( "bin", binary );
+	//cv::waitKey(0);
 
-	cv::Mat hueLevel = hslChannels[0];
+	//converto la boundedImg in HSV
+	cv::Mat hsvRegion;
+	cv::cvtColor(boundedImg, hsvRegion, CV_BGR2HSV);
+	cv::Mat hsvChannels[3];
+	cv::split(hsvRegion, hsvChannels);
 
-	//cv::Rect roi(x-3,y-3,5,5);
-	//cv::Mat colorBlob = hueLevel(roi);
-	//printf("%.2f\n",normColor(colorBlob.data[colorBlob.step*2+2]));
+	//Uso l'immagine binaria come flag. L'oggetto è nero.
+	//Faccio la media dei valori di saturazione dei pixel
+	double totalPixel = 0;
+	double regionH = 0;
+	double regionS = 0;
+	double regionV = 0;
 
-	double hue = this->normColor(hueLevel.data[hueLevel.step*y+x]);
-	printf("%.2f\n",hue);
-	return this->getColorString(hue);
-	*/
+	for (int i=0;i<binary.rows;i++)
+		for (int j=0;j<binary.cols;j++)
+			if(binary.data[binary.step*i+j] < 10) {
+				totalPixel += 1;
+				regionH += hsvChannels[0].data[hsvChannels[0].step*i+j];
+				regionS += hsvChannels[1].data[hsvChannels[1].step*i+j];
+				regionV += hsvChannels[2].data[hsvChannels[2].step*i+j];
+			}
+	regionH /= totalPixel;
+	regionS /= totalPixel;
+	regionV /= totalPixel;
+
+	double hue = this->normHue(regionH);
+	double sat = this->normSV(regionS);
+	double val = this->normSV(regionV);
+
+	printf("%.2f\n",regionH);
+	return this->getColorString(hue,sat,val);
 }
 
 
-double FeatureExtractor::normColor(int hueVal){
+double FeatureExtractor::normHue(int hueVal){
 	return ((double)hueVal*360.0/180.0);
 }
 
+double FeatureExtractor::normSV(int svVal){
+	return ((double)svVal*100.0/255.0);
+}
 
-string FeatureExtractor::getColorString(double gimpHueValue){
-	if((gimpHueValue < 15.0) || ((gimpHueValue > 330.0) && (gimpHueValue < 360.0)))
+string FeatureExtractor::getColorString(double gimpHue, double gimpSaturation, double gimpValue){
+	if ((gimpValue >= 0) && (gimpValue <= 30))
+		return "black";
+	else if (((gimpValue >= 95) && (gimpValue <= 100)) && ((gimpSaturation>=0) && (gimpSaturation<=5)))
+		return "white";
+	else if (((gimpValue >= 30) && (gimpValue <= 60)) && ((gimpSaturation>=5) && (gimpSaturation<=15)))
+		return "gray";
+	else if ((gimpHue < 15.0) || ((gimpHue > 330.0) && (gimpHue < 360.0)))
 		return "red";
-	else if(gimpHueValue < 45.0)
+	else if(gimpHue < 45.0)
 		return "orange";
-	else if(gimpHueValue < 65.0)
+	else if(gimpHue < 65.0)
 		return "yellow";
-	else if(gimpHueValue < 140.0)
+	else if(gimpHue < 140.0)
 		return "green";
-	else if(gimpHueValue < 210.0)
+	else if(gimpHue < 210.0)
 		return "cyan";
-	else if(gimpHueValue < 250.0)
+	else if(gimpHue < 250.0)
 		return "blue";
-	else if(gimpHueValue < 280.0)
+	else if(gimpHue < 280.0)
 		return "violet";
-	else if(gimpHueValue < 330.0)
+	else if(gimpHue < 330.0)
 		return "pink";
 	else return "unknown";
 }
@@ -364,12 +402,20 @@ void FeatureExtractor::recognizeTriangles(){
 void FeatureExtractor::getExtractedFeature(){
 	//this->recognizeCircles();
 
+
 	cout<<"color: "+this->getPointColor(100, 100)+"\n";   //rosso
 	cout<<"color: "+this->getPointColor(200, 100)+"\n";		//verde
 	cout<<"color: "+this->getPointColor(100, 250)+"\n";		//blue
 	cout<<"color: "+this->getPointColor(240, 240)+"\n";		//giallo
+	cout<<"color: "+this->getPointColor(118, 42)+"\n";		//bianco
+	cout<<"color: "+this->getPointColor(580,367)+"\n";		//nero
 
 	//init(0);
+	cv::vector<cv::Point> p1;
+	p1.push_back(cv::Point(77,42));
+	p1.push_back(cv::Point(29,127));
+	p1.push_back(cv::Point(127,130));
+	cout<<"color: "+this->getRegionColor(p1)+"\n";	//rosso
 
 	//this->recognizeTriangles();
 	//this->recognizeSquares();

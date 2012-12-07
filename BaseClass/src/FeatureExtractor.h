@@ -31,9 +31,10 @@ private:
 	void recognizeCircles();
 	void recognizeSquares();
 	void recognizeTriangles();
-	double normColor(int hueVal);
-	string getColorString(double gimpHueValue);
-	string getRegionColor();
+	double normHue(int hueVal);
+	double normSV(int svVal);
+	string getColorString(double gimpHue, double gimpSaturation, double gimpValue);
+	string getRegionColor(cv::vector<cv::Point> points);
 	cv::Mat image;
 
 };

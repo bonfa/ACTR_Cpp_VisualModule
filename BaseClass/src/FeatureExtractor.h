@@ -26,12 +26,14 @@ public:
 	FeatureExtractor(cv::Mat img);
 	void getExtractedFeature(); //@TODO: trasformare il tipo ritornato in una lista di oggetti
 	virtual ~FeatureExtractor();
-	string getColor(int x, int y);
+	string getPointColor(int x, int y);
 private:
 	cv::Point3_<uchar>* getPixel(int x, int y);
 	void recognizeCircles();
 	void recognizeSquares();
 	void recognizeTriangles();
+	double normColor(int hueVal);
+	string getColorString(double gimpHueValue);
 	cv::Mat image;
 
 };

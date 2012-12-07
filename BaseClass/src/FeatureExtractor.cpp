@@ -27,98 +27,49 @@ cv::Point3_<uchar>* FeatureExtractor::getPixel(int x, int y){
 	return image.ptr<cv::Point3_<uchar> >(y,x); //Point3_<uchar>* p
 }
 
-string FeatureExtractor::getColor(int x, int y){
+string FeatureExtractor::getPointColor(int x, int y){
 	// Convert image to HSV.
-
-
-
-	cv::Mat hsl;
-
-	cv::cvtColor(image, hsl, CV_RGB2HSV);
+	cv::Mat hsv;
+	cv::cvtColor(image, hsv, CV_BGR2HSV);
 
 	cv::Mat hslChannels[3];
-	cv::split(hsl, hslChannels);
+	cv::split(hsv, hslChannels);
 
-	hslChannels[0];
+	cv::Mat hueLevel = hslChannels[0];
 
+	//cv::Rect roi(x-3,y-3,5,5);
+	//cv::Mat colorBlob = hueLevel(roi);
+	//printf("%.2f\n",normColor(colorBlob.data[colorBlob.step*2+2]));
 
-
-	/*
-
-
-
-	cv::Mat hsvImage;
-	cvtColor( image, hsvImage, CV_BGR2HSV );
-	cv::imshow("d",hsvImage);
-	cv::waitKey();
-	CvScalar s;
-	s=cv::get2D(imgRGB,i,j);
-
-	p = hsvImage.ptr<cv::Point3_<uchar> >(y,x);
-	// extract hue
-	/*cv::Mat* hueImage = cv::createImage( size, 8, 1 );
-	cv::setImageCOI( hsvImage, 1 );
-	cv::copy( hsvImage, hueImage );
-
-	cv::imshow("der",hueImage);
-	cv::waitKey();*/
-
-/*
-	cv::Mat hsv;
-	cv::Mat hue;
-	cv::Mat sat;
-	cv::Mat val;
-
-	cvtColor( image, hsv, CV_BGR2HSV );
-
-	cv::imshow("d",hsv);
-	cv::waitKey();
-
-	hue.create( hsv.size(), hsv.depth() );
-	int ch[] = { 0, 0 };
-	mixChannels( &hsv, 1, &hue, 1, ch, 1 );
-
-
-
-*/
-	if(hslChannels[1].at<uchar>(x,y) <30.0 *180.0 /360.0 )
-		return "red";
-	else if(hslChannels[0].at<uchar>(x,y)<90*180.0 /360.0)
-		return "yellow";
-	else if(hslChannels[0].at<uchar>(x,y)<150*180.0 /360.0)
-		return "green";
-	else if(hslChannels[0].at<uchar>(x,y)<210*180.0 /360.0)
-		return "cyan";
-	else if(hslChannels[0].at<uchar>(x,y)<270*180.0 /360.0)
-		return "blue";
-	else if(hslChannels[0].at<uchar>(x,y)<330*180.0 /360.0)
-			return "pink";
-	else return "unknown";
-
-	//cout << p->y ;
-	//cout << p->z ;
-	/*
-	if(p->z > 250 - MRG && p->y < MRG && p->x < MRG)
-		return "red";
-	else if(p->z < MRG && p->y < 167 + MRG && p->y > 167 - MRG && p->x > 230 - MRG)
-		return "cyan";
-	else if(p->z > 250 - MRG && p->y < 219 + MRG && p->y > 219 - MRG && p->x < MRG)
-		return "yellow";
-	else if(p->z < MRG && p->y < 103 + MRG && p->y > 103 - MRG && p->x < 169 + MRG && p->x > 169 - MRG)
-		return "blue";
-	else if(p->z > 255 - MRG && p->y < 153 + MRG && p->y > 153 - MRG && p->x < 51 + MRG && p->x > 51 - MRG)
-		return "orange";
-	else if(p->z > 34 - MRG && p->z < 34 + MRG && p->y < 232 + MRG && p->y > 232 - MRG && p->x < 62 + MRG && p->x > 62 - MRG)
-		return "green";
-	else if(p->z < 50 && p->y < 50 && p->x < 50 && p->z + p->y + p->x < 120)
-		return "black";
-	/*
-	p->x //B
-	p->y //G
-	p->z //R */
-	return "unknown";
+	double hue = this->normColor(hueLevel.data[hueLevel.step*y+x]);
+	printf("%.2f\n",hue);
+	return this->getColorString(hue);
 }
 
+
+double FeatureExtractor::normColor(int hueVal){
+	return ((double)hueVal*360.0/180.0);
+}
+
+string FeatureExtractor::getColorString(double gimpHueValue){
+	if((gimpHueValue < 15.0) || ((gimpHueValue > 330.0) && (gimpHueValue < 360.0)))
+		return "red";
+	else if(gimpHueValue < 45.0)
+		return "orange";
+	else if(gimpHueValue < 65.0)
+		return "yellow";
+	else if(gimpHueValue < 140.0)
+		return "green";
+	else if(gimpHueValue < 210.0)
+		return "cyan";
+	else if(gimpHueValue < 250.0)
+		return "blue";
+	else if(gimpHueValue < 280.0)
+		return "violet";
+	else if(gimpHueValue < 330.0)
+		return "pink";
+	else return "unknown";
+}
 
 void FeatureExtractor::recognizeCircles(){
 	cv::Mat gray;
@@ -390,16 +341,16 @@ void FeatureExtractor::recognizeTriangles(){
 
 
 void FeatureExtractor::getExtractedFeature(){
-	this->recognizeCircles();
-	/*
-	cout<<"color: "+this->getColor(100, 100)+"\n";
-	cout<<"color: "+this->getColor(200, 100)+"\n";
-	cout<<"color: "+this->getColor(100, 250)+"\n";
-	cout<<"color: "+this->getColor(240, 240)+"\n";*/
+	//this->recognizeCircles();
+
+	cout<<"color: "+this->getPointColor(100, 100)+"\n";   //rosso
+	cout<<"color: "+this->getPointColor(200, 100)+"\n";		//verde
+	cout<<"color: "+this->getPointColor(100, 250)+"\n";		//blue
+	cout<<"color: "+this->getPointColor(240, 240)+"\n";		//giallo
 
 	//init(0);
 
-	this->recognizeTriangles();
+	//this->recognizeTriangles();
 	//this->recognizeSquares();
 }
 

@@ -23,9 +23,6 @@ FeatureExtractor::~FeatureExtractor() {
 }
 
 
-cv::Point3_<uchar>* FeatureExtractor::getPixel(int x, int y){
-	return image.ptr<cv::Point3_<uchar> >(y,x); //Point3_<uchar>* p
-}
 
 string FeatureExtractor::getPointColor(int x, int y){
 	// Convert image to HSV.
@@ -47,9 +44,33 @@ string FeatureExtractor::getPointColor(int x, int y){
 }
 
 
+string FeatureExtractor::getRegionColor(int x, int y){
+	/*
+	 *  @TODO: pensare a come capire cosa è interno alla regione e cosa è esterno
+	 // Convert image to HSV.
+	cv::Mat hsv;
+	cv::cvtColor(image, hsv, CV_BGR2HSV);
+
+	cv::Mat hslChannels[3];
+	cv::split(hsv, hslChannels);
+
+	cv::Mat hueLevel = hslChannels[0];
+
+	//cv::Rect roi(x-3,y-3,5,5);
+	//cv::Mat colorBlob = hueLevel(roi);
+	//printf("%.2f\n",normColor(colorBlob.data[colorBlob.step*2+2]));
+
+	double hue = this->normColor(hueLevel.data[hueLevel.step*y+x]);
+	printf("%.2f\n",hue);
+	return this->getColorString(hue);
+	*/
+}
+
+
 double FeatureExtractor::normColor(int hueVal){
 	return ((double)hueVal*360.0/180.0);
 }
+
 
 string FeatureExtractor::getColorString(double gimpHueValue){
 	if((gimpHueValue < 15.0) || ((gimpHueValue > 330.0) && (gimpHueValue < 360.0)))

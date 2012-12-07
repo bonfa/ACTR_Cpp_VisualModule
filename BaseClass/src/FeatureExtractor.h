@@ -28,12 +28,12 @@ public:
 	virtual ~FeatureExtractor();
 	string getPointColor(int x, int y);
 private:
-	cv::Point3_<uchar>* getPixel(int x, int y);
 	void recognizeCircles();
 	void recognizeSquares();
 	void recognizeTriangles();
 	double normColor(int hueVal);
 	string getColorString(double gimpHueValue);
+	string getRegionColor();
 	cv::Mat image;
 
 };

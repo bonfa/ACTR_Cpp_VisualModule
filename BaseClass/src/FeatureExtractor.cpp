@@ -29,32 +29,30 @@ string FeatureExtractor::getPointColor(int x, int y){
 	cv::Mat hsv;
 	cv::cvtColor(image, hsv, CV_BGR2HSV);
 
+	//Split image into 3 separates channels H,S,V
 	cv::Mat hslChannels[3];
 	cv::split(hsv, hslChannels);
 
-	cv::Mat hueLevel = hslChannels[0];
-
-	//cv::Rect roi(x-3,y-3,5,5);
-	//cv::Mat colorBlob = hueLevel(roi);
-	//printf("%.2f\n",normColor(colorBlob.data[colorBlob.step*2+2]));
-
-	double hue = this->normHue(hueLevel.data[hueLevel.step*y+x]);
+	//Normalize Opencv values as Gimp values
+	double hue = this->normHue(hslChannels[0].data[hslChannels[0].step*y+x]);
 	double sat = this->normSV(hslChannels[1].data[hslChannels[1].step*y+x]);
 	double val = this->normSV(hslChannels[2].data[hslChannels[2].step*y+x]);
 
-	printf("%.2f\n",hue);
-	printf("%.2f\n",sat);
-	printf("%.2f\n",val);
+	//printf("%.2f\n",hue);
+	//printf("%.2f\n",sat);
+	//printf("%.2f\n",val);
+
+	//returns the correct string
 	return this->getColorString(hue,sat,val);
 }
 
 
 string FeatureExtractor::getRegionColor(cv::vector<cv::Point> points){
-	//imposto il roi nella bounding box della forma
+	//extract the bounding box of the shape in a new image
 	cv::Rect boundingBox = boundingRect(cv::Mat(points));
 	cv::Mat boundedImg = image(boundingBox);
 
-	//converto l'immagine in immagine binaria.
+	//convert the image in a binary one
 	cv::Mat binary,gray;
 	cv::cvtColor(boundedImg, gray, CV_BGR2GRAY);
 	int thresholdValue = 128;
@@ -62,14 +60,14 @@ string FeatureExtractor::getRegionColor(cv::vector<cv::Point> points){
 	//cv::imshow( "bin", binary );
 	//cv::waitKey(0);
 
-	//converto la boundedImg in HSV
+	//convert the boundedImg in HSV and split it in 3 levels
 	cv::Mat hsvRegion;
 	cv::cvtColor(boundedImg, hsvRegion, CV_BGR2HSV);
 	cv::Mat hsvChannels[3];
 	cv::split(hsvRegion, hsvChannels);
 
-	//Uso l'immagine binaria come flag. L'oggetto è nero.
-	//Faccio la media dei valori di saturazione dei pixel
+	//Use the binary image as a flag foreground - background. The object is black.
+	//Compute the average of the object pixels to have the overall color of the object.
 	double totalPixel = 0;
 	double regionH = 0;
 	double regionS = 0;
@@ -87,24 +85,32 @@ string FeatureExtractor::getRegionColor(cv::vector<cv::Point> points){
 	regionS /= totalPixel;
 	regionV /= totalPixel;
 
+	//Normalize Opencv values as Gimp values
 	double hue = this->normHue(regionH);
 	double sat = this->normSV(regionS);
 	double val = this->normSV(regionV);
 
-	printf("%.2f\n",regionH);
+	//printf("%.2f\n",regionH);
+
+	//returns the correct string
 	return this->getColorString(hue,sat,val);
 }
 
 
 double FeatureExtractor::normHue(int hueVal){
+	//transform the opencv hue value [0,180] to gimp value [0,360]
 	return ((double)hueVal*360.0/180.0);
 }
 
+
 double FeatureExtractor::normSV(int svVal){
+	//transform the opencv saturation and value values [0,255] to gimp values [0,100]
 	return ((double)svVal*100.0/255.0);
 }
 
+
 string FeatureExtractor::getColorString(double gimpHue, double gimpSaturation, double gimpValue){
+	//from hue, saturation and value returns a string with the name of the color
 	if ((gimpValue >= 0) && (gimpValue <= 30))
 		return "black";
 	else if (((gimpValue >= 95) && (gimpValue <= 100)) && ((gimpSaturation>=0) && (gimpSaturation<=5)))
@@ -127,6 +133,7 @@ string FeatureExtractor::getColorString(double gimpHue, double gimpSaturation, d
 		return "violet";
 	else if(gimpHue < 330.0)
 		return "pink";
+	//This should never happen
 	else return "unknown";
 }
 

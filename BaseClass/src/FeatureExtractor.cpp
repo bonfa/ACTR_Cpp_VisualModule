@@ -6,7 +6,6 @@
  */
 
 #include "FeatureExtractor.h"
-#include "Server.h"
 
 #define MRG 25
 
@@ -14,7 +13,9 @@
 
 FeatureExtractor::FeatureExtractor(cv::Mat img) {
 	image = img;
-	cv::vector<Quadrilateral> quadrilateralList;
+	std::vector<Quadrilateral> quadrilateralList;
+	std::vector<Triangle> triangleList;
+	std::vector<Circle> circleList;
 }
 
 
@@ -140,6 +141,7 @@ string FeatureExtractor::getColorString(double gimpHue, double gimpSaturation, d
 
 void FeatureExtractor::recognizeCircles(){
 	cv::Mat gray;
+	cv::Mat circleImg = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
 
 	/// Convert it to gray
 	cv::cvtColor( image, gray, CV_BGR2GRAY );
@@ -153,19 +155,23 @@ void FeatureExtractor::recognizeCircles(){
 	/// Apply the Hough Transform to find the circles
 	cv::HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 1, gray.rows/8, 200, 100, 0, 0 );
 
-	/// Draw the circles detected
+
 	for( size_t i = 0; i < circles.size(); i++ ) {
 		cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
 		int radius = cvRound(circles[i][2]);
+
+		circleList.push_back(Circle(radius, center.x,center.y));
+
+		/// Draw the circles detected
 		// circle center
-		circle( image, center, 3, cv::Scalar(0,255,0), -1, 8, 0 );
+		circle( circleImg, center, 3, cv::Scalar(0,255,0), -1, 8, 0 );
 		// circle outline
-		circle( image, center, radius, cv::Scalar(0,0,255), 3, 8, 0 );
+		circle( circleImg, center, radius, cv::Scalar(0,0,255), 3, 8, 0 );
 	}
 
 	/// Show your results
 	cv::namedWindow( "Hough Circle Transform Demo", CV_WINDOW_AUTOSIZE );
-	cv::imshow( "Hough Circle Transform Demo", image );
+	cv::imshow( "Hough Circle Transform Demo", circleImg );
 
 	cv::waitKey(0);
 }
@@ -269,8 +275,6 @@ void FeatureExtractor::recognizeSquares(){
 	}
 	cv::imshow("quadr",rects);
 	cv::waitKey(0);
-
-	return quadrilateralList;
 }
 
 
@@ -365,6 +369,9 @@ void FeatureExtractor::recognizeTriangles(){
 				printf("(%d,%d)  ",triangles.at(i).at(j).x,triangles.at(i).at(j).y);
 			}
 			printf("\n\n");
+
+			//add each square to the quadrilaterl list
+			this->triangleList.push_back(Triangle(triangles.at(i).at(0).x,triangles.at(i).at(0).y,triangles.at(i).at(1).x,triangles.at(i).at(1).y,triangles.at(i).at(2).x,triangles.at(i).at(2).y));
 		}
 	}
 	cv::imshow("triangles",triangleImg);
@@ -373,9 +380,6 @@ void FeatureExtractor::recognizeTriangles(){
 
 
 void FeatureExtractor::getExtractedFeature(){
-	//this->recognizeCircles();
-
-
 	cout<<"color: "+this->getPointColor(100, 100)+"\n";   //rosso
 	cout<<"color: "+this->getPointColor(200, 100)+"\n";		//verde
 	cout<<"color: "+this->getPointColor(100, 250)+"\n";		//blue
@@ -390,14 +394,38 @@ void FeatureExtractor::getExtractedFeature(){
 	p1.push_back(cv::Point(127,130));
 	cout<<"color: "+this->getRegionColor(p1)+"\n";	//rosso
 
+	this->recognizeCircles();
 	this->recognizeSquares();
 	this->recognizeTriangles();
 
 }
 
 
+//------------------------------------------------------------------------------------------------------------
 
 
+
+string FeatureExtractor::isBigger(int aIndex,int bIndex){
+	if (aIndex < 0)
+		throw(InputException("negative index of vector [first element]"));
+	if (this->outOfBound(aIndex))
+		throw(InputException("index out of bound [first element]"));
+	if (bIndex < 0)
+		throw(InputException("negative index of vector [second element]"));
+	if (this->outOfBound(bIndex))
+		throw(InputException("index out of bound [second element]"));
+
+	//else
+	double aArea = (()shapeList.at(aIndex))
+
+	return "bo";
+}
+
+
+
+bool FeatureExtractor::outOfBound(unsigned int index){
+	return (index >= this->shapeList.size());
+}
 
 
 

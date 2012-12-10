@@ -18,7 +18,14 @@ using namespace std;
 #include <stdio.h>
 #include "utils.h"
 #include "extractorUtils.h"
+#include "Quadrilateral.h"
+#include "Server.h"
+#include "Triangle.h"
+#include "Circle.h"
+#include "Object.h"
 
+
+typedef enum {QUADRILATERAL, TRIANGLE, CIRCLE} ShapeType;
 
 
 class FeatureExtractor {
@@ -27,16 +34,22 @@ public:
 	void getExtractedFeature(); //@TODO: trasformare il tipo ritornato in una lista di oggetti
 	virtual ~FeatureExtractor();
 	string getPointColor(int x, int y);
+	//string isBigger(ShapeType aType,int aIndex,ShapeType bType, int bIndex);
+	string isBigger(int aIndex, int bIndex);
 private:
 	void recognizeCircles();
 	void recognizeSquares();
 	void recognizeTriangles();
 	double normHue(int hueVal);
 	double normSV(int svVal);
+	bool outOfBound(unsigned int index);
 	string getColorString(double gimpHue, double gimpSaturation, double gimpValue);
 	string getRegionColor(cv::vector<cv::Point> points);
 	cv::Mat image;
-	cv::vector<Quadrilateral> quadrilateralList;
+	std::vector<Quadrilateral> quadrilateralList;
+	std::vector<Triangle> triangleList;
+	std::vector<Circle> circleList;
+	std::vector<Object> shapeList;
 };
 
 #endif /* FEATUREEXTRACTOR_H_ */

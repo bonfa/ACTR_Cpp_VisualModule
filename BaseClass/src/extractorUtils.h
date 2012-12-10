@@ -17,16 +17,17 @@
 #include "utils.h"
 
 double angle( cv::Point pt1, cv::Point pt2, cv::Point pt0 );
-cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> > squareList);
 double myDistance(cv::Point a, cv::Point b);
 bool similar(cv::vector<cv::Point> a, cv::vector<cv::Point> b);
-cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList);
 bool tooClose(cv::Point a, cv::Point b);
 bool isFalse(cv::vector<cv::Point> square);
+bool isTriangle(cv::vector<cv::Point> terna);
+cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList);
+cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> > squareList);
 cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::Point> > oldList);
 cv::vector<cv::Point> sort4PointsClockwise(cv::vector<cv::Point> squareList);
 cv::vector<cv::vector<cv::Point> > deleteFalseTriangles(cv::vector<cv::vector<cv::Point> > oldList);
-bool isTriangle(cv::vector<cv::Point> terna);
+
 
 
 class FourPointsSorter{

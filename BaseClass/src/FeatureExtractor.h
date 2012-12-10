@@ -36,7 +36,7 @@ private:
 	string getColorString(double gimpHue, double gimpSaturation, double gimpValue);
 	string getRegionColor(cv::vector<cv::Point> points);
 	cv::Mat image;
-
+	cv::vector<Quadrilateral> quadrilateralList;
 };
 
 #endif /* FEATUREEXTRACTOR_H_ */

@@ -14,6 +14,7 @@
 
 FeatureExtractor::FeatureExtractor(cv::Mat img) {
 	image = img;
+	cv::vector<Quadrilateral> quadrilateralList;
 }
 
 
@@ -185,27 +186,23 @@ void FeatureExtractor::recognizeSquares(){
 	cv::vector<cv::vector<cv::Point> > contours;
 
 	// find squares in every color plane of the image (only gray plane)
-	for (int c = 0; c < 3; c++)
-	{
+	for (int c = 0; c < 3; c++) {
 		int ch[] = {c, 0};
 		// extract the single colour level in gray0
 		cv::mixChannels(&blurred, 1, &gray0, 1, ch, 1);
 
 		// try several threshold levels (0,1 and 2)
 		const int threshold_level = 2;
-		for (int l = 0; l < threshold_level; l++)
-		{
+		for (int l = 0; l < threshold_level; l++) {
 			// Use Canny instead of zero threshold level!
 			// Canny helps to catch squares with gradient shading
-			if (l == 0)
-			{
+			if (l == 0) {
 				Canny(gray0, gray, 10, 20, 3); //
 
 				// Dilate helps to remove potential holes between edge segments
 				cv::dilate(gray, gray, cv::Mat(), cv::Point(-1,-1));
 			}
-			else
-			{
+			else {
 				gray = gray0 >= (l+1) * 255 / threshold_level;
 			}
 
@@ -221,75 +218,59 @@ void FeatureExtractor::recognizeSquares(){
 
 					// Note: absolute value of an area is used because area may be positive or negative - in accordance with the
 					// contour orientation
-					//if (approx.size() == 4 && fabs(contourArea(cv::Mat(approx))) > 1000 && cv::isContourConvex(cv::Mat(approx)))
-					if (approx.size() == 4 && cv::isContourConvex(cv::Mat(approx)))
-					{
-
-						//@todo: capire a cosa serve il controllo sull'angolo (per adesso è commentato e il programma va bene lo stesso)
-						double maxCosine = 0;
-
-						for (int j = 2; j < 5; j++)
-						{
-								double cosine = fabs(angle(approx[j%4], approx[j-2], approx[j-1]));
-								maxCosine = MAX(maxCosine, cosine);
-						}
-
-						//if (maxCosine < 0.3)
-								squares.push_back(approx);
+					if (approx.size() == 4 && cv::isContourConvex(cv::Mat(approx))) {
+						squares.push_back(approx);
 					}
 			}
 		}
 	}
 
-	//disegno i quadrati
+	//draw squares
 	cv::Mat rects;
 	rects = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
 
 
-	//ordino in verso antiorario ogni quaterna di vettori
+	//sort clockwise the points of each square
 	for ( unsigned int i = 0; i< squares.size(); i++ ) {
 		squares.at(i) = sort4PointsClockwise(squares.at(i));
 	}
 
 
-	//controllo che non ci siano quadrati con punti quasi coincidenti
+	//delete squares with two points too close one to each other
 	squares = deleteFalseSquares(squares);
 
 	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
 	squares = squaresSort(squares);
 
-	//elimino i quadrati sovrapposti
+	//delete overlapped squares
 	squares = deleteOverlapped(squares);
 
 
+	//draw each square with its bounding box on the image
+	if (squares.size() > 0) {
+		for (unsigned int i = 0; i< squares.size(); i++ ) {
+			// draw square
+			cv::drawContours(rects, squares, i, cv::Scalar(255,0,0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point()); //blue
 
-	for (unsigned int i = 0; i< squares.size(); i++ ) {
+			// draw bounding rect
+			cv::Rect rect = boundingRect(cv::Mat(squares[i]));
+			cv::rectangle(rects, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
 
-		// draw contour
-		cv::drawContours(rects, squares, i, cv::Scalar(255,0,0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point()); //blue
+			//prints the coordinates of the square
+			printf("F %d: ",i+1);
+			for (unsigned int j=0;j<squares.at(i).size();j++){
+				printf("(%d,%d)  ",squares.at(i).at(j).x,squares.at(i).at(j).y);
+			}
+			printf("\n\n");
 
-		// draw bounding rect
-		cv::Rect rect = boundingRect(cv::Mat(squares[i]));
-		cv::rectangle(rects, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
-
-		// draw rotated rect
-		/*
-		cv::RotatedRect minRect = minAreaRect(cv::Mat(squares[i]));
-		cv::Point2f rect_points[4];
-		minRect.points( rect_points );
-		for ( int j = 0; j < 4; j++ ) {
-			cv::line( rects, rect_points[j], rect_points[(j+1)%4], cv::Scalar(0,0,255), 1, 8 ); // red
-		}*/
-		printf("F %d: ",i+1);
-		for (unsigned int j=0;j<squares.at(i).size();j++){
-			printf("(%d,%d)  ",squares.at(i).at(j).x,squares.at(i).at(j).y);
+			//add each square to the quadrilaterl list
+			this->quadrilateralList.push_back(Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y));
 		}
-		printf("\n\n");
 	}
-
-
 	cv::imshow("quadr",rects);
 	cv::waitKey(0);
+
+	return quadrilateralList;
 }
 
 
@@ -320,15 +301,13 @@ void FeatureExtractor::recognizeTriangles(){
 		{
 			// Use Canny instead of zero threshold level!
 			// Canny helps to catch squares with gradient shading
-			if (l == 0)
-			{
+			if (l == 0) {
 				Canny(gray0, gray, 10, 20, 3); //
 
 				// Dilate helps to remove potential holes between edge segments
 				cv::dilate(gray, gray, cv::Mat(), cv::Point(-1,-1));
 			}
-			else
-			{
+			else {
 				gray = gray0 >= (l+1) * 255 / threshold_level;
 			}
 
@@ -337,71 +316,58 @@ void FeatureExtractor::recognizeTriangles(){
 
 			// Test contours
 			cv::vector<cv::Point> approx;
-			cout << contours.size();
 			for (size_t i = 0; i < contours.size(); i++) {
 					// approximate contour with accuracy proportional to the contour perimeter
 					cv::approxPolyDP(cv::Mat(contours[i]), approx, arcLength(cv::Mat(contours[i]), true)*0.02, true);
 
 					// Note: absolute value of an area is used because area may be positive or negative - in accordance with the
 					// contour orientation
-					//if (approx.size() == 4 && fabs(contourArea(cv::Mat(approx))) > 1000 && cv::isContourConvex(cv::Mat(approx)))
-					if (approx.size() == 3 && cv::isContourConvex(cv::Mat(approx)))
-					{
-
-						//@todo: capire a cosa serve il controllo sull'angolo (per adesso è commentato e il programma va bene lo stesso)
-						double maxCosine = 0;
-
-						for (int j = 2; j < 5; j++)
-						{
-								double cosine = fabs(angle(approx[j%4], approx[j-2], approx[j-1]));
-								maxCosine = MAX(maxCosine, cosine);
-						}
-
-						//if (maxCosine < 0.3)
-							triangles.push_back(approx);
+					if (approx.size() == 3 && cv::isContourConvex(cv::Mat(approx)))  {
+						triangles.push_back(approx);
 					}
 			}
 		}
 	}
 
-	//disegno i triangoli
-	cv::Mat rects;
-	rects = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
+	//draw triangles
+	cv::Mat triangleImg;
+	triangleImg = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
 
 
-	//ordino in verso antiorario ogni quaterna di vettori
+	//sort clockwise the points of each triangle
 	for ( unsigned int i = 0; i< triangles.size(); i++ ) {
 		triangles.at(i) = sort4PointsClockwise(triangles.at(i));
 	}
 
 
-	//controllo che non ci siano quadrati con punti quasi coincidenti
+	//delete triangles with two points too close one to each other
 	triangles = deleteFalseTriangles(triangles);
 
-	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto  --> crash!!!!
+	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
 	triangles = squaresSort(triangles);
 
-	//elimino i quadrati sovrapposti
+	//delete overlapped triangles
 	triangles = deleteOverlapped(triangles);
 
-	for (unsigned int i = 0; i< triangles.size(); i++ ) {
+	//draw each triangle with its bounding box on the image
+	if (triangles.size() > 0) {
+		for (unsigned int i = 0; i< triangles.size(); i++ ) {
 
-		// draw contour
-		cv::drawContours(rects, triangles, i, cv::Scalar(255,0,0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point()); //blue
+			// draw contour
+			cv::drawContours(triangleImg, triangles, i, cv::Scalar(255,0,0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point()); //blue
 
-		// draw bounding rect
-		cv::Rect rect = boundingRect(cv::Mat(triangles[i]));
-		cv::rectangle(rects, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
+			// draw bounding rect
+			cv::Rect rect = boundingRect(cv::Mat(triangles[i]));
+			cv::rectangle(triangleImg, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
 
-		printf("F %d: ",i+1);
-		for (unsigned int j=0;j<triangles.at(i).size();j++){
-			printf("(%d,%d)  ",triangles.at(i).at(j).x,triangles.at(i).at(j).y);
+			printf("F %d: ",i+1);
+			for (unsigned int j=0;j<triangles.at(i).size();j++){
+				printf("(%d,%d)  ",triangles.at(i).at(j).x,triangles.at(i).at(j).y);
+			}
+			printf("\n\n");
 		}
-		printf("\n\n");
 	}
-
-
-	cv::imshow("triangles",rects);
+	cv::imshow("triangles",triangleImg);
 	cv::waitKey(0);
 }
 

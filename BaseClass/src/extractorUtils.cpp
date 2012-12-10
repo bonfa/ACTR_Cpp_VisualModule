@@ -12,22 +12,6 @@ double angle( cv::Point pt1, cv::Point pt2, cv::Point pt0 ) {
 
 
 
-cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> > squareList)
-{
-	for ( unsigned int i = 0; i< squareList.size()-1; i++ ) {
-		for ( unsigned int j = i+1; j< squareList.size(); j++ ) {
-			if ((squareList.at(i).at(0).x > squareList.at(j).at(0).x)
-					|| ((squareList.at(i).at(0).x == squareList.at(j).at(0).x) && (squareList.at(i).at(0).y > squareList.at(j).at(0).y))){
-				cv::vector<cv::Point> t = squareList.at(j);
-				squareList.at(j) = squareList.at(i);
-				squareList.at(i) = t;
-			}
-		}
-	}
-	return squareList;
-}
-
-
 double myDistance(cv::Point a, cv::Point b){
 	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 }
@@ -60,26 +44,6 @@ bool similar(cv::vector<cv::Point> a, cv::vector<cv::Point> b){
 
 
 
-cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList){
-	cv::vector<cv::vector<cv::Point> > withoutDuplicates;
-	withoutDuplicates.push_back(oldList.at(0));
-
-	for (unsigned int i = 1; i< oldList.size(); i++ ) {
-		bool isSimilar = false;
-		for ( unsigned int j = 0; j< withoutDuplicates.size(); j++ )
-			if (similar(oldList.at(i),withoutDuplicates.at(j))){
-				isSimilar = true;
-				break;
-			}
-		if (isSimilar == false)
-			withoutDuplicates.push_back(oldList.at(i));
-	}
-	return withoutDuplicates;
-}
-
-
-
-
 bool tooClose(cv::Point a, cv::Point b){
 	if (myDistance(a,b) < 15)
 			return true;
@@ -103,23 +67,55 @@ bool isFalse(cv::vector<cv::Point> square){
 
 
 
-cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::Point> > oldList){
-	cv::vector<cv::vector<cv::Point> > withoutFalseSquares;
-
-	for (unsigned int i = 0; i< oldList.size(); i++ ){
-		if (! isFalse(oldList.at(i))){
-			withoutFalseSquares.push_back(oldList.at(i));
-		}
-	}
-
-	return withoutFalseSquares;
+bool isTriangle(cv::vector<cv::Point> terna){
+	double area = fabs(contourArea(cv::Mat(terna)));
+	if (area > 350)
+		return true;
+	return false;
 }
 
 
 
-cv::vector<cv::vector<cv::Point> > deleteFalseTriangles(cv::vector<cv::vector<cv::Point> > oldList){
-	cv::vector<cv::vector<cv::Point> > withoutFalseSquares;
+cv::vector<cv::Point>  sort4PointsClockwise(cv::vector<cv::Point> points){
+	if (points.size() == 0)
+		return points;
 
+	//else
+	FourPointsSorter *fps = new FourPointsSorter(points);
+	points = fps->getSortedRotatedClockwise();
+	return points;
+}
+
+
+
+cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> > squareList)
+{
+	if (squareList.size()==0)
+		return squareList;
+
+	//else
+	for ( unsigned int i = 0; i< squareList.size()-1; i++ ) {
+		for ( unsigned int j = i+1; j< squareList.size(); j++ ) {
+			if ((squareList.at(i).at(0).x > squareList.at(j).at(0).x)
+					|| ((squareList.at(i).at(0).x == squareList.at(j).at(0).x) && (squareList.at(i).at(0).y > squareList.at(j).at(0).y))){
+				cv::vector<cv::Point> t = squareList.at(j);
+				squareList.at(j) = squareList.at(i);
+				squareList.at(i) = t;
+			}
+		}
+	}
+	return squareList;
+}
+
+
+
+
+cv::vector<cv::vector<cv::Point> > deleteFalseTriangles(cv::vector<cv::vector<cv::Point> > oldList){
+	if (oldList.size() == 0)
+		return oldList;
+
+	//else
+	cv::vector<cv::vector<cv::Point> > withoutFalseSquares;
 	for (unsigned int i = 0; i< oldList.size(); i++ ){ //@TODO
 		if (isTriangle(oldList.at(i))){
 			withoutFalseSquares.push_back(oldList.at(i));
@@ -131,20 +127,44 @@ cv::vector<cv::vector<cv::Point> > deleteFalseTriangles(cv::vector<cv::vector<cv
 
 
 
-bool isTriangle(cv::vector<cv::Point> terna){
-	double area = fabs(contourArea(cv::Mat(terna)));
-	if (area > 350)
-		return true;
-	return false;
+cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::Point> > oldList){
+	if (oldList.size() == 0)
+			return oldList;
+
+	//else
+	cv::vector<cv::vector<cv::Point> > withoutFalseSquares;
+	for (unsigned int i = 0; i< oldList.size(); i++ ){
+		if (! isFalse(oldList.at(i))){
+			withoutFalseSquares.push_back(oldList.at(i));
+		}
+	}
+
+	return withoutFalseSquares;
 }
 
 
+cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList){
+	cv::vector<cv::vector<cv::Point> > withoutDuplicates;
+	if (oldList.size()== 0)
+		return oldList;
 
-cv::vector<cv::Point>  sort4PointsClockwise(cv::vector<cv::Point> points){
-	FourPointsSorter *fps = new FourPointsSorter(points);
-	points = fps->getSortedRotatedClockwise();
-	return points;
+	//else
+	withoutDuplicates.push_back(oldList.at(0));
+
+	for (unsigned int i = 1; i< oldList.size(); i++ ) {
+		bool isSimilar = false;
+		for ( unsigned int j = 0; j< withoutDuplicates.size(); j++ )
+			if (similar(oldList.at(i),withoutDuplicates.at(j))){
+				isSimilar = true;
+				break;
+			}
+		if (isSimilar == false)
+			withoutDuplicates.push_back(oldList.at(i));
+	}
+	return withoutDuplicates;
 }
+
+
 
 //--------------------------------------------------------------------------------------------------
 
@@ -215,6 +235,8 @@ int FourPointsSorter::getFirstPointPosition(){
 double FourPointsSorter::getDistance(cv::Point p){
 	return (sqrt(pow(p.x,2)+pow(p.y,2)));
 }
+
+
 
 cv::vector<cv::Point> FourPointsSorter::getSortedRotatedClockwise(){
 	this->sortClockWise();

@@ -74,7 +74,12 @@ std::vector<Object *> FeatureGetter::getFeatureList(){
 	cout << getPosition(2,0) <<endl << endl;  //right - below
 
 	//Examples
-	cout << getCenterDistance(2,2) <<endl;  //0
+	cout << getCenterDistance(2,2) << endl;  //0
+	cout << getCenterDistance(0,2) << endl << endl;  //~431
+
+	//Examples
+	cout << getExtremeDistance(0,0) << endl; //0
+	cout << getExtremeDistance(0,5) << endl; //~17
 
 	return objectList;
 }
@@ -155,13 +160,55 @@ double FeatureGetter::getCenterDistance(int aIndex,int bIndex){
 	if (this->outOfBound(bIndex))
 		throw(InputException("index out of bound [second element]"));
 
-	//@todo: sostituuire con i centri degli oggetti
 	Point aCenter = (objectList.at(aIndex))->getCenter();
 	Point bCenter = (objectList.at(bIndex))->getCenter();
 
 
 	return myDistance(aCenter,bCenter);
 }
+
+
+
+double FeatureGetter::getExtremeDistance(int aIndex,int bIndex){
+	if (aIndex < 0)
+		throw(InputException("negative index of vector [first element]"));
+	if (this->outOfBound(aIndex))
+		throw(InputException("index out of bound [first element]"));
+	if (bIndex < 0)
+		throw(InputException("negative index of vector [second element]"));
+	if (this->outOfBound(bIndex))
+		throw(InputException("index out of bound [second element]"));
+
+	std::vector<Point> aPoints = this->getPointList((objectList.at(aIndex))->getBbox());
+	std::vector<Point> bPoints = this->getPointList((objectList.at(bIndex))->getBbox());
+
+	//@todo:change this method with something smarter
+	//for the moment this method returns the minimum of all the distances between the points of the first bbox and the points ot the second bounding box
+	double minDistance = myDistance(aPoints.at(0),bPoints.at(0));
+	for (size_t i=0; i < aPoints.size(); i++)
+		for (size_t j=0; j < bPoints.size(); j++){
+			double distance = myDistance(aPoints.at(i),bPoints.at(j));
+			if (distance < minDistance)
+				minDistance = distance;
+		}
+	return minDistance;
+}
+
+
+std::vector<Point> FeatureGetter::getPointList(Rect bbox){
+	std::vector<Point> pointList;
+	Point p1 = Point(bbox.x,bbox.y);
+	Point p2 = Point(bbox.x+bbox.width,bbox.y);
+	Point p3 = Point(bbox.x+bbox.width,bbox.y+bbox.height);
+	Point p4 = Point(bbox.x,bbox.y+bbox.height);
+
+	pointList.push_back(p1);
+	pointList.push_back(p2);
+	pointList.push_back(p3);
+	pointList.push_back(p4);
+	return pointList;
+}
+
 
 
 

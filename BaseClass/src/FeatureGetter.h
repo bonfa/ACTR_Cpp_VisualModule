@@ -34,6 +34,7 @@ public:
 	string isBigger(int aIndex, int bIndex);
 	string getPosition (int aIndex,int bIndex);
 	double getCenterDistance(int aIndex,int bIndex);
+	double getExtremeDistance(int aIndex,int bIndex);
 	//da cancellare una volta finito lo sviluppo
 	void showImage();
 	void showVideo();
@@ -44,6 +45,7 @@ private:
 	cv::VideoCapture video;
 	std::vector<Object *> objectList;
 	bool outOfBound(unsigned int index);
+	std::vector<Point> getPointList(Rect bbox);
 };
 
 #endif /* BASECLASS_H_ */

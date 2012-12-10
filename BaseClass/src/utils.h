@@ -26,6 +26,12 @@ int getMinMax(const std::vector<Point>& coords, int type);
 std::vector<Point> Sort4PointsClockwise(std::vector<Point> points);
 bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy );
 double erone(Point a, Point b, Point c);
-//cv::vector<cv::Point> Sort4cvPointsClockwise(cv::vector<cv::Point> points);
+double myDistance(Point a, Point b);
+
+
+
+
+
+
 
 #endif /* UTILS_H_ */

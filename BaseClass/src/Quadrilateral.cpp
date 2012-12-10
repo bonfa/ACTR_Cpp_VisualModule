@@ -54,6 +54,7 @@ Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,in
 	minY = getMinMax(coords, MIN_Y);
 
 	setBbox(minX, minY, maxY - minY, maxX-minX);
+	this->setCenter();
 }
 
 

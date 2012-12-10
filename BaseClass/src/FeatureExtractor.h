@@ -23,6 +23,7 @@ using namespace std;
 #include "Triangle.h"
 #include "Circle.h"
 #include "Object.h"
+#include "Blob.h"
 
 
 typedef enum {QUADRILATERAL, TRIANGLE, CIRCLE} ShapeType;
@@ -31,25 +32,23 @@ typedef enum {QUADRILATERAL, TRIANGLE, CIRCLE} ShapeType;
 class FeatureExtractor {
 public:
 	FeatureExtractor(cv::Mat img);
-	void getExtractedFeature(); //@TODO: trasformare il tipo ritornato in una lista di oggetti
+	std::vector<Object *> getExtractedFeature(); //@TODO: trasformare il tipo ritornato in una lista di oggetti
 	virtual ~FeatureExtractor();
 	string getPointColor(int x, int y);
-	//string isBigger(ShapeType aType,int aIndex,ShapeType bType, int bIndex);
-	string isBigger(int aIndex, int bIndex);
 private:
 	void recognizeCircles();
 	void recognizeSquares();
 	void recognizeTriangles();
 	double normHue(int hueVal);
 	double normSV(int svVal);
-	bool outOfBound(unsigned int index);
 	string getColorString(double gimpHue, double gimpSaturation, double gimpValue);
 	string getRegionColor(cv::vector<cv::Point> points);
 	cv::Mat image;
-	std::vector<Quadrilateral> quadrilateralList;
-	std::vector<Triangle> triangleList;
-	std::vector<Circle> circleList;
-	std::vector<Object> shapeList;
+	std::vector<Quadrilateral *> quadrilateralList;
+	std::vector<Triangle *> triangleList;
+	std::vector<Circle *> circleList;
+	std::vector<Object *> objectList;
+
 };
 
 #endif /* FEATUREEXTRACTOR_H_ */

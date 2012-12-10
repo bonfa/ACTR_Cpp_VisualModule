@@ -31,10 +31,13 @@ public:
 	virtual ~Object();
 	virtual string getChunk() =0;
 	Rect getBbox();
+	Point getCenter();
 protected:
 	void setBbox(int x, int y, int height, int width);
+	void setCenter();
 	bool attended;
 	double rotation;
+	Point center;
 	Rect bbox;
 };
 

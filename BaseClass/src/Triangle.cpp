@@ -23,6 +23,7 @@ Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy){
 	this->c = Point(cx, cy);
 	this->area = erone(this->a, this->b, this->c);
 	this->setBoundingBox();
+	this->setCenter();
 }
 
 

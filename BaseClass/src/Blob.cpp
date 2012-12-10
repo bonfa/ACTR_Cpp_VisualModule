@@ -24,3 +24,6 @@ double Blob::getArea(){
 		cout << ("Eccezione"); //TODO
 	return area;
 }
+
+
+

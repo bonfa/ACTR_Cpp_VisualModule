@@ -160,7 +160,7 @@ void FeatureExtractor::recognizeCircles(){
 		cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
 		int radius = cvRound(circles[i][2]);
 
-		circleList.push_back(Circle(radius, center.x,center.y));
+		circleList.push_back(new Circle(radius, center.x,center.y));
 
 		/// Draw the circles detected
 		// circle center
@@ -270,7 +270,7 @@ void FeatureExtractor::recognizeSquares(){
 			printf("\n\n");
 
 			//add each square to the quadrilaterl list
-			this->quadrilateralList.push_back(Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y));
+			this->quadrilateralList.push_back(new Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y));
 		}
 	}
 	cv::imshow("quadr",rects);
@@ -371,7 +371,7 @@ void FeatureExtractor::recognizeTriangles(){
 			printf("\n\n");
 
 			//add each square to the quadrilaterl list
-			this->triangleList.push_back(Triangle(triangles.at(i).at(0).x,triangles.at(i).at(0).y,triangles.at(i).at(1).x,triangles.at(i).at(1).y,triangles.at(i).at(2).x,triangles.at(i).at(2).y));
+			this->triangleList.push_back(new Triangle(triangles.at(i).at(0).x,triangles.at(i).at(0).y,triangles.at(i).at(1).x,triangles.at(i).at(1).y,triangles.at(i).at(2).x,triangles.at(i).at(2).y));
 		}
 	}
 	cv::imshow("triangles",triangleImg);
@@ -379,7 +379,7 @@ void FeatureExtractor::recognizeTriangles(){
 }
 
 
-void FeatureExtractor::getExtractedFeature(){
+std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 	cout<<"color: "+this->getPointColor(100, 100)+"\n";   //rosso
 	cout<<"color: "+this->getPointColor(200, 100)+"\n";		//verde
 	cout<<"color: "+this->getPointColor(100, 250)+"\n";		//blue
@@ -398,34 +398,13 @@ void FeatureExtractor::getExtractedFeature(){
 	this->recognizeSquares();
 	this->recognizeTriangles();
 
+	//concatenate everything in a vector of objects
+	this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());
+	this->objectList.insert(objectList.end(),this->triangleList.begin(),this->triangleList.end());
+	this->objectList.insert(objectList.end(),this->circleList.begin(),this->circleList.end());
+
+	return objectList;
 }
 
 
 //------------------------------------------------------------------------------------------------------------
-
-
-
-string FeatureExtractor::isBigger(int aIndex,int bIndex){
-	if (aIndex < 0)
-		throw(InputException("negative index of vector [first element]"));
-	if (this->outOfBound(aIndex))
-		throw(InputException("index out of bound [first element]"));
-	if (bIndex < 0)
-		throw(InputException("negative index of vector [second element]"));
-	if (this->outOfBound(bIndex))
-		throw(InputException("index out of bound [second element]"));
-
-	//else
-	double aArea = (()shapeList.at(aIndex))
-
-	return "bo";
-}
-
-
-
-bool FeatureExtractor::outOfBound(unsigned int index){
-	return (index >= this->shapeList.size());
-}
-
-
-

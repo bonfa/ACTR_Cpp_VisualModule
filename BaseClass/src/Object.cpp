@@ -34,3 +34,15 @@ void Object::setBbox(int x, int y, int height, int width){
 		throw InputException("Negative values in the points coordinates");
 	bbox = Rect(x, y, height, width);
 }
+
+
+Point Object::getCenter(){
+	return center;
+}
+
+
+void Object::setCenter(){
+	int xCenter = bbox.x + bbox.width/2;
+	int yCenter = bbox.y + bbox.height/2;
+	center = Point(xCenter,yCenter);
+}

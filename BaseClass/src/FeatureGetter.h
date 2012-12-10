@@ -15,7 +15,10 @@
 
 #include <iostream>
 #include "Input.h"
+#include "utils.h"
 #include "FeatureExtractor.h"
+#include "MyPoint.h"
+
 
 
 using namespace std;
@@ -27,7 +30,10 @@ public:
 	void updateImage();
 	void startVideoCapture();
 	void terminate();
-	void getFeatureList(); 	//@TODO: da trasformare il tipo ritornato in vector<Objects>
+	std::vector<Object *> getFeatureList();
+	string isBigger(int aIndex, int bIndex);
+	string getPosition (int aIndex,int bIndex);
+	double getCenterDistance(int aIndex,int bIndex);
 	//da cancellare una volta finito lo sviluppo
 	void showImage();
 	void showVideo();
@@ -36,6 +42,8 @@ private:
 	FeatureExtractor *featureExtractor;
 	cv::Mat img;
 	cv::VideoCapture video;
+	std::vector<Object *> objectList;
+	bool outOfBound(unsigned int index);
 };
 
 #endif /* BASECLASS_H_ */

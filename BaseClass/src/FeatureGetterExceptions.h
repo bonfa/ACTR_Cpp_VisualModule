@@ -20,4 +20,22 @@ public:
 	VerticalLineException(): runtime_error("Vertical Stright Line Exception"){}
 };
 
+
+class ParallelLinesException: public runtime_error {
+public:
+	ParallelLinesException(): runtime_error("Parallel Lines Exception"){}
+};
+
+
+class CoincidentLinesException: public runtime_error {
+public:
+	CoincidentLinesException(): runtime_error("Coincident Lines Exception"){}
+};
+
+
+class NotOverlappedSegmentException: public runtime_error {
+public:
+	NotOverlappedSegmentException(): runtime_error("NotOverlappedSegmentException"){}
+};
+
 #endif /* BASE_CLASS_EXCEPTIONS_H_ */

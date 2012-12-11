@@ -18,6 +18,9 @@
 #include "utils.h"
 #include "FeatureExtractor.h"
 #include "MyPoint.h"
+#include "StraightLine.h"
+#include "Segment.h"
+#include "FeatureGetterExceptions.h"
 
 
 

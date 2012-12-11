@@ -9,12 +9,14 @@
 #define STRAIGHTLINE_H_
 
 #include "FeatureGetterExceptions.h"
+#include "MyPoint.h"
 
 class StraightLine {
 public:
 	//StraightLine();
 	StraightLine(double a, double b, double c);
 	StraightLine(int xa, int ya, int xb, int yb);
+	StraightLine(Point a, Point b);
 	double getA();
 	double getB();
 	double getC();
@@ -22,6 +24,10 @@ public:
 	double getIntercept();
 	bool isVertical();
 	bool doesPointBelongTo(int xp,int yp);
+	bool isParallel(StraightLine line2);
+	bool isCoincident(StraightLine line2);
+	Point getInterceptionPoint(StraightLine line2);
+	double getY(double xp);
 	virtual ~StraightLine();
 private:
 	double calculateSlope();

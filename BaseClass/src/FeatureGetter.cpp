@@ -78,8 +78,8 @@ std::vector<Object *> FeatureGetter::getFeatureList(){
 	cout << getCenterDistance(0,2) << endl << endl;  //~431
 
 	//Examples
-	cout << getExtremeDistance(0,0) << endl; //0
-	cout << getExtremeDistance(0,5) << endl; //~17
+	//cout << getExtremeDistance(0,0) << endl; //0
+	//cout << getExtremeDistance(0,5) << endl; //~17
 
 	return objectList;
 }
@@ -170,6 +170,12 @@ double FeatureGetter::getCenterDistance(int aIndex,int bIndex){
 
 
 double FeatureGetter::getExtremeDistance(int aIndex,int bIndex){
+	/**
+	 * The distance between two objects is made in this way:
+	 * 1) The straight line which passes between the centers of the two bounding boxes is calculated
+	 * 2) The two points which are the results of the intersection between this line and one of the late of the bounding boxes are calculated
+	 * 3) Calculation of the distance between these two new points
+	 * */
 	if (aIndex < 0)
 		throw(InputException("negative index of vector [first element]"));
 	if (this->outOfBound(aIndex))
@@ -178,12 +184,59 @@ double FeatureGetter::getExtremeDistance(int aIndex,int bIndex){
 		throw(InputException("negative index of vector [second element]"));
 	if (this->outOfBound(bIndex))
 		throw(InputException("index out of bound [second element]"));
+	if (aIndex == bIndex)
+		return 0;
 
-	std::vector<Point> aPoints = this->getPointList((objectList.at(aIndex))->getBbox());
-	std::vector<Point> bPoints = this->getPointList((objectList.at(bIndex))->getBbox());
+	// Step 1 - Calculate the straight line which passes between the centers of the two bounding boxes
+	Point aCenter = (objectList.at(aIndex))->getCenter();
+	Point bCenter = (objectList.at(bIndex))->getCenter();
+	Segment centerLine = Segment(aCenter,bCenter);
+
+	//cout << aCenter.x << "-" << aCenter.y << endl;
+	//cout << bCenter.x << "-" << bCenter.y << endl;
+
+	//Step 2 - Get the edges of the two boxes
+	std::vector<Segment> aEdges = (objectList.at(aIndex))->getBbox().getEdgesLine();
+	std::vector<Segment> bEdges = (objectList.at(bIndex))->getBbox().getEdgesLine();
+	//std::vector<Point> aPoints = (objectList.at(aIndex))->getBbox().getPoints();
+	//std::vector<Point> bPoints = (objectList.at(bIndex))->getBbox().getPoints();
+
+	//Step 3 - Calculate the intersection between the lines and the segments
+	Point aIntersect,bIntersect;
+	int numberofExceptions = 0;
+	for(size_t i=0; i < aEdges.size(); i++){
+		try{
+			aIntersect = (aEdges.at(i)).getInterceptionPoint(centerLine);
+			break;
+		}
+		catch (NotOverlappedSegmentException& e) {numberofExceptions++;}
+	}
+	cout << "NoE = " <<numberofExceptions <<endl;
+	if (numberofExceptions >= 4){
+		throw  NotOverlappedSegmentException();
+	}
+
+	numberofExceptions = 0;
+	cout << "NoE = " <<numberofExceptions <<endl;
+	for(size_t i=0; i < bEdges.size(); i++){
+		try{
+			bIntersect = (bEdges.at(i)).getInterceptionPoint(centerLine);
+			break;
+		}
+		catch (NotOverlappedSegmentException& e) {numberofExceptions++;}
+	}
+	cout << "NoE = " <<numberofExceptions <<endl;
+	if (numberofExceptions >= 4){
+			throw  NotOverlappedSegmentException();
+	}
+
+
+	return myDistance(aIntersect,bIntersect);
 
 	//@todo:change this method with something smarter
 	//for the moment this method returns the minimum of all the distances between the points of the first bbox and the points ot the second bounding box
+	/*
+	 *
 	double minDistance = myDistance(aPoints.at(0),bPoints.at(0));
 	for (size_t i=0; i < aPoints.size(); i++)
 		for (size_t j=0; j < bPoints.size(); j++){
@@ -192,6 +245,7 @@ double FeatureGetter::getExtremeDistance(int aIndex,int bIndex){
 				minDistance = distance;
 		}
 	return minDistance;
+	*/
 }
 
 

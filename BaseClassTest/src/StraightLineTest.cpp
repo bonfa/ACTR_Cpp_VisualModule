@@ -4,201 +4,357 @@
 #include "StraightLineTest.h"
 
 
-void StraightLineTestFirstConstructor01(){
-	double actualA = 1;
-	double actualB = 1;
-	double actualC = 0;
-	double actualSlope = -1;
-	double actualIntercept = 0;
-	bool actualIsVertical = false;
-	StraightLine *l = new StraightLine(actualA,actualB,actualC);
+struct TestParameters_01{
 
-	double a = l->getA();
-	ASSERT_EQUAL(a, actualA);
+	TestParameters_01(): l(1,1,0){
+		actualA = 1;
+		actualB = 1;
+		actualC = 0;
+		actualSlope = -1;
+		actualIntercept = 0;
+		actualIsVertical = false;
+	}
 
-	double b = l->getB();
-	ASSERT_EQUAL(b, actualB);
+	void getterATest_01(){
+		double a = l.getA();
+		ASSERT_EQUAL(a, actualA);
+	}
 
-	double c = l->getC();
-	ASSERT_EQUAL(c, actualC);
+	void getterBTest_01(){
+		double b = l.getB();
+		ASSERT_EQUAL(b, actualB);
+	}
 
-	double slope = l->getSlope();
-	ASSERT_EQUAL(slope,actualSlope);
+	void getterCTest_01(){
+		double c = l.getC();
+		ASSERT_EQUAL(c, actualC);
+	}
 
-	double intercept = l->getIntercept();
-	ASSERT_EQUAL(intercept, actualIntercept);
+	void getterSlopeTest_01(){
+		double slope = l.getSlope();
+		ASSERT_EQUAL(slope,actualSlope);
+	}
 
-	ASSERT_EQUAL(l->isVertical(), actualIsVertical);
+	void getterInterceptTest_01(){
+		double interc = l.getIntercept();
+		ASSERT_EQUAL(interc,actualIntercept);
+	}
 
-	ASSERT_EQUAL(true,l->doesPointBelongTo(0,0));
+	void verticalTest_01(){
+		ASSERT_EQUAL(l.isVertical(), actualIsVertical);
+	}
 
-	ASSERT_EQUAL(false,l->doesPointBelongTo(1,1));
-}
+	void pointBelongingTest_01(){
+		ASSERT_EQUAL(true,l.doesPointBelongTo(0,0));
+	}
 
-
-void StraightLineTestFirstConstructor02(){
-	double actualA = 1;
-	double actualB = 0;
-	double actualC = 5;
-	double actualSlope = 0;
-	double actualIntercept = -actualC;
-	bool actualIsVertical = false;
-	StraightLine *l = new StraightLine(actualA,actualB,actualC);
-
-	double a = l->getA();
-	ASSERT_EQUAL(a, actualA);
-
-	double b = l->getB();
-	ASSERT_EQUAL(b, actualB);
-
-	double c = l->getC();
-	ASSERT_EQUAL(c, actualC);
-
-	double slope = l->getSlope();
-	ASSERT_EQUAL(slope,actualSlope);
-
-	double intercept = l->getIntercept();
-	ASSERT_EQUAL(intercept, actualIntercept);
-
-	ASSERT_EQUAL(l->isVertical(), actualIsVertical);
-
-	ASSERT_EQUAL(true,l->doesPointBelongTo(0,-5));
-
-	ASSERT_EQUAL(false,l->doesPointBelongTo(1,1));
-}
+	void pointNotBelongingTest_01(){
+		ASSERT_EQUAL(false,l.doesPointBelongTo(1,1));
+	}
 
 
-void StraightLineTestFirstConstructor03(){
-	double actualA = 0;
-	double actualB = 1;
-	double actualC = 5;
-	//double actualSlope = -1;
-	//double actualIntercept = 0;
-	bool actualIsVertical = true;
-	StraightLine *l = new StraightLine(actualA,actualB,actualC);
+	StraightLine l;
+	double actualA;
+	double actualB;
+	double actualC;
+	double actualSlope;
+	double actualIntercept;
+	bool actualIsVertical;
 
-	double a = l->getA();
-	ASSERT_EQUAL(a, actualA);
-
-	double b = l->getB();
-	ASSERT_EQUAL(b, actualB);
-
-	double c = l->getC();
-	ASSERT_EQUAL(c, actualC);
-
-	ASSERT_THROWS(l->getSlope(),VerticalLineException);
-
-	ASSERT_THROWS(l->getIntercept(), VerticalLineException);
-
-	ASSERT_EQUAL(l->isVertical(), actualIsVertical);
-
-	ASSERT_EQUAL(true,l->doesPointBelongTo(-5,0));
-
-	ASSERT_EQUAL(false,l->doesPointBelongTo(1,1));
-}
+};
 
 
-void StraightLineTestSecondConstructor01(){
-	int xa = 1, ya = 1;
-	int xb = -1, yb = -1;
+struct TestParameters_02{
 
-	double actualA = -2;
-	double actualB = 2;
-	double actualC = 0;
-	double actualSlope = 1;
-	double actualIntercept = 0;
-	bool actualIsVertical = false;
-	StraightLine *l = new StraightLine(xa,ya,xb,yb);
+	TestParameters_02(): l(1,0,5){
+		 actualA = 1;
+		 actualB = 0;
+		 actualC = 5;
+		 actualSlope = 0;
+		 actualIntercept = -actualC;
+		 actualIsVertical = false;
+	}
 
-	double a = l->getA();
-	ASSERT_EQUAL(a, actualA);
+	void getterATest_02(){
+		double a = l.getA();
+		ASSERT_EQUAL(a, actualA);
+	}
 
-	double b = l->getB();
-	ASSERT_EQUAL(b, actualB);
+	void getterBTest_02(){
+		double b = l.getB();
+		ASSERT_EQUAL(b, actualB);
+	}
 
-	double c = l->getC();
-	ASSERT_EQUAL(c, actualC);
+	void getterCTest_02(){
+		double c = l.getC();
+		ASSERT_EQUAL(c, actualC);
+	}
 
-	double slope = l->getSlope();
-	ASSERT_EQUAL(slope,actualSlope);
+	void getterSlopeTest_02(){
+		double slope = l.getSlope();
+		ASSERT_EQUAL(slope,actualSlope);
+	}
 
-	double intercept = l->getIntercept();
-	ASSERT_EQUAL(intercept, actualIntercept);
+	void getterInterceptTest_02(){
+		double interc = l.getIntercept();
+		ASSERT_EQUAL(interc,actualIntercept);
+	}
 
-	ASSERT_EQUAL(l->isVertical(), actualIsVertical);
+	void verticalTest_02(){
+		ASSERT_EQUAL(l.isVertical(), actualIsVertical);
+	}
 
-	ASSERT_EQUAL(true,l->doesPointBelongTo(0,0));
+	void pointBelongingTest_02(){
+		ASSERT_EQUAL(true,l.doesPointBelongTo(0,-5));
+	}
 
-	ASSERT_EQUAL(false,l->doesPointBelongTo(1,2));
-}
-
-
-void StraightLineTestSecondConstructor02(){
-	int xa = 0, ya = 5;
-	int xb = 5, yb = 5;
-
-	double actualA = 5;
-	double actualB = 0;
-	double actualC = -25;
-	double actualSlope = 0;
-	double actualIntercept = 5;
-	bool actualIsVertical = false;
-	StraightLine *l = new StraightLine(xa,ya,xb,yb);
-
-	double a = l->getA();
-	ASSERT_EQUAL(a, actualA);
-
-	double b = l->getB();
-	ASSERT_EQUAL(b, actualB);
-
-	double c = l->getC();
-	ASSERT_EQUAL(c, actualC);
-
-	double slope = l->getSlope();
-	ASSERT_EQUAL(slope,actualSlope);
-
-	double intercept = l->getIntercept();
-	ASSERT_EQUAL(intercept, actualIntercept);
-
-	ASSERT_EQUAL(l->isVertical(), actualIsVertical);
-
-	ASSERT_EQUAL(true,l->doesPointBelongTo(1,5));
-
-	ASSERT_EQUAL(false,l->doesPointBelongTo(0,0));
-}
+	void pointNotBelongingTest_02(){
+		ASSERT_EQUAL(false,l.doesPointBelongTo(1,1));
+	}
 
 
-void StraightLineTestSecondConstructor03(){
-	int xa = 5, ya = 0;
-	int xb = 5, yb = 5;
+	StraightLine l;
+	double actualA;
+	double actualB;
+	double actualC;
+	double actualSlope;
+	double actualIntercept;
+	bool actualIsVertical;
 
-	double actualA = 0;
-	double actualB = 1;
-	double actualC = -5;
-	//double actualSlope = 0;
-	//double actualIntercept = 5;
-	bool actualIsVertical = true;
-	StraightLine *l = new StraightLine(xa,ya,xb,yb);
+};
 
-	double a = l->getA();
-	ASSERT_EQUAL(a, actualA);
 
-	double b = l->getB();
-	ASSERT_EQUAL(b, actualB);
 
-	double c = l->getC();
-	ASSERT_EQUAL(c, actualC);
+struct TestParameters_03{
 
-	ASSERT_THROWS(l->getSlope(),VerticalLineException);
+	TestParameters_03(): l(0,1,5){
+		 actualA = 0;
+		 actualB = 1;
+		 actualC = 5;
+		 //actualSlope = 0;
+		 //actualIntercept = -actualC;
+		 actualIsVertical = true;
+	}
 
-	ASSERT_THROWS(l->getIntercept(), VerticalLineException);
+	void getterATest_03(){
+		double a = l.getA();
+		ASSERT_EQUAL(a, actualA);
+	}
 
-	ASSERT_EQUAL(l->isVertical(), actualIsVertical);
+	void getterBTest_03(){
+		double b = l.getB();
+		ASSERT_EQUAL(b, actualB);
+	}
 
-	ASSERT_EQUAL(true,l->doesPointBelongTo(5,1));
+	void getterCTest_03(){
+		double c = l.getC();
+		ASSERT_EQUAL(c, actualC);
+	}
 
-	ASSERT_EQUAL(false,l->doesPointBelongTo(0,0));
-}
+	void getterSlopeTest_03(){
+		ASSERT_THROWS(l.getSlope(),VerticalLineException);
+	}
+
+	void getterInterceptTest_03(){
+		ASSERT_THROWS(l.getIntercept(), VerticalLineException);
+	}
+
+	void verticalTest_03(){
+		ASSERT_EQUAL(l.isVertical(), actualIsVertical);
+	}
+
+	void pointBelongingTest_03(){
+		ASSERT_EQUAL(true,l.doesPointBelongTo(-5,0));
+	}
+
+	void pointNotBelongingTest_03(){
+		ASSERT_EQUAL(false,l.doesPointBelongTo(1,1));
+	}
+
+
+	StraightLine l;
+	double actualA;
+	double actualB;
+	double actualC;
+	//double actualSlope;
+	//double actualIntercept;
+	bool actualIsVertical;
+
+};
+
+
+
+struct TestParameters_04{
+	TestParameters_04(): l(1,1,-1,-1){
+		 actualA = -2;
+		 actualB = 2;
+		 actualC = 0;
+		 actualSlope = 1;
+		 actualIntercept = 0;
+		 actualIsVertical = false;
+		}
+
+		void getterATest_04(){
+			double a = l.getA();
+			ASSERT_EQUAL(a, actualA);
+		}
+
+		void getterBTest_04(){
+			double b = l.getB();
+			ASSERT_EQUAL(b, actualB);
+		}
+
+		void getterCTest_04(){
+			double c = l.getC();
+			ASSERT_EQUAL(c, actualC);
+		}
+
+		void getterSlopeTest_04(){
+			double slope = l.getSlope();
+			ASSERT_EQUAL(slope,actualSlope);
+		}
+
+		void getterInterceptTest_04(){
+			double interc = l.getIntercept();
+			ASSERT_EQUAL(interc,actualIntercept);
+		}
+
+		void verticalTest_04(){
+			ASSERT_EQUAL(l.isVertical(), actualIsVertical);
+		}
+
+		void pointBelongingTest_04(){
+			ASSERT_EQUAL(true,l.doesPointBelongTo(0,0));
+		}
+
+		void pointNotBelongingTest_04(){
+			ASSERT_EQUAL(false,l.doesPointBelongTo(1,2));
+		}
+
+
+		StraightLine l;
+		double actualA;
+		double actualB;
+		double actualC;
+		double actualSlope;
+		double actualIntercept;
+		bool actualIsVertical;
+
+};
+
+
+
+
+struct TestParameters_05{
+	TestParameters_05(): l(0,5,5,5){
+		 actualA = 5;
+		 actualB = 0;
+		 actualC = -25;
+		 actualSlope = 0;
+		 actualIntercept = 5;
+		 actualIsVertical = false;
+		}
+
+			void getterATest_05(){
+				double a = l.getA();
+				ASSERT_EQUAL(a, actualA);
+			}
+
+			void getterBTest_05(){
+				double b = l.getB();
+				ASSERT_EQUAL(b, actualB);
+			}
+
+			void getterCTest_05(){
+				double c = l.getC();
+				ASSERT_EQUAL(c, actualC);
+			}
+
+			void getterSlopeTest_05(){
+				double slope = l.getSlope();
+				ASSERT_EQUAL(slope,actualSlope);
+			}
+
+			void getterInterceptTest_05(){
+				double interc = l.getIntercept();
+				ASSERT_EQUAL(interc,actualIntercept);
+			}
+
+			void verticalTest_05(){
+				ASSERT_EQUAL(l.isVertical(), actualIsVertical);
+			}
+
+			void pointBelongingTest_05(){
+				ASSERT_EQUAL(true,l.doesPointBelongTo(1,5));
+			}
+
+			void pointNotBelongingTest_05(){
+				ASSERT_EQUAL(false,l.doesPointBelongTo(0,0));
+			}
+
+
+			StraightLine l;
+			double actualA;
+			double actualB;
+			double actualC;
+			double actualSlope;
+			double actualIntercept;
+			bool actualIsVertical;
+};
+
+//----------------------------------------------------------------------------------------------------
+
+struct TestParameters_06{
+	TestParameters_06(): l(5,0,5,5){
+		 actualA = 0;
+		 actualB = 1;
+		 actualC = -5;
+
+		 actualIsVertical = true;
+		}
+
+			void getterATest_06(){
+				double a = l.getA();
+				ASSERT_EQUAL(a, actualA);
+			}
+
+			void getterBTest_06(){
+				double b = l.getB();
+				ASSERT_EQUAL(b, actualB);
+			}
+
+			void getterCTest_06(){
+				double c = l.getC();
+				ASSERT_EQUAL(c, actualC);
+			}
+
+			void getterSlopeTest_06(){
+				ASSERT_THROWS(l.getSlope(),VerticalLineException);
+			}
+
+			void getterInterceptTest_06(){
+				ASSERT_THROWS(l.getIntercept(), VerticalLineException);
+			}
+
+			void verticalTest_06(){
+				ASSERT_EQUAL(l.isVertical(), actualIsVertical);
+			}
+
+			void pointBelongingTest_06(){
+				ASSERT_EQUAL(true,l.doesPointBelongTo(5,1));
+			}
+
+			void pointNotBelongingTest_06(){
+				ASSERT_EQUAL(false,l.doesPointBelongTo(0,0));
+			}
+
+
+			StraightLine l;
+			double actualA;
+			double actualB;
+			double actualC;
+			bool actualIsVertical;
+};
 
 
 void StraightLineTestSecondConstructor04(){
@@ -212,13 +368,64 @@ void StraightLineTestSecondConstructor04(){
 
 cute::suite make_suite_StraightLineTest(){
 	cute::suite s;
-	//s.push_back(CUTE(thisIsAStraightLineTestTest));
-	s.push_back(CUTE(StraightLineTestFirstConstructor01));
-	s.push_back(CUTE(StraightLineTestFirstConstructor02));
-	s.push_back(CUTE(StraightLineTestFirstConstructor03));
-	s.push_back(CUTE(StraightLineTestSecondConstructor01));
-	s.push_back(CUTE(StraightLineTestSecondConstructor02));
-	s.push_back(CUTE(StraightLineTestSecondConstructor03));
+	s+= CUTE_SMEMFUN(TestParameters_01,getterATest_01);
+	s+= CUTE_SMEMFUN(TestParameters_02,getterATest_02);
+	s+= CUTE_SMEMFUN(TestParameters_03,getterATest_03);
+	s+= CUTE_SMEMFUN(TestParameters_04,getterATest_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,getterATest_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,getterATest_06);
+
+	s+= CUTE_SMEMFUN(TestParameters_01,getterBTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_02,getterBTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_03,getterBTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_04,getterBTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,getterBTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,getterBTest_06);
+
+	s+= CUTE_SMEMFUN(TestParameters_01,getterCTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_02,getterCTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_03,getterCTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_04,getterCTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,getterCTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,getterCTest_06);
+
+	s+= CUTE_SMEMFUN(TestParameters_01,getterSlopeTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_02,getterSlopeTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_03,getterSlopeTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_04,getterSlopeTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,getterSlopeTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,getterSlopeTest_06);
+
+	s+= CUTE_SMEMFUN(TestParameters_01,getterInterceptTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_02,getterInterceptTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_03,getterInterceptTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_04,getterInterceptTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,getterInterceptTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,getterInterceptTest_06);
+
+	s+= CUTE_SMEMFUN(TestParameters_01,verticalTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_02,verticalTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_03,verticalTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_04,verticalTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,verticalTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,verticalTest_06);
+
+
+	s+= CUTE_SMEMFUN(TestParameters_01,pointBelongingTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_02,pointBelongingTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_03,pointBelongingTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_04,pointBelongingTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,pointBelongingTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,pointBelongingTest_06);
+
+	s+= CUTE_SMEMFUN(TestParameters_01,pointNotBelongingTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_02,pointNotBelongingTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_03,pointNotBelongingTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_04,pointNotBelongingTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,pointNotBelongingTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,pointNotBelongingTest_06);
+
+
 	s.push_back(CUTE(StraightLineTestSecondConstructor04));
 	return s;
 }

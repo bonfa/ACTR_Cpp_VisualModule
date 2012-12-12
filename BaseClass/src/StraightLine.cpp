@@ -7,12 +7,11 @@
 
 #include "StraightLine.h"
 
-
+/**
+ * 1) Set the equation of the straight line    ay + bx + c = 0
+ * 2) Set the slope and the intercept of the straight line
+ * */
 StraightLine::StraightLine(double a, double b, double c) {
-	/**
-	 * Set the equation of the straight line
-	 * ay + bx + c = 0
-	 * */
 	this->a = a;
 	this->b = b;
 	this->c = c;
@@ -26,11 +25,13 @@ StraightLine::StraightLine(double a, double b, double c) {
 	}
 }
 
+
+/**
+ * 1) Check if the points are not the same point
+ * 2) Set the equation of the straight line    ay + bx + c = 0
+ * 3) Set the slope and the intercept of the straight line
+ * */
 StraightLine::StraightLine(int xa, int ya, int xb, int yb){
-	/**
-	 * Set the equation of the straight line
-	 * ay + bx + c = 0
-	 * */
 	if (xa==xb && ya==yb)
 		throw InputException("Coincident Points");
 	else if (xa==xb && ya!=yb){
@@ -50,6 +51,11 @@ StraightLine::StraightLine(int xa, int ya, int xb, int yb){
 }
 
 
+/**
+ * 1) Check if the points are not the same point
+ * 2) Set the equation of the straight line    ay + bx + c = 0
+ * 3) Set the slope and the intercept of the straight line
+ * */
 StraightLine::StraightLine(Point a, Point b){
 	/**
 	 * Set the equation of the straight line
@@ -74,13 +80,17 @@ StraightLine::StraightLine(Point a, Point b){
 }
 
 
+/** @ATTENTION: If the line is vertical it raises an exception*/
 double StraightLine::calculateSlope(){
-	if (this->a!=0)
+	//TODO: change the control --> done
+	// if (a != 0)
+	if (! areSame(this->a,0))
 		return -(this->b/this->a);
 	else
 		throw VerticalLineException();
 }
 
+/** @ATTENTION: If the line is vertical it raises an exception*/
 double StraightLine::getSlope(){
 	if (this->isVertical())
 		throw VerticalLineException();
@@ -88,6 +98,7 @@ double StraightLine::getSlope(){
 		return this->slope;
 }
 
+/** @ATTENTION: If the line is vertical it raises an exception*/
 double StraightLine::getIntercept(){
 	if (this->isVertical())
 		throw VerticalLineException();
@@ -95,27 +106,36 @@ double StraightLine::getIntercept(){
 		return this->intercept;
 }
 
+
+/** @ATTENTION: If the line is vertical it raises an exception*/
 double StraightLine::calculateIntercept(){
-	if (this->a!=0)
+	//TODO: change the control
+	//if (this->a!=0)
+	if(!areSame(a,0))
 		return -(this->c/this->a);
 	else
 		throw VerticalLineException();
 }
 
-
+/** @ATTENTION: If the line is vertical it raises an exception*/
 bool StraightLine::isVertical(){
-	if (this->a==0)
+	//TODO: change the control
+	//if (this->a==0)
+	if(areSame(a,0))
 		return true;
 	else
 		return false;
 }
 
 bool StraightLine::doesPointBelongTo(int xp,int yp){
-	if (this->a * yp + this->b * xp + this->c == 0)
+	//TODO: change the control
+	//if (this->a * yp + this->b * xp + this->c == 0)
+	if (areSame(this->a * yp + this->b * xp + this->c,0))
 			return true;
 	else
 			return false;
 }
+
 
 double StraightLine::getA(){
 	return this->a;
@@ -130,6 +150,7 @@ double StraightLine::getB(){
 double StraightLine::getC(){
 	return this->c;
 }
+
 
 StraightLine::~StraightLine() {
 	// TODO Auto-generated destructor stub
@@ -200,7 +221,7 @@ bool StraightLine::isCoincident(StraightLine line2){
 }
 
 
-
+/** @ATTENTION: the input and the output value are double (and not integer)*/
 double StraightLine::getY(double xp){
 	return (slope*xp+intercept);
 }

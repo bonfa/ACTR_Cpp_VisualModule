@@ -6,6 +6,7 @@
  *
  *  This class represent the triangular geometric shape.
  *  It is defined by its three vertices.
+ *  @ATTENTION: the coordinates must not be negative
  */
 
 #ifndef TRIANGLE_H_

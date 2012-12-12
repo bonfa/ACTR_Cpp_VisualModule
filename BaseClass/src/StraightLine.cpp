@@ -141,9 +141,16 @@ Point StraightLine::getInterceptionPoint(StraightLine line2){
 		throw CoincidentLinesException();
 	if (this->isParallel(line2))
 		throw ParallelLinesException();
+	//the case in which both of the lines are vertical is handled above
 
-	//@todo: sistemare se la retta è verticale
-	//else
+	//one of the two lines is vertical
+	if(this->isVertical())
+		return (line2.getInterceptionPointWithVertical(*this));
+
+	else if (line2.isVertical())
+		return this->getInterceptionPointWithVertical(line2);
+
+	//non of two lines is vertical
 	double m1 = this->slope;
 	double q1 = this->intercept;
 	double m2 = line2.getSlope();
@@ -151,23 +158,45 @@ Point StraightLine::getInterceptionPoint(StraightLine line2){
 	double xp = (double(q2-q1))/(double(m1-m2));
 	double yp = this->getY(xp);
 
-	return Point(int(xp),int(yp));
+	return Point(round(xp),round(yp));
 }
 
 
+
+Point StraightLine::getInterceptionPointWithVertical(StraightLine verticalLine){
+	double xp = -verticalLine.getC()/verticalLine.getB();
+	double yp = (-this->c - this->b*xp) / this->a;
+	return Point(round(xp),round(yp));
+}
+
+
+
 bool StraightLine::isParallel(StraightLine line2){
-	//todo: controllare per rette verticali --> pendenza zero
-	double slope2 = line2.getSlope();
-	return (this->slope == slope2);
+	if (this->isVertical() && line2.isVertical())
+			return true;
+
+	else if (!this->isVertical() && !line2.isVertical()){
+		return ((areSame(this->slope,line2.getSlope())));
+	}
+
+	else	//one vertical and one not
+		return false;
 }
 
 
 
 bool StraightLine::isCoincident(StraightLine line2){
-	//todo: controllare per rette verticali
-	double slope2 = line2.getSlope();
-	double intercep2 = line2.getIntercept();
-	return ((int(this->slope) == int(slope2)) && (int(this->intercept) == (intercep2)));
+	if (this->isVertical() && line2.isVertical())
+		return (areSame(this->intercept,line2.getIntercept()));
+
+	else if (!this->isVertical() && !line2.isVertical()){
+		return ((areSame(this->slope,line2.getSlope())) && (areSame(this->intercept,line2.getIntercept())));
+	}
+
+	else	//one vertical and one not
+		return false;
+
+
 }
 
 

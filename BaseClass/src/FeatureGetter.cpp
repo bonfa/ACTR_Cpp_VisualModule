@@ -78,8 +78,8 @@ std::vector<Object *> FeatureGetter::getFeatureList(){
 	cout << getCenterDistance(0,2) << endl << endl;  //~431
 
 	//Examples
-	//cout << getExtremeDistance(0,0) << endl; //0
-	//cout << getExtremeDistance(0,5) << endl; //~17
+	cout << getExtremeDistance(0,0) << endl; //0
+	cout << getExtremeDistance(0,2) << endl; //~17
 
 	return objectList;
 }

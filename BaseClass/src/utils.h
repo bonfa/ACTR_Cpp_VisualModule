@@ -12,6 +12,7 @@
 #define MAX_Y 2
 #define MIN_X 3
 #define MIN_Y 4
+#define EPSILON 0.00001
 
 
 #include <opencv/cv.h>
@@ -27,7 +28,7 @@ std::vector<Point> Sort4PointsClockwise(std::vector<Point> points);
 bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy );
 double erone(Point a, Point b, Point c);
 double myDistance(Point a, Point b);
-
+bool areSame(double a, double b);
 
 
 

@@ -10,6 +10,7 @@
 
 #include "FeatureGetterExceptions.h"
 #include "MyPoint.h"
+#include "utils.h"
 
 class StraightLine {
 public:
@@ -27,6 +28,7 @@ public:
 	bool isParallel(StraightLine line2);
 	bool isCoincident(StraightLine line2);
 	Point getInterceptionPoint(StraightLine line2);
+	Point getInterceptionPointWithVertical(StraightLine verticalLine);
 	double getY(double xp);
 	virtual ~StraightLine();
 private:

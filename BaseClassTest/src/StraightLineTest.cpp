@@ -52,6 +52,11 @@ struct TestParameters_01{
 		ASSERT_EQUAL(false,l.doesPointBelongTo(1,1));
 	}
 
+	void getYTest_01(){
+		double realY = -5;
+		ASSERT_EQUAL(realY,l.getY(5));
+	}
+
 
 	StraightLine l;
 	double actualA;
@@ -112,6 +117,10 @@ struct TestParameters_02{
 		ASSERT_EQUAL(false,l.doesPointBelongTo(1,1));
 	}
 
+	void getYTest_02(){
+			double realY = -5;
+			ASSERT_EQUAL(realY,l.getY(3));
+	}
 
 	StraightLine l;
 	double actualA;
@@ -171,6 +180,9 @@ struct TestParameters_03{
 		ASSERT_EQUAL(false,l.doesPointBelongTo(1,1));
 	}
 
+	void getYTest_03(){
+		ASSERT_THROWS(l.getY(3), VerticalLineException);
+	}
 
 	StraightLine l;
 	double actualA;
@@ -229,6 +241,11 @@ struct TestParameters_04{
 
 		void pointNotBelongingTest_04(){
 			ASSERT_EQUAL(false,l.doesPointBelongTo(1,2));
+		}
+
+		void getYTest_04(){
+			double realY = 5;
+			ASSERT_EQUAL(realY,l.getY(5));
 		}
 
 
@@ -292,6 +309,11 @@ struct TestParameters_05{
 				ASSERT_EQUAL(false,l.doesPointBelongTo(0,0));
 			}
 
+			void getYTest_05(){
+				double realY = 5;
+				ASSERT_EQUAL(realY,l.getY(2));
+			}
+
 
 			StraightLine l;
 			double actualA;
@@ -302,7 +324,7 @@ struct TestParameters_05{
 			bool actualIsVertical;
 };
 
-//----------------------------------------------------------------------------------------------------
+
 
 struct TestParameters_06{
 	TestParameters_06(): l(5,0,5,5){
@@ -346,6 +368,10 @@ struct TestParameters_06{
 
 			void pointNotBelongingTest_06(){
 				ASSERT_EQUAL(false,l.doesPointBelongTo(0,0));
+			}
+
+			void getYTest_06(){
+				ASSERT_THROWS(l.getY(3), VerticalLineException);
 			}
 
 
@@ -424,6 +450,13 @@ cute::suite make_suite_StraightLineTest(){
 	s+= CUTE_SMEMFUN(TestParameters_04,pointNotBelongingTest_04);
 	s+= CUTE_SMEMFUN(TestParameters_05,pointNotBelongingTest_05);
 	s+= CUTE_SMEMFUN(TestParameters_06,pointNotBelongingTest_06);
+
+	s+= CUTE_SMEMFUN(TestParameters_01,getYTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_02,getYTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_03,getYTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_04,getYTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,getYTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,getYTest_06);
 
 
 	s.push_back(CUTE(StraightLineTestSecondConstructor04));

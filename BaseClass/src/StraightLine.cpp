@@ -82,8 +82,6 @@ StraightLine::StraightLine(Point a, Point b){
 
 /** @ATTENTION: If the line is vertical it raises an exception*/
 double StraightLine::calculateSlope(){
-	//TODO: change the control --> done
-	// if (a != 0)
 	if (! areSame(this->a,0))
 		return -(this->b/this->a);
 	else
@@ -109,31 +107,19 @@ double StraightLine::getIntercept(){
 
 /** @ATTENTION: If the line is vertical it raises an exception*/
 double StraightLine::calculateIntercept(){
-	//TODO: change the control
-	//if (this->a!=0)
 	if(!areSame(a,0))
 		return -(this->c/this->a);
 	else
 		throw VerticalLineException();
 }
 
-/** @ATTENTION: If the line is vertical it raises an exception*/
+
 bool StraightLine::isVertical(){
-	//TODO: change the control
-	//if (this->a==0)
-	if(areSame(a,0))
-		return true;
-	else
-		return false;
+	return areSame(a,0);
 }
 
 bool StraightLine::doesPointBelongTo(int xp,int yp){
-	//TODO: change the control
-	//if (this->a * yp + this->b * xp + this->c == 0)
-	if (areSame(this->a * yp + this->b * xp + this->c,0))
-			return true;
-	else
-			return false;
+	return (areSame(this->a * yp + this->b * xp + this->c,0));
 }
 
 
@@ -152,11 +138,21 @@ double StraightLine::getC(){
 }
 
 
+
+/** @ATTENTION: the input and the output value are double (and not integer)*/
+double StraightLine::getY(double xp){
+	if (isVertical())
+		throw VerticalLineException();
+	else
+		return (slope*xp+intercept);
+}
+
+
 StraightLine::~StraightLine() {
 	// TODO Auto-generated destructor stub
 }
 
-
+//TODO: test
 Point StraightLine::getInterceptionPoint(StraightLine line2){
 	if (this->isCoincident(line2))
 		throw CoincidentLinesException();
@@ -183,7 +179,7 @@ Point StraightLine::getInterceptionPoint(StraightLine line2){
 }
 
 
-
+//TODO: test
 Point StraightLine::getInterceptionPointWithVertical(StraightLine verticalLine){
 	double xp = -verticalLine.getC()/verticalLine.getB();
 	double yp = (-this->c - this->b*xp) / this->a;
@@ -191,7 +187,7 @@ Point StraightLine::getInterceptionPointWithVertical(StraightLine verticalLine){
 }
 
 
-
+//TODO: test
 bool StraightLine::isParallel(StraightLine line2){
 	if (this->isVertical() && line2.isVertical())
 			return true;
@@ -205,7 +201,7 @@ bool StraightLine::isParallel(StraightLine line2){
 }
 
 
-
+//TODO: test
 bool StraightLine::isCoincident(StraightLine line2){
 	if (this->isVertical() && line2.isVertical())
 		return (areSame(this->intercept,line2.getIntercept()));
@@ -221,8 +217,5 @@ bool StraightLine::isCoincident(StraightLine line2){
 }
 
 
-/** @ATTENTION: the input and the output value are double (and not integer)*/
-double StraightLine::getY(double xp){
-	return (slope*xp+intercept);
-}
+
 

@@ -32,7 +32,7 @@ typedef enum {QUADRILATERAL, TRIANGLE, CIRCLE} ShapeType;
 class FeatureExtractor {
 public:
 	FeatureExtractor(cv::Mat img);
-	std::vector<Object *> getExtractedFeature(); //@TODO: trasformare il tipo ritornato in una lista di oggetti
+	std::vector<Object *> getExtractedFeature();
 	virtual ~FeatureExtractor();
 	string getPointColor(int x, int y);
 private:

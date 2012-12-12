@@ -211,13 +211,13 @@ double FeatureGetter::getExtremeDistance(int aIndex,int bIndex){
 		}
 		catch (NotOverlappedSegmentException& e) {numberofExceptions++;}
 	}
-	cout << "NoE = " <<numberofExceptions <<endl;
+	//cout << "NoE = " <<numberofExceptions <<endl;
 	if (numberofExceptions >= 4){
 		throw  NotOverlappedSegmentException();
 	}
 
-	numberofExceptions = 0;
-	cout << "NoE = " <<numberofExceptions <<endl;
+	//numberofExceptions = 0;
+	//cout << "NoE = " <<numberofExceptions <<endl;
 	for(size_t i=0; i < bEdges.size(); i++){
 		try{
 			bIntersect = (bEdges.at(i)).getInterceptionPoint(centerLine);
@@ -225,27 +225,13 @@ double FeatureGetter::getExtremeDistance(int aIndex,int bIndex){
 		}
 		catch (NotOverlappedSegmentException& e) {numberofExceptions++;}
 	}
-	cout << "NoE = " <<numberofExceptions <<endl;
+	//cout << "NoE = " <<numberofExceptions <<endl;
 	if (numberofExceptions >= 4){
 			throw  NotOverlappedSegmentException();
 	}
 
 
 	return myDistance(aIntersect,bIntersect);
-
-	//@todo:change this method with something smarter
-	//for the moment this method returns the minimum of all the distances between the points of the first bbox and the points ot the second bounding box
-	/*
-	 *
-	double minDistance = myDistance(aPoints.at(0),bPoints.at(0));
-	for (size_t i=0; i < aPoints.size(); i++)
-		for (size_t j=0; j < bPoints.size(); j++){
-			double distance = myDistance(aPoints.at(i),bPoints.at(j));
-			if (distance < minDistance)
-				minDistance = distance;
-		}
-	return minDistance;
-	*/
 }
 
 

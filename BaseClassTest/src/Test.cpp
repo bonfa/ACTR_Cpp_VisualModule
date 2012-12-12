@@ -11,6 +11,7 @@
 #include "BlobTest.h"
 #include "utilsTest.h"
 #include "extractorUtilsTest.h"
+#include "SegmentTest.h"
 
 #include "QRScannerTest.h"
 
@@ -58,6 +59,9 @@ void runTest(){
 
 	cute::suite extractorUtilsTest = make_suite_extractorUtilsTest();
 	cute::makeRunner(lis)(extractorUtilsTest, "RectTest");
+
+	cute::suite segmentTest = make_suite_SegmentTest();
+	cute::makeRunner(lis)(segmentTest, "RectTest");
 
 }
 

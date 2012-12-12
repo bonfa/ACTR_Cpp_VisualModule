@@ -77,13 +77,6 @@ int getMinMax(const std::vector<Point>& coords, int type) {
 }
 
 
-bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy ){
-
-	StraightLine *line = new StraightLine(ax,ay,bx,by);
-	return line->doesPointBelongTo(cx,cy);
-}
-
-
 double erone(Point a, Point b, Point c){
 	double ab;
 	double bc;
@@ -97,12 +90,31 @@ double erone(Point a, Point b, Point c){
 }
 
 
-double myDistance(Point a, Point b){
-		return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+
+/**
+ *	1) take the first two points
+ *	2) create the straight line which passes for these points
+ *	3) check if the third point belongs to the line
+ * */
+bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy ){
+
+	StraightLine *line = new StraightLine(ax,ay,bx,by);
+	return line->doesPointBelongTo(cx,cy);
 }
 
 
 
+/***/
+double myDistance(Point a, Point b){
+	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+}
+
+
+
+/**
+ * @ATTENTION: You need to define a constant which contains the value of EPSILON,
+ * that is the precision of the comparison
+ * */
 bool areSame(double a, double b){
     return fabs(a - b) < EPSILON;
 }

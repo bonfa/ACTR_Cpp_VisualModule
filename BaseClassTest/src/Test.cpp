@@ -58,7 +58,7 @@ void runTest(){
 	cute::makeRunner(lis)(RectTest, "RectTest");
 
 	cute::suite extractorUtilsTest = make_suite_extractorUtilsTest();
-	cute::makeRunner(lis)(extractorUtilsTest, "RectTest");
+	cute::makeRunner(lis)(extractorUtilsTest, "extractorUtilsTest");
 
 	cute::suite segmentTest = make_suite_SegmentTest();
 	cute::makeRunner(lis)(segmentTest, "RectTest");

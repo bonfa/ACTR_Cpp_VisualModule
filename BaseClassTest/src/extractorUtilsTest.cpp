@@ -4,6 +4,8 @@
 #include "extractorUtilsTest.h"
 
 void debugging() {
+	/*
+
 	cv::vector <cv::vector<cv::Point> > prova;
 	cv::vector<cv::Point> p1;
 	p1.push_back(cv::Point(181,45));
@@ -44,6 +46,7 @@ void debugging() {
 			printf("\n\n");
 	}
 	ASSERTM("start writing tests", true);
+	*/
 }
 
 cute::suite make_suite_extractorUtilsTest(){

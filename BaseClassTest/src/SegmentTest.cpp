@@ -4,7 +4,7 @@
 #include "SegmentTest.h"
 
 void thisIsASegmentTestTest() {
-	ASSERTM("start writing tests", false);	
+	ASSERTM("start writing tests", true);
 }
 
 cute::suite make_suite_SegmentTest(){

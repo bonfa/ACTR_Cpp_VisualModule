@@ -14,7 +14,7 @@
 
 using namespace std;
 
-
+//TODO: documentation
 class Segment: StraightLine {
 public:
 	Segment(Point a, Point b);

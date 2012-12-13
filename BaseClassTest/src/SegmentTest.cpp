@@ -3,6 +3,7 @@
 #include "cute_runner.h"
 #include "SegmentTest.h"
 
+//TODO: tests
 void thisIsASegmentTestTest() {
 	ASSERTM("start writing tests", true);
 }

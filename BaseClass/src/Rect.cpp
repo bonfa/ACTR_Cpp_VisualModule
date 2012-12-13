@@ -14,6 +14,12 @@ Rect::Rect(){
 	width = 0;
 }
 
+/**
+ * Constructor
+ * 1) check that the coordinates of the point are not negative
+ * 2) check that the width and the height are positive
+ * 3) creates the rectangle
+ * */
 Rect::Rect(int x_, int y_, int height_, int width_) {
 	if(x_< 0 || y_ < 0 || height_ <= 0 || width_ <= 0)
 				throw InputException(("Negative values in the coordinates"));
@@ -23,6 +29,13 @@ Rect::Rect(int x_, int y_, int height_, int width_) {
 	width = width_;
 }
 
+
+/**
+ * Constructor
+ * 1) check that the coordinates of the point are not negative
+ * 2) check that the width and the height are positive
+ * 3) creates the rectangle
+ * */
 Rect::Rect(Point p, int height_, int width_){
 	if(p.x < 0)
 		throw InputException(("Negative values in the coordinates [p.x]"));
@@ -47,7 +60,7 @@ bool Rect::operator==(const Rect &other) const {
 
 
 Rect::~Rect() {
-	// TODO Auto-generated destructor stub
+
 }
 
 
@@ -82,12 +95,6 @@ std::vector<Point> Rect::getPoints(){
 	pointList.push_back(p2);
 	pointList.push_back(p3);
 	pointList.push_back(p4);
-
-	/*
-	for(int i =0; i< pointList.size();i++){
-		cout << pointList.at(i).x << "-" << pointList.at(i).y << endl;
-	}*/
-
 
 	return pointList;
 }

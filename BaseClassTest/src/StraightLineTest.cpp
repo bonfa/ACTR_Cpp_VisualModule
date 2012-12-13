@@ -310,6 +310,25 @@ struct TestParameters_04{
 			ASSERT_EQUAL(realY,l.getY(5));
 		}
 
+		void getInterceptionPointTestWithParallelTest_04(){
+			StraightLine secondLine = StraightLine(Point(0,1),Point(1,2));
+			ASSERT_THROWS(l.getInterceptionPoint(secondLine),ParallelLinesException);
+		}
+
+		void getInterceptionPointTestWithSameTest_04(){
+			StraightLine secondLine = StraightLine(Point(0,0),Point(-5,-5));
+			ASSERT_THROWS(l.getInterceptionPoint(secondLine),CoincidentLinesException);
+		}
+
+		void getInterceptionPointTestNoError_A_Test_04(){
+			StraightLine secondLine = StraightLine(Point(0,1),Point(-5,1));
+			ASSERT_EQUAL(l.getInterceptionPoint(secondLine),Point(1,1));
+		}
+
+		void getInterceptionPointTestNoError_B_Test_04(){
+			StraightLine secondLine = StraightLine(Point(0,2),Point(2,0));
+			ASSERT_EQUAL(l.getInterceptionPoint(secondLine),Point(1,1));
+		}
 
 		StraightLine l;
 		double actualA;
@@ -376,6 +395,25 @@ struct TestParameters_05{
 				ASSERT_EQUAL(realY,l.getY(2));
 			}
 
+			void getInterceptionPointTestWithParallelTest_05(){
+				StraightLine secondLine = StraightLine(Point(0,0),Point(5,0));
+				ASSERT_THROWS(l.getInterceptionPoint(secondLine),ParallelLinesException);
+			}
+
+			void getInterceptionPointTestWithSameTest_05(){
+				StraightLine secondLine = StraightLine(Point(-1,5),Point(-5,5));
+				ASSERT_THROWS(l.getInterceptionPoint(secondLine),CoincidentLinesException);
+			}
+
+			void getInterceptionPointTestNoError_A_Test_05(){
+				StraightLine secondLine = StraightLine(Point(0,0),Point(0,1));
+				ASSERT_EQUAL(l.getInterceptionPoint(secondLine),Point(0,5));
+			}
+
+			void getInterceptionPointTestNoError_B_Test_05(){
+				StraightLine secondLine = StraightLine(Point(0,2),Point(2,0));
+				ASSERT_EQUAL(l.getInterceptionPoint(secondLine),Point(-3,5));
+			}
 
 			StraightLine l;
 			double actualA;
@@ -434,6 +472,27 @@ struct TestParameters_06{
 
 			void getYTest_06(){
 				ASSERT_THROWS(l.getY(3), VerticalLineException);
+			}
+
+
+			void getInterceptionPointTestWithParallelTest_06(){
+				StraightLine secondLine = StraightLine(Point(0,0),Point(0,5));
+				ASSERT_THROWS(l.getInterceptionPoint(secondLine),ParallelLinesException);
+			}
+
+			void getInterceptionPointTestWithSameTest_06(){
+				StraightLine secondLine = StraightLine(Point(5,-2),Point(5,-6));
+				ASSERT_THROWS(l.getInterceptionPoint(secondLine),CoincidentLinesException);
+			}
+
+			void getInterceptionPointTestNoError_A_Test_06(){
+				StraightLine secondLine = StraightLine(Point(1,1),Point(-6,1));
+				ASSERT_EQUAL(l.getInterceptionPoint(secondLine),Point(5,1));
+			}
+
+			void getInterceptionPointTestNoError_B_Test_06(){
+				StraightLine secondLine = StraightLine(Point(0,2),Point(2,0));
+				ASSERT_EQUAL(l.getInterceptionPoint(secondLine),Point(5,-3));
 			}
 
 
@@ -532,7 +591,18 @@ cute::suite make_suite_StraightLineTest(){
 	s+= CUTE_SMEMFUN(TestParameters_03,getInterceptionPointTestWithSameTest_03);
 	s+= CUTE_SMEMFUN(TestParameters_03,getInterceptionPointTestNoError_A_Test_03);
 	s+= CUTE_SMEMFUN(TestParameters_03,getInterceptionPointTestNoError_B_Test_03);
-
+	s+= CUTE_SMEMFUN(TestParameters_04,getInterceptionPointTestWithParallelTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_04,getInterceptionPointTestWithSameTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_04,getInterceptionPointTestNoError_A_Test_04);
+	s+= CUTE_SMEMFUN(TestParameters_04,getInterceptionPointTestNoError_B_Test_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,getInterceptionPointTestWithParallelTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_05,getInterceptionPointTestWithSameTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_05,getInterceptionPointTestNoError_A_Test_05);
+	s+= CUTE_SMEMFUN(TestParameters_05,getInterceptionPointTestNoError_B_Test_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,getInterceptionPointTestWithParallelTest_06);
+	s+= CUTE_SMEMFUN(TestParameters_06,getInterceptionPointTestWithSameTest_06);
+	s+= CUTE_SMEMFUN(TestParameters_06,getInterceptionPointTestNoError_A_Test_06);
+	s+= CUTE_SMEMFUN(TestParameters_06,getInterceptionPointTestNoError_B_Test_06);
 
 
 	s.push_back(CUTE(StraightLineTestSecondConstructor04));

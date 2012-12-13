@@ -47,7 +47,7 @@ public:
 	/** Returns true if the line and the input line are the same line*/
 	bool isCoincident(StraightLine line2);
 
-	/** Returns the point which is the result of the intersection of the line and the input line*/
+	/** Returns the point (with integer coordinates) which is the result of the intersection of the line and the input line*/
 	Point getInterceptionPoint(StraightLine line2);
 
 	/** Returns the point which is the result of the intersection of the line and the input line,

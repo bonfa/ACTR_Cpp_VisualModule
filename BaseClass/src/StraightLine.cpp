@@ -152,7 +152,10 @@ StraightLine::~StraightLine() {
 	// TODO Auto-generated destructor stub
 }
 
+
+
 //TODO: test
+/**ATTENTION: the point returned has integer coordinates*/
 Point StraightLine::getInterceptionPoint(StraightLine line2){
 	if (this->isCoincident(line2))
 		throw CoincidentLinesException();
@@ -167,7 +170,7 @@ Point StraightLine::getInterceptionPoint(StraightLine line2){
 	else if (line2.isVertical())
 		return this->getInterceptionPointWithVertical(line2);
 
-	//non of two lines is vertical
+	//none of two lines is vertical
 	double m1 = this->slope;
 	double q1 = this->intercept;
 	double m2 = line2.getSlope();
@@ -204,7 +207,7 @@ bool StraightLine::isParallel(StraightLine line2){
 //TODO: test
 bool StraightLine::isCoincident(StraightLine line2){
 	if (this->isVertical() && line2.isVertical())
-		return (areSame(this->intercept,line2.getIntercept()));
+		return (areSame(this->c,line2.getC()));
 
 	else if (!this->isVertical() && !line2.isVertical()){
 		return ((areSame(this->slope,line2.getSlope())) && (areSame(this->intercept,line2.getIntercept())));

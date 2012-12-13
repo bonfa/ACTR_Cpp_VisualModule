@@ -149,12 +149,11 @@ double StraightLine::getY(double xp){
 
 
 StraightLine::~StraightLine() {
-	// TODO Auto-generated destructor stub
+
 }
 
 
 
-//TODO: test
 /**ATTENTION: the point returned has integer coordinates*/
 Point StraightLine::getInterceptionPoint(StraightLine line2){
 	if (this->isCoincident(line2))
@@ -182,15 +181,18 @@ Point StraightLine::getInterceptionPoint(StraightLine line2){
 }
 
 
-//TODO: test
+
 Point StraightLine::getInterceptionPointWithVertical(StraightLine verticalLine){
+	if (this->isVertical())
+		throw VerticalLineException();
+	//else
 	double xp = -verticalLine.getC()/verticalLine.getB();
 	double yp = (-this->c - this->b*xp) / this->a;
 	return Point(round(xp),round(yp));
 }
 
 
-//TODO: test
+
 bool StraightLine::isParallel(StraightLine line2){
 	if (this->isVertical() && line2.isVertical())
 			return true;
@@ -204,7 +206,7 @@ bool StraightLine::isParallel(StraightLine line2){
 }
 
 
-//TODO: test
+
 bool StraightLine::isCoincident(StraightLine line2){
 	if (this->isVertical() && line2.isVertical())
 		return (areSame(this->c,line2.getC()));

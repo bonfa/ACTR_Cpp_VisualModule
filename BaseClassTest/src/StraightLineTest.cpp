@@ -78,6 +78,32 @@ struct TestParameters_01{
 	}
 
 
+	void isCoincidentTest_01(){
+		StraightLine secondLine = StraightLine(Point(1,-1),Point(-1,1));
+		ASSERT_EQUAL(l.isCoincident(secondLine),true);
+	}
+
+
+	void isNotCoincidentTest_01(){
+		StraightLine secondLine = StraightLine(Point(-1,-1),Point(1,1));
+		ASSERT_EQUAL(l.isCoincident(secondLine),false);
+	}
+
+	void isParallelTest_01(){
+		StraightLine secondLine = StraightLine(2,2,5);
+		ASSERT_EQUAL(l.isParallel(secondLine),true);
+	}
+
+	void isNotParallelTest_01(){
+		StraightLine secondLine = StraightLine(2,3,4);
+		ASSERT_EQUAL(l.isParallel(secondLine),false);
+	}
+
+	void getInterceptionWithVerticalTest_01(){
+		StraightLine secondLine = StraightLine(5,0,5,5);
+		ASSERT_EQUAL(l.getInterceptionPointWithVertical(secondLine),Point(5,-5));
+	}
+
 	StraightLine l;
 	double actualA;
 	double actualB;
@@ -164,6 +190,32 @@ struct TestParameters_02{
 	}
 
 
+	void isCoincidentTest_02(){
+		StraightLine secondLine = StraightLine(Point(-10,-5),Point(20,-5));
+		ASSERT_EQUAL(l.isCoincident(secondLine),true);
+	}
+
+
+	void isNotCoincidentTest_02(){
+		StraightLine secondLine = StraightLine(Point(-1,-1),Point(1,1));
+		ASSERT_EQUAL(l.isCoincident(secondLine),false);
+	}
+
+	void isParallelTest_02(){
+		StraightLine secondLine = StraightLine(Point(0,0),Point(5,0));
+		ASSERT_EQUAL(l.isParallel(secondLine),true);
+	}
+
+	void isNotParallelTest_02(){
+		StraightLine secondLine = StraightLine(2,3,4);
+		ASSERT_EQUAL(l.isParallel(secondLine),false);
+	}
+
+	void getInterceptionWithVerticalTest_02(){
+		StraightLine secondLine = StraightLine(5,0,5,5);
+		ASSERT_EQUAL(l.getInterceptionPointWithVertical(secondLine),Point(5,-5));
+	}
+
 	StraightLine l;
 	double actualA;
 	double actualB;
@@ -244,6 +296,38 @@ struct TestParameters_03{
 	void getInterceptionPointTestNoError_B_Test_03(){
 		StraightLine secondLine = StraightLine(Point(0,1),Point(1,0));
 		ASSERT_EQUAL(l.getInterceptionPoint(secondLine),Point(-5,6));
+	}
+
+
+	void isCoincidentTest_03(){
+		StraightLine secondLine = StraightLine(Point(-5,-5),Point(-5,150));
+		ASSERT_EQUAL(l.isCoincident(secondLine),true);
+	}
+
+
+	void isNotCoincidentTest_03(){
+		StraightLine secondLine = StraightLine(Point(-1,-1),Point(1,1));
+		ASSERT_EQUAL(l.isCoincident(secondLine),false);
+	}
+
+	void isParallelTest_03(){
+		StraightLine secondLine = StraightLine(Point(0,0),Point(0,5));
+		ASSERT_EQUAL(l.isParallel(secondLine),true);
+	}
+
+	void isNotParallelTest_03(){
+		StraightLine secondLine = StraightLine(2,3,4);
+		ASSERT_EQUAL(l.isParallel(secondLine),false);
+	}
+
+	void getInterceptionWithVerticalTest_03a(){
+		StraightLine secondLine = StraightLine(0,0,0,5);
+		ASSERT_THROWS(l.getInterceptionPointWithVertical(secondLine),VerticalLineException);
+	}
+
+	void getInterceptionWithVerticalTest_03b(){
+			StraightLine secondLine = StraightLine(0,1,5);
+			ASSERT_THROWS(l.getInterceptionPointWithVertical(secondLine),VerticalLineException);
 	}
 
 	StraightLine l;
@@ -330,6 +414,34 @@ struct TestParameters_04{
 			ASSERT_EQUAL(l.getInterceptionPoint(secondLine),Point(1,1));
 		}
 
+
+		void isCoincidentTest_04(){
+			StraightLine secondLine = StraightLine(Point(-5,-5),Point(10,10));
+			ASSERT_EQUAL(l.isCoincident(secondLine),true);
+		}
+
+
+		void isNotCoincidentTest_04(){
+			StraightLine secondLine = StraightLine(Point(-11,-1),Point(1,23));
+			ASSERT_EQUAL(l.isCoincident(secondLine),false);
+		}
+
+		void isParallelTest_04(){
+			StraightLine secondLine = StraightLine(1,-1,-10);
+			ASSERT_EQUAL(l.isParallel(secondLine),true);
+		}
+
+		void isNotParallelTest_04(){
+			StraightLine secondLine = StraightLine(2,3,4);
+			ASSERT_EQUAL(l.isParallel(secondLine),false);
+		}
+
+		void getInterceptionWithVerticalTest_04(){
+			StraightLine secondLine = StraightLine(0,0,0,5);
+			ASSERT_EQUAL(l.getInterceptionPointWithVertical(secondLine),Point(0,0));
+		}
+
+
 		StraightLine l;
 		double actualA;
 		double actualB;
@@ -415,6 +527,34 @@ struct TestParameters_05{
 				ASSERT_EQUAL(l.getInterceptionPoint(secondLine),Point(-3,5));
 			}
 
+
+			void isCoincidentTest_05(){
+				StraightLine secondLine = StraightLine(Point(-5,5),Point(10,5));
+				ASSERT_EQUAL(l.isCoincident(secondLine),true);
+			}
+
+
+			void isNotCoincidentTest_05(){
+				StraightLine secondLine = StraightLine(Point(-11,-1),Point(1,23));
+				ASSERT_EQUAL(l.isCoincident(secondLine),false);
+			}
+
+			void isParallelTest_05(){
+				StraightLine secondLine = StraightLine(0,0,10,0);
+				ASSERT_EQUAL(l.isParallel(secondLine),true);
+			}
+
+			void isNotParallelTest_05(){
+				StraightLine secondLine = StraightLine(2,3,4);
+				ASSERT_EQUAL(l.isParallel(secondLine),false);
+			}
+
+			void getInterceptionWithVerticalTest_05(){
+				StraightLine secondLine = StraightLine(0,1,-1);
+				ASSERT_EQUAL(l.getInterceptionPointWithVertical(secondLine),Point(1,5));
+			}
+
+
 			StraightLine l;
 			double actualA;
 			double actualB;
@@ -493,6 +633,38 @@ struct TestParameters_06{
 			void getInterceptionPointTestNoError_B_Test_06(){
 				StraightLine secondLine = StraightLine(Point(0,2),Point(2,0));
 				ASSERT_EQUAL(l.getInterceptionPoint(secondLine),Point(5,-3));
+			}
+
+
+			void isCoincidentTest_06(){
+				StraightLine secondLine = StraightLine(Point(5,-25),Point(5,150));
+				ASSERT_EQUAL(l.isCoincident(secondLine),true);
+			}
+
+
+			void isNotCoincidentTest_06(){
+				StraightLine secondLine = StraightLine(Point(-1,-1),Point(1,1));
+				ASSERT_EQUAL(l.isCoincident(secondLine),false);
+			}
+
+			void isParallelTest_06(){
+				StraightLine secondLine = StraightLine(Point(0,0),Point(0,5));
+				ASSERT_EQUAL(l.isParallel(secondLine),true);
+			}
+
+			void isNotParallelTest_06(){
+				StraightLine secondLine = StraightLine(2,3,4);
+				ASSERT_EQUAL(l.isParallel(secondLine),false);
+			}
+
+			void getInterceptionWithVerticalTest_06a(){
+				StraightLine secondLine = StraightLine(0,0,0,5);
+				ASSERT_THROWS(l.getInterceptionPointWithVertical(secondLine),VerticalLineException);
+			}
+
+			void getInterceptionWithVerticalTest_06b(){
+					StraightLine secondLine = StraightLine(0,1,-5);
+					ASSERT_THROWS(l.getInterceptionPointWithVertical(secondLine),VerticalLineException);
 			}
 
 
@@ -604,6 +776,38 @@ cute::suite make_suite_StraightLineTest(){
 	s+= CUTE_SMEMFUN(TestParameters_06,getInterceptionPointTestNoError_A_Test_06);
 	s+= CUTE_SMEMFUN(TestParameters_06,getInterceptionPointTestNoError_B_Test_06);
 
+	s+= CUTE_SMEMFUN(TestParameters_01,isCoincidentTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_01,isNotCoincidentTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_01,isParallelTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_01,isNotParallelTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_01,getInterceptionWithVerticalTest_01);
+	s+= CUTE_SMEMFUN(TestParameters_02,isCoincidentTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_02,isNotCoincidentTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_02,isParallelTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_02,isNotParallelTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_02,getInterceptionWithVerticalTest_02);
+	s+= CUTE_SMEMFUN(TestParameters_03,isCoincidentTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_03,isNotCoincidentTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_03,isParallelTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_03,isNotParallelTest_03);
+	s+= CUTE_SMEMFUN(TestParameters_03,getInterceptionWithVerticalTest_03a);
+	s+= CUTE_SMEMFUN(TestParameters_03,getInterceptionWithVerticalTest_03b);
+	s+= CUTE_SMEMFUN(TestParameters_04,isCoincidentTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_04,isNotCoincidentTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_04,isParallelTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_04,isNotParallelTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_04,getInterceptionWithVerticalTest_04);
+	s+= CUTE_SMEMFUN(TestParameters_05,isCoincidentTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_05,isNotCoincidentTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_05,isParallelTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_05,isNotParallelTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_05,getInterceptionWithVerticalTest_05);
+	s+= CUTE_SMEMFUN(TestParameters_06,isCoincidentTest_06);
+	s+= CUTE_SMEMFUN(TestParameters_06,isNotCoincidentTest_06);
+	s+= CUTE_SMEMFUN(TestParameters_06,isParallelTest_06);
+	s+= CUTE_SMEMFUN(TestParameters_06,isNotParallelTest_06);
+	s+= CUTE_SMEMFUN(TestParameters_06,getInterceptionWithVerticalTest_06a);
+	s+= CUTE_SMEMFUN(TestParameters_06,getInterceptionWithVerticalTest_06b);
 
 	s.push_back(CUTE(StraightLineTestSecondConstructor04));
 	return s;

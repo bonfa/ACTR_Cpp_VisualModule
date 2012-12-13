@@ -73,5 +73,5 @@ Point Triangle::getC(){
 
 
 Triangle::~Triangle() {
-	// TODO Auto-generated destructor stub
+
 }

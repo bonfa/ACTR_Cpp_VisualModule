@@ -3,7 +3,7 @@
  *
  *  Created on: 13/nov/2012
  *      Author: francesco
- *  This class represent a bounding box of rectangular shape.
+ *  This class represents a bounding box of rectangular shape.
  *  It is supposed to bound the objects detected.
  *
  *  It is defined by a point, which is the starting point of the rectangle

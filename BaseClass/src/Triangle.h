@@ -23,7 +23,7 @@ class Triangle: public Blob {
 public:
 	Triangle(int ax,int ay,int bx,int by,int cx,int cy);
 	virtual ~Triangle();
-	/** Returns a string which contains the basilar information about the triangle*/
+	/** Returns a string which contains the basic information about the triangle*/
 	string getChunk();
 	/** Returns the first vertex of the triangle*/
 	Point getA();

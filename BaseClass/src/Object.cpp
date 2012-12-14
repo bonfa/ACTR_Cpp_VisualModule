@@ -28,7 +28,10 @@ Rect Object::getBbox(){
 	return this->bbox;
 }
 
-
+/**
+ * 1) control that the value of the bounding box are consistent
+ * 2) create the bounding box
+ * */
 void Object::setBbox(int x, int y, int height, int width){
 	if(x<0 || y < 0 || height <=0 || width <= 0)
 		throw InputException("Negative values in the points coordinates");
@@ -40,7 +43,9 @@ Point Object::getCenter(){
 	return center;
 }
 
-
+/**
+ * The center of the object is set as the center of the bounding box
+ * */
 void Object::setCenter(){
 	int xCenter = bbox.x + bbox.width/2;
 	int yCenter = bbox.y + bbox.height/2;

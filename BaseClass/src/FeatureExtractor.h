@@ -3,6 +3,16 @@
  *
  *  Created on: 04/dic/2012
  *      Author: francesco
+ *
+ *	This class extract some features from the input image.
+ *	The features are returned in an object list
+ *	The extracted feature are:
+ *		-) circles
+ *		-) squares
+ *		-) triangles
+ *		-) color of a pixel
+ *		-) color of an omogeneous area
+ *
  */
 
 using namespace std;
@@ -25,28 +35,42 @@ using namespace std;
 #include "Object.h"
 #include "Blob.h"
 
-
+//todo: delete
 typedef enum {QUADRILATERAL, TRIANGLE, CIRCLE} ShapeType;
 
 
 class FeatureExtractor {
 public:
 	FeatureExtractor(cv::Mat img);
+	/** Return the list of the recognized object in the image*/
 	std::vector<Object *> getExtractedFeature();
-	virtual ~FeatureExtractor();
+	/** Return the color of a point*/
 	string getPointColor(int x, int y);
+	virtual ~FeatureExtractor();
 private:
+	/**Analizes the image and looks for circles in it. The circles found are added in the circleList*/
 	void recognizeCircles();
+	/** Analizes the image and looks for quadrilateral in it. The circles found are added in the quadrilateralList*/
 	void recognizeSquares();
+	/** Analizes the image and looks for triangles in it. The circles found are added in the triangleList*/
 	void recognizeTriangles();
+	/** Receives as input the opencvValue of hue and returns it normalized in a "GimpLike" way*/
 	double normHue(int hueVal);
+	/** Receives as input the opencvValue of saturation or value and returns it normalized in a "GimpLike" way*/
 	double normSV(int svVal);
+	/** Starting from the "GimpLike" values of hue, saturation and value, it returns a string containing the name of the color referred by those three values*/
 	string getColorString(double gimpHue, double gimpSaturation, double gimpValue);
+	/** Returns the color of the region defined by the input points*/
 	string getRegionColor(cv::vector<cv::Point> points);
+	/** The input image */
 	cv::Mat image;
+	/** The list of all the quadrilaterals recognized in the input image*/
 	std::vector<Quadrilateral *> quadrilateralList;
+	/** The list of all the triangles recognized in the input image*/
 	std::vector<Triangle *> triangleList;
+	/** The list of all the circles recognized in the input image*/
 	std::vector<Circle *> circleList;
+	/** The list of all the objects recognized in the input image*/
 	std::vector<Object *> objectList;
 
 };

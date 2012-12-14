@@ -1,5 +1,5 @@
 /*
- * BaseClass.cpp
+ * FeatureGetter.cpp
  *
  *  Created on: 29/ott/2012
  *      Author: enrico

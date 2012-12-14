@@ -21,11 +21,11 @@ FeatureExtractor::FeatureExtractor(cv::Mat img) {
 
 
 FeatureExtractor::~FeatureExtractor() {
-	// TODO Auto-generated destructor stub
 }
 
 
-
+/** Converts the image in HSV, normalize the value as Gimp and then recognize the color
+ * starting from the new values*/
 string FeatureExtractor::getPointColor(int x, int y){
 	// Convert image to HSV.
 	cv::Mat hsv;
@@ -48,7 +48,11 @@ string FeatureExtractor::getPointColor(int x, int y){
 	return this->getColorString(hue,sat,val);
 }
 
-
+/** Converts the image in grayscale
+ *  apply a threshold to distinguish foreground to background
+ *  Using the thresholded image as a foreground background map,
+ *  it averages all the values of HSV of the object.
+ *  Then it calls the function to normalize the HSV value and then there is the recognition*/
 string FeatureExtractor::getRegionColor(cv::vector<cv::Point> points){
 	//extract the bounding box of the shape in a new image
 	cv::Rect boundingBox = boundingRect(cv::Mat(points));
@@ -380,6 +384,7 @@ void FeatureExtractor::recognizeTriangles(){
 
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){
+	//TODO: alla fine eliminare tutto questo schifo ee far ritornare solo la lista di oggetti
 	cout<<"color: "+this->getPointColor(100, 100)+"\n";   //rosso
 	cout<<"color: "+this->getPointColor(200, 100)+"\n";		//verde
 	cout<<"color: "+this->getPointColor(100, 250)+"\n";		//blue

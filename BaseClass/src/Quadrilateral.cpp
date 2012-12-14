@@ -15,7 +15,16 @@ Quadrilateral::Quadrilateral() {
 Quadrilateral::~Quadrilateral() {
 }
 
-
+/**
+ * Constructor
+ * 1) check that all the coordinates are not negative
+ * 2) check that the points are not on the same line
+ * 3) sort the vertices following the clockwise order
+ * 4) creates the quadrilateral
+ * 5) set the area
+ * 6) set the bounding box
+ * 7) set the center of the bounding box
+ * */
 Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy){
 	if(ax<0 || ay<0 || bx<0 || by<0 || cx<0 || cy<0 || dx<0 || dy<0)
 		throw InputException("Negative coordinate");

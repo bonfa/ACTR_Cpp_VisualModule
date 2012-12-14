@@ -3,6 +3,12 @@
  *
  *  Created on: 03/dic/2012
  *      Author: francesco
+ *
+ *  This class represents a generic input for the image or for the video.
+ *
+ *  The input can be:
+ *  1) an image;
+ *  2) a video stream captured by a webcam;
  */
 
 #ifndef INPUT_H_
@@ -19,8 +25,10 @@ using namespace std;
 class Input {
 public:
 	Input();
-	cv::Mat getImage(cv::String path); //return image
-	cv::VideoCapture getStream(); //return video
+	/**return the image at that path*/
+	cv::Mat getImage(cv::String path);
+	/**return the video captured by the webcam*/
+	cv::VideoCapture getStream();
 	virtual ~Input();
 };
 

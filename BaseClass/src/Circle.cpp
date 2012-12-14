@@ -9,7 +9,14 @@
 #include <math.h>
 
 
-
+/**
+ * Constructor
+ * 1) check that all the coordinates are not negative
+ * 2) create the circle
+ * 3) set the area
+ * 4) set the bounding box
+ * 5) the center of the bounding box is the center of the circle
+ * */
 Circle::Circle(int rad, int x, int y) {
 	if(x < 0 || y < 0 || rad <= 0 || x-rad <0 || y-rad <0)
 		throw InputException(("Negative values in the points coordinates"));
@@ -44,5 +51,5 @@ int Circle::getRadius(){
 
 
 Circle::~Circle() {
-	// TODO Auto-generated destructor stub
+
 }

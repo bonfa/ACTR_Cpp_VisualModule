@@ -24,6 +24,5 @@ bool Point::operator==(const Point &other) const {
 
 
 Point::~Point() {
-	// TODO Auto-generated destructor stub
 }
 

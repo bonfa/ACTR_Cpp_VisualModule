@@ -46,15 +46,6 @@ void utilsTest02(){
 	ASSERT_EQUAL(-6,getMinMax(coords, MIN_Y));
 }
 
-void utilsTest03(){
-	ASSERT_EQUAL(true,inLinePoints(1, 2, 3, 4, 5, 6 ));
-	ASSERT_EQUAL(true,inLinePoints(1, 2, 1, 4, 1, 6 ));
-	ASSERT_EQUAL(true,inLinePoints(1, 2, 3, 2, 5, 2 ));
-	ASSERT_EQUAL(true,inLinePoints(0, 0, -1, -2, 2, 4 ));
-	ASSERT_EQUAL(false,inLinePoints(0, 0, -1, -2, 2, 9 ));
-	ASSERT_EQUAL(false,inLinePoints(0, 1, -1, -2, 2, 90 ));
-}
-
 void utilsTest04(){
 	Point a = Point(0, 0);
 	Point b = Point(1,0);
@@ -64,6 +55,7 @@ void utilsTest04(){
 	ASSERT_EQUAL(1,erone(b,a,c));
 	ASSERT_EQUAL(1,erone(c,a,b));
 	ASSERT_EQUAL(0,erone(a,a,c));
+	ASSERT_EQUAL(0,erone(a,a,a));
 
 	a = Point(1, 3);
 	b = Point(2,1);
@@ -74,12 +66,212 @@ void utilsTest04(){
 	ASSERT_EQUAL(0,erone(a,a,c));
 }
 
+
+void inLinePointsTest_01(){
+	ASSERT_EQUAL(true,inLinePoints(1, 2, 3, 4, 5, 6 ));
+}
+
+
+void inLinePointsTest_02(){
+	ASSERT_EQUAL(true,inLinePoints(1, 2, 1, 4, 1, 6 ));
+}
+
+
+void inLinePointsTest_03(){
+	ASSERT_EQUAL(true,inLinePoints(1, 2, 3, 2, 5, 2 ));
+}
+
+
+void inLinePointsTest_04(){
+	ASSERT_EQUAL(true,inLinePoints(0, 0, -1, -2, 2, 4 ));
+}
+
+
+void inLinePointsTest_05(){
+	ASSERT_EQUAL(false,inLinePoints(0, 0, -1, -2, 2, 9 ));
+}
+
+
+void inLinePointsTest_06(){
+	ASSERT_EQUAL(false,inLinePoints(0, 1, -1, -2, 2, 90 ));
+}
+
+
+void distanceTest_01(){
+	Point a = Point(0,0);
+	Point b = Point(1,0);
+
+	ASSERT_EQUAL(1,myDistance(a,b));
+}
+
+
+void distanceTest_02(){
+	Point a = Point(0,0);
+	Point b = Point(-1,0);
+
+	ASSERT_EQUAL(1,myDistance(a,b));
+}
+
+
+void distanceTest_04(){
+	Point a = Point(0,0);
+	Point b = Point(0,1);
+
+	ASSERT_EQUAL(1,myDistance(a,b));
+}
+
+
+void distanceTest_03(){
+	Point a = Point(0,0);
+	Point b = Point(0,-1);
+
+	ASSERT_EQUAL(1,myDistance(a,b));
+}
+
+
+void distanceTest_05(){
+	Point a = Point(1,0);
+	Point b = Point(0,0);
+
+	ASSERT_EQUAL(1,myDistance(a,b));
+}
+
+
+
+void distanceTest_06(){
+	Point a = Point(-1,0);
+	Point b = Point(0,0);
+
+	ASSERT_EQUAL(1,myDistance(a,b));
+}
+
+
+void distanceTest_07(){
+	Point a = Point(1,0);
+	Point b = Point(0,1);
+
+	ASSERT_EQUAL(sqrt(2),myDistance(a,b));
+}
+
+
+
+void distanceTest_08(){
+	Point a = Point(-1,-1);
+	Point b = Point(1,1);
+
+	ASSERT_EQUAL(2*sqrt(2),myDistance(a,b));
+}
+
+
+
+void distanceTest_09(){
+	Point a = Point(-1,-1);
+	Point b = Point(-1,-1);
+
+	ASSERT_EQUAL(0,myDistance(a,b));
+}
+
+
+void distanceTest_10(){
+	Point a = Point(-1,-1);
+	Point b = Point(-2,-1);
+
+	ASSERT_EQUAL(1,myDistance(a,b));
+}
+
+
+void areSameTest_01(){
+	double a,b;
+
+	a = 1.0;
+	b = 1.0;
+
+	ASSERT_EQUAL(true,areSame(a,b));
+}
+
+
+
+void areSameTest_02(){
+	double a,b;
+
+	a = 1.0;
+	b = 2.0;
+
+	ASSERT_EQUAL(false,areSame(a,b));
+}
+
+
+
+void areSameTest_03(){
+	double a,b;
+
+	a = 1.00000;
+	b = 1.00010;
+
+	ASSERT_EQUAL(false,areSame(a,b));
+}
+
+
+
+void areSameTest_04(){
+	double a,b;
+
+	a = 1.00000;
+	b = 1.00001;
+
+	ASSERT_EQUAL(false,areSame(a,b));
+}
+
+
+void areSameTest_05(){
+	double a,b;
+
+	a = 1.000000;
+	b = 1.000001;
+
+	ASSERT_EQUAL(true,areSame(a,b));
+}
+
+
+
+void areSameTest_06(){
+	double a,b;
+
+	a = 1.000000;
+	b = 1.000009;
+
+	ASSERT_EQUAL(true,areSame(a,b));
+}
+
+
 cute::suite make_suite_utilsTest(){
 	cute::suite s;
 	s.push_back(CUTE(utilsTest01));
 	s.push_back(CUTE(utilsTest02));
-	s.push_back(CUTE(utilsTest03));
 	s.push_back(CUTE(utilsTest04));
+
+	s.push_back(CUTE(inLinePointsTest_01));
+	s.push_back(CUTE(inLinePointsTest_02));
+	s.push_back(CUTE(inLinePointsTest_03));
+	s.push_back(CUTE(inLinePointsTest_04));
+	s.push_back(CUTE(inLinePointsTest_05));
+	s.push_back(CUTE(inLinePointsTest_06));
+	s.push_back(CUTE(distanceTest_01));
+	s.push_back(CUTE(distanceTest_02));
+	s.push_back(CUTE(distanceTest_03));
+	s.push_back(CUTE(distanceTest_04));
+	s.push_back(CUTE(distanceTest_05));
+	s.push_back(CUTE(distanceTest_06));
+	s.push_back(CUTE(distanceTest_07));
+	s.push_back(CUTE(distanceTest_08));
+	s.push_back(CUTE(distanceTest_09));
+	s.push_back(CUTE(distanceTest_10));
+	s.push_back(CUTE(areSameTest_01));
+	s.push_back(CUTE(areSameTest_02));
+	s.push_back(CUTE(areSameTest_03));
+	s.push_back(CUTE(areSameTest_04));
+	s.push_back(CUTE(areSameTest_05));
+	s.push_back(CUTE(areSameTest_06));
 
 	return s;
 }

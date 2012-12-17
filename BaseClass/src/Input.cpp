@@ -9,8 +9,6 @@
 
 
 Input::Input() {
-	// TODO Auto-generated constructor stub
-
 }
 
 
@@ -18,16 +16,17 @@ Input::Input() {
 cv::Mat Input::getImage(string path){
 	cv::Mat img;
 
-	img=cv::imread(path);     // carica l'immagine
-
+	img = cv::imread(path);
+	//TODO: raise an exception if the image does ont exists
 	return img;
-} //return image
+}
 
 
 cv::VideoCapture Input::getStream(){
 	cv::VideoCapture cap(0);
+	//TODO: raise an exception if there is something wrong
 	return cap;
-} //return video
+}
 
 
 

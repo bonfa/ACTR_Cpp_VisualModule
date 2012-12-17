@@ -7,7 +7,15 @@
 
 #include "Triangle.h"
 
-
+/**
+ * Constructor
+ * 1) check that all the coordinates are not negative
+ * 2) check that the points are not on the same line
+ * 3) creates the triangle
+ * 4) set the area
+ * 5) set the bounding box
+ * 6) set the center of the bounding box
+ * */
 Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy){
 	if(ax<0 || ay<0 || bx<0 || by<0 || cx<0 || cy<0)
 		throw InputException(("Negative values in the points coordinates"));
@@ -65,5 +73,5 @@ Point Triangle::getC(){
 
 
 Triangle::~Triangle() {
-	// TODO Auto-generated destructor stub
+
 }

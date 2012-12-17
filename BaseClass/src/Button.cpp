@@ -12,6 +12,15 @@ Button::~Button() {
 
 }
 
+/**
+ * Constructor
+ * 1) check that the coordinates of the point are not negative
+ * 2) check that the width and the height are positive
+ * 3) check that the string is not empty
+ * 4) creates the button
+ * 5) set the bounding box
+ * 6) set the center of the bounding box
+ * */
 Button::Button(int x,int y, int height, int width, string txt) :text(""){
 	if(x< 0|| y < 0 || width <1 || height < 1)
 		throw InputException(("Inammisible values in the points coordinates"));
@@ -26,6 +35,7 @@ Button::Button(int x,int y, int height, int width, string txt) :text(""){
 	area = (b.x - a.x)*(c.y - d.y);
 
 	setBbox(x, y, height, width);
+	this->setCenter();
 }
 
 

@@ -25,9 +25,35 @@
 
 int getMinMax(const std::vector<Point>& coords, int type);
 std::vector<Point> Sort4PointsClockwise(std::vector<Point> points);
-bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy );
 double erone(Point a, Point b, Point c);
+
+
+/**
+ * Given three 2D points, this method calculates if all of them
+ * belong to the same line
+ * */
+bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy );
+
+
+
+/**
+ * Given two 2D points, this method calculates the distance between them.
+ * The distance is calculated as
+ *
+ * sqrt((a.x-b.x)^2 + (a.y-b.y)^2)
+ *
+ * @author: francesco
+ *
+ * */
 double myDistance(Point a, Point b);
+
+
+/**
+ * This method tells if two double values are equal under a certain values
+ *
+ * The precision is determined by a variable called EPSILON which
+ * is defined externally to the function
+ * */
 bool areSame(double a, double b);
 
 

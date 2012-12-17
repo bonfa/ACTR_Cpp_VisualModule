@@ -34,6 +34,7 @@ void TriangleTest_Parameters_01(){
 	Rect bbox = t->getBbox();
 	ASSERT_EQUAL(Rect(0,0,2,4),bbox);
 	ASSERT_EQUAL(expectedChunkString,t->getChunk());
+	ASSERT_EQUAL(Point(2,1),t->getCenter());
 }
 
 

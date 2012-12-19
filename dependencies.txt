@@ -1,0 +1,2 @@
+Lista (parziale) dei pacchetti da installare per poter compilare il progetto
+jsoncpp libzbar-dev libmagick++-dev libmagickwand-dev libopencv-dev libhighgui-dev libopencv-highgui-dev libcv-dev

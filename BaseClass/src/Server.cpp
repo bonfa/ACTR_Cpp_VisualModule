@@ -4,113 +4,101 @@
  *  Created on: 05/dic/2012
  *      Author: enrico
  */
-#include <iostream>
-#include <cstring>      // Needed for memset
-#include <sys/socket.h> // Needed for the socket functions
-#include <netdb.h>      // Needed for the socket functions
-#include <json/json.h>
-#include <sstream>
+ 
 
-int new_sd;
-struct addrinfo *host_info_list; // Pointer to the to the linked list of host_info's.
-int socketfd ; // The socket descriptor
-
-int respond(int new_sd);
 extern "C" int *init (int i);
+//
+// async_tcp_echo_server.cpp
+// ~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// Copyright (c) 2003-2012 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+//
+// Distributed under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
 
-/*
-struct c_struct
-     {
-       int x;
-       char *s;
-     };*/
+//g++ -I/usr/include/jsoncpp echoServer.cpp -o EchoServer -lboost_system -lboost_system-mt -pthread -ljsoncpp
+//richiede libbost-all-dev
 
-void initServer();
-void closeServer();
-void loopServer();
-/*
-int main(int argc, char **argv){
-	init(1);
-	return 0;
-	}
-*/
+#include <cstdlib>
+#include <iostream>
+#include <boost/bind.hpp>
+#include <boost/asio.hpp>
 
-int *init (int i)
+#include <json/json.h>
+
+using boost::asio::ip::tcp;
+
+std::string message = "Waiting to receive data\nIn telnet type: '{\"data\": \"Contenuto\"}' and hit return, close telnet to terminate\n";
+
+class session
 {
+public:
+  session(boost::asio::io_service& io_service)
+    : socket_(io_service)
+  {
+  }
 
-	initServer();
+  tcp::socket& socket()
+  {
+    return socket_;
+  }
 
-    //gestione delle richieste del client
-    loopServer();
+  void start()
+  {
+	 
 
-    closeServer();
+	   boost::asio::write(socket_, boost::asio::buffer(message));
+	   
+    socket_.async_read_some(boost::asio::buffer(data_, max_length),
+        boost::bind(&session::handle_read, this,
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred));
+  }
 
-    return 0;
-
-
-}
-
-void initServer(){
-	///-------------- PRESO COME ERA --------------
-
-    int status;
-    struct addrinfo host_info;       // The struct that getaddrinfo() fills up with data.
-
-    // The MAN page of getaddrinfo() states "All  the other fields in the structure pointed
-    // to by hints must contain either 0 or a null pointer, as appropriate." When a struct
-    // is created in c++, it will be given a block of memory. This memory is not nessesary
-    // empty. Therefor we use the memset function to make sure all fields are NULL.
-    memset(&host_info, 0, sizeof host_info);
-
-    std::cout << "Setting up the structs..."  << std::endl;
-
-    host_info.ai_family = AF_UNSPEC;     // IP version not specified. Can be both.
-    host_info.ai_socktype = SOCK_STREAM; // Use SOCK_STREAM for TCP or SOCK_DGRAM for UDP.
-    host_info.ai_flags = AI_PASSIVE;     // IP Wildcard
-
-    status = getaddrinfo(NULL, "5556", &host_info, &host_info_list);
-    // getaddrinfo returns 0 on succes, or some other value when an error occured.
-    // (translated into human readable text by the gai_gai_strerror function).
-    if (status != 0)  std::cout << "getaddrinfo error" << gai_strerror(status) ;
-
-
-    std::cout << "Creating a socket..."  << std::endl;
-    socketfd = socket(host_info_list->ai_family, host_info_list->ai_socktype,
-                      host_info_list->ai_protocol);
-    if (socketfd == -1)  std::cout << "socket error " ;
-
-    std::cout << "Binding socket..."  << std::endl;
-    // we use to make the setsockopt() function to make sure the port is not in use
-    // by a previous execution of our code. (see man page for more information)
-    int yes = 1;
-    status = setsockopt(socketfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-    status = bind(socketfd, host_info_list->ai_addr, host_info_list->ai_addrlen);
-    if (status == -1)  std::cout << "bind error" << std::endl ;
-
-    std::cout << "Listen()ing for connections..."  << std::endl;
-	std::cout << "Example of usage: $telnet 127.0.0.1 5556\n";
-    status =  listen(socketfd, 5);
-    if (status == -1)  std::cout << "listen error" << std::endl ;
-
-
-    struct sockaddr_storage their_addr;
-    socklen_t addr_size = sizeof(their_addr);
-    new_sd = accept(socketfd, (struct sockaddr *)&their_addr, &addr_size);
-    if (new_sd == -1)
+private:
+  void handle_read(const boost::system::error_code& error,
+      size_t bytes_transferred)
+  {
+    if (!error)
     {
-        std::cout << "listen error" << std::endl ;
+		std::string output = decodeJson(data_);
+		/*
+		std::string s = "Hello, world";
+		std::vector<char> v(s.begin(), s.end());
+		v.push_back('\0'); // Make sure we are null-terminated
+		char* c = &v[0];
+		
+		str.assign(data_, 6);*/
+		
+      boost::asio::async_write(socket_,
+          boost::asio::buffer(output.c_str(),output.length()),
+          boost::bind(&session::handle_write, this,
+            boost::asio::placeholders::error));
     }
     else
     {
-        std::cout << "Connection accepted. Using new socketfd : "  <<
-new_sd << std::endl;
+      delete this;
     }
+  }
 
-	///-------------- FINE --------------	
-	}
-
-//funzione di decodifica del JSON
-std::string decodeJson(std::string json){
+  void handle_write(const boost::system::error_code& error)
+  {
+    if (!error)
+    {
+		
+      socket_.async_read_some(boost::asio::buffer(data_, max_length),
+          boost::bind(&session::handle_read, this,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
+    }
+    else
+    {
+      delete this;
+    }
+  }
+  
+  static std::string decodeJson(std::string json){
 	std::stringstream stream;
 
 
@@ -138,66 +126,73 @@ std::string decodeJson(std::string json){
 	return stream.str();
 }
 
-int inLoop(){
-	int status = respond( new_sd);
-    	if (status == 0) {
-    		std::cout << "Session terminated\n";
-    	}
-    	else if (status == -1) {
-    	    		std::cout << "Receive error\n";
-    	    	}	
-	return status;
+  tcp::socket socket_;
+  enum { max_length = 1024 };
+  char data_[max_length];
+};
+
+class server
+{
+public:
+  server(boost::asio::io_service& io_service, short port)
+    : io_service_(io_service),
+      acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
+  {
+    start_accept();
+  }
+
+
+private:
+  void start_accept()
+  {
+    session* new_session = new session(io_service_);
+    acceptor_.async_accept(new_session->socket(),
+        boost::bind(&server::handle_accept, this, new_session,
+          boost::asio::placeholders::error));
+  }
+
+  void handle_accept(session* new_session,
+      const boost::system::error_code& error)
+  {
+    if (!error)
+    {
+      new_session->start();
+    }
+    else
+    {
+      delete new_session;
+    }
+
+    start_accept();
+  }
+
+  boost::asio::io_service& io_service_;
+  tcp::acceptor acceptor_;
+};
+
+
+
+int main(int argc, char* argv[])
+{
+  try
+  {
+    if (argc != 2)
+    {
+      std::cerr << "Usage: async_tcp_echo_server <port>\n";
+      return 1;
+    }
+
+    boost::asio::io_service io_service;
+
+    using namespace std; // For atoi.
+    server s(io_service, atoi(argv[1]));
+
+    io_service.run();
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << "Exception: " << e.what() << "\n";
+  }
+
+  return 0;
 }
-
-void loopServer(){
-int status = 1;
- while(true && status != 0 && status != -1){
-    	
-    }	
-}
-
-void closeServer(){
-//chiusura socket
-    freeaddrinfo(host_info_list);
-    close(new_sd);
-    close(socketfd);
-}
-
-int respond(int new_sd){
-	std::cout << "Waiting to recieve data..."  << std::endl;
-	std::cout << "In telnet type: '{\"data\": \"Contenuto\"}' and hit return, close telnet to terminate\n";
-
-	ssize_t bytes_recieved;
-	char incomming_data_buffer[1000];
-	//TODO: perchè il buffer di 1000?
-	bytes_recieved = recv(new_sd, incomming_data_buffer,1000, 0);
-
-	// If no data arrives, the program will just wait here until some data arrives.
-	if (bytes_recieved == 0) return 0;
-	if (bytes_recieved == -1) return -1 ;
-
-	incomming_data_buffer[bytes_recieved] = '\0';
-	std::cout <<"Ricevuto:"<< incomming_data_buffer << std::endl;
-
-
-	std::string decoded = decodeJson(incomming_data_buffer);
-
-
-	std::cout << "Decodificato il JSON:" << decoded << std::endl ;
-
-
-
-	std::cout << "send()ing back a message...";
-
-	char msg[decoded.size()+1];
-	strcpy(msg, decoded.c_str());
-	int len;
-	ssize_t bytes_sent;
-	len = strlen(msg);
-	bytes_sent = send(new_sd, msg, len, 0);
-
-	return bytes_recieved;
-}
-
-
-

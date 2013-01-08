@@ -18,6 +18,14 @@ http://www.hitl.washington.edu/artoolkit/documentation/tutorialhistory.htm
 Sistema delle coordinate
 http://www.hitl.washington.edu/artoolkit/documentation/cs.htm
 
+Calibrazione webcam:
+
+Center X: 692,500000
+       Y: 344,000000
+Dist Factor: 0,000000
+Size Adjust: 1,000000
+
+
 ---- Odio le matrici ----
 Teoria:
 http://www.kwon3d.com/theory/transform/rot.html

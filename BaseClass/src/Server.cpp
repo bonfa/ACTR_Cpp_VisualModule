@@ -11,6 +11,9 @@
 #include <json/json.h>
 #include <sstream>
 
+int new_sd;
+struct addrinfo *host_info_list; // Pointer to the to the linked list of host_info's.
+int socketfd ; // The socket descriptor
 
 int respond(int new_sd);
 extern "C" int *init (int i);
@@ -22,14 +25,36 @@ struct c_struct
        char *s;
      };*/
 
+void initServer();
+void closeServer();
+void loopServer();
+/*
+int main(int argc, char **argv){
+	init(1);
+	return 0;
+	}
+*/
+
 int *init (int i)
 {
 
+	initServer();
+
+    //gestione delle richieste del client
+    loopServer();
+
+    closeServer();
+
+    return 0;
+
+
+}
+
+void initServer(){
 	///-------------- PRESO COME ERA --------------
 
     int status;
     struct addrinfo host_info;       // The struct that getaddrinfo() fills up with data.
-    struct addrinfo *host_info_list; // Pointer to the to the linked list of host_info's.
 
     // The MAN page of getaddrinfo() states "All  the other fields in the structure pointed
     // to by hints must contain either 0 or a null pointer, as appropriate." When a struct
@@ -50,7 +75,6 @@ int *init (int i)
 
 
     std::cout << "Creating a socket..."  << std::endl;
-    int socketfd ; // The socket descripter
     socketfd = socket(host_info_list->ai_family, host_info_list->ai_socktype,
                       host_info_list->ai_protocol);
     if (socketfd == -1)  std::cout << "socket error " ;
@@ -69,7 +93,6 @@ int *init (int i)
     if (status == -1)  std::cout << "listen error" << std::endl ;
 
 
-    int new_sd;
     struct sockaddr_storage their_addr;
     socklen_t addr_size = sizeof(their_addr);
     new_sd = accept(socketfd, (struct sockaddr *)&their_addr, &addr_size);
@@ -83,30 +106,8 @@ int *init (int i)
 new_sd << std::endl;
     }
 
-	///-------------- FINE --------------
-
-    //gestione delle richieste del client
-    while(true){
-    	int status = respond( new_sd);
-    	if (status == 0) {
-    		std::cout << "Session terminated\n";
-    		break;
-    	}
-    	else if (status == -1) {
-    	    		std::cout << "Receive error\n";
-    	    		break;
-    	    	}
-    }
-
-    //chiusura socket
-    freeaddrinfo(host_info_list);
-    close(new_sd);
-    close(socketfd);
-
-    return 0;
-
-
-}
+	///-------------- FINE --------------	
+	}
 
 //funzione di decodifica del JSON
 std::string decodeJson(std::string json){
@@ -135,6 +136,31 @@ std::string decodeJson(std::string json){
 	//stream<<"Json Example pretty print: " <<std::endl<<root.toStyledString() <<std::endl;
 
 	return stream.str();
+}
+
+int inLoop(){
+	int status = respond( new_sd);
+    	if (status == 0) {
+    		std::cout << "Session terminated\n";
+    	}
+    	else if (status == -1) {
+    	    		std::cout << "Receive error\n";
+    	    	}	
+	return status;
+}
+
+void loopServer(){
+int status = 1;
+ while(true && status != 0 && status != -1){
+    	
+    }	
+}
+
+void closeServer(){
+//chiusura socket
+    freeaddrinfo(host_info_list);
+    close(new_sd);
+    close(socketfd);
 }
 
 int respond(int new_sd){

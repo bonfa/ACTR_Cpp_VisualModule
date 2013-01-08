@@ -6,7 +6,7 @@
  */
  
 
-extern "C" int *init (int i);
+
 //
 // async_tcp_echo_server.cpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,7 +26,9 @@ extern "C" int *init (int i);
 #include <boost/asio.hpp>
 
 #include <json/json.h>
+#include "Server.h"
 
+//extern "C" int *init (int i);
 using boost::asio::ip::tcp;
 
 std::string message = "Waiting to receive data\nIn telnet type: '{\"data\": \"Contenuto\"}' and hit return, close telnet to terminate\n";
@@ -172,20 +174,19 @@ private:
 
 
 
-int main(int argc, char* argv[])
+int runServer(int port)
 {
   try
   {
-    if (argc != 2)
+    if (port<0)
     {
-      std::cerr << "Usage: async_tcp_echo_server <port>\n";
+      std::cerr << "Porta del server negativa\n";
       return 1;
     }
 
     boost::asio::io_service io_service;
 
-    using namespace std; // For atoi.
-    server s(io_service, atoi(argv[1]));
+    server s(io_service, port);
 
     io_service.run();
   }

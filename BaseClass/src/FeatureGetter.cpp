@@ -79,8 +79,11 @@ std::vector<Object *> FeatureGetter::getFeatureList(){
 
 	//Examples
 	cout << getExtremeDistance(0,0) << endl; //0
-	cout << getExtremeDistance(0,2) << endl; //~17
+	cout << getExtremeDistance(0,2) << endl << endl; //~17
 
+	//Examples
+	cout << "ROTATION" << endl;
+	cout << getRotation(0) << endl;
 	return objectList;
 }
 
@@ -249,6 +252,16 @@ std::vector<Point> FeatureGetter::getPointList(Rect bbox){
 	return pointList;
 }
 
+
+double FeatureGetter::getRotation(int objIndex){
+	if (objIndex < 0)
+			throw(InputException("negative index of vector"));
+	if (this->outOfBound(objIndex))
+			throw(InputException("index out of bound"));
+
+	Object * obj = objectList.at(objIndex);
+	return obj->getRotation();
+}
 
 
 

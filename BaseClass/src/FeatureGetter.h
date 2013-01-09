@@ -53,6 +53,9 @@ public:
 	/** Gives the extreme distance of two object.
 	 *  ATTENTION: check how this method works*/
 	double getExtremeDistance(int aIndex,int bIndex);
+	/** Gives the rotation of shape in counterclockwise starting from the horizontal position of an object.
+	 *  ATTENTION: check how this method works*/
+	double getRotation(int index);
 
 	//TODO: da cancellare una volta finito lo sviluppo
 	void showImage();

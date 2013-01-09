@@ -57,7 +57,10 @@ double myDistance(Point a, Point b);
 bool areSame(double a, double b);
 
 
-
+/**
+ * This method returns the minimum value of the list
+ * */
+double getMin(const std::vector<double>& values);
 
 
 

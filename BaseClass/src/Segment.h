@@ -19,7 +19,7 @@
 using namespace std;
 
 //TODO: documentation
-class Segment: StraightLine {
+class Segment: public StraightLine {
 public:
 	Segment(Point a, Point b);
 

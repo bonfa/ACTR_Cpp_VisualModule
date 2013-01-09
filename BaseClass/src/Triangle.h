@@ -40,6 +40,8 @@ private:
 	Point c;
 	/** Set the bounding box around the triangle.*/
 	void setBoundingBox();
+
+	void setRotation();
 };
 
 #endif /* TRIANGLE_H_ */

@@ -33,6 +33,8 @@ public:
 	Rect getBbox();
 	/** Returns the 'center' of the object*/
 	Point getCenter();
+	/** Returns the 'rotation' of the object*/
+	double getRotation();
 protected:
 	/** Set the bounding box around the object*/
 	void setBbox(int x, int y, int height, int width);
@@ -40,7 +42,7 @@ protected:
 	void setCenter();
 	/** A boolean that is true if the object has already sent to actr ?(//todo: check if it is useful or not)? */
 	bool attended;
-	/** Gives the rotation in the clockwise order*/
+	/** Gives the rotation in the counter clockwise order*/
 	double rotation;
 	/** The center of the object. It is defined as the center of the bounding box of the object */
 	Point center;

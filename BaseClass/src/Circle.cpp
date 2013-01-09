@@ -25,6 +25,7 @@ Circle::Circle(int rad, int x, int y) {
 	center.y = y;
 	area = rad * rad * M_PI;
 	setBbox(x-rad, y-rad, 2*rad, 2*rad);
+	this->setRotation();
 }
 
 string Circle::getChunk(){
@@ -49,6 +50,10 @@ int Circle::getRadius(){
 	return this->radius;
 }
 
+void Circle::setRotation(){
+	//A circle does not have a rotation
+	rotation = 0;
+}
 
 Circle::~Circle() {
 

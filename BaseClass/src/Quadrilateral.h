@@ -16,6 +16,9 @@
 #include "Blob.h"
 #include "utils.h"
 #include "MyPoint.h"
+#include "Segment.h"
+#include "StraightLine.h"
+#include <cmath>
 
 
 
@@ -44,7 +47,10 @@ protected:
 	Point c;
 	/** The fourth vertex*/
 	Point d;
-
+	/** Set the 'rotation' of the quadrilateral. The rotation is defined as the angle of the less sloped segments of the shape*/
+	void setRotation();
+	/** Return a vector containing the four segment of the quadrilateral*/
+	std::vector<Segment> getEdgesLine();
 };
 
 #endif /* Quadrilateral_H_ */

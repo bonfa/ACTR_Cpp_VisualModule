@@ -14,3 +14,4 @@ base/
 library/
 *.o
 *.a
+BaseClass/src/author.h

@@ -18,6 +18,10 @@ FeatureExtractor::FeatureExtractor(cv::Mat img) {
 	std::vector<Circle> circleList;
 }
 
+FeatureExtractor::FeatureExtractor() {
+	image = NULL;
+	std::vector<QRCode> qrList;
+}
 
 
 FeatureExtractor::~FeatureExtractor() {
@@ -381,6 +385,7 @@ void FeatureExtractor::recognizeTriangles(){
 	cv::imshow("triangles",triangleImg);
 	cv::waitKey(0);
 }
+
 
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){

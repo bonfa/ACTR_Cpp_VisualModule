@@ -10,7 +10,7 @@
 
 using boost::asio::ip::tcp;
 
-std::string message = "Waiting to receive data\nIn telnet type: '{\"data\": \"Contenuto\"}' and hit return, close telnet to terminate\n";
+std::string messaggio = "Waiting to receive data\nIn telnet type: '{\"data\": \"Contenuto\"}' and hit return, close telnet to terminate\n";
 
 class Session
 {
@@ -29,7 +29,7 @@ public:
   {
 	 
 
-	   boost::asio::write(socket_, boost::asio::buffer(message));
+	   boost::asio::write(socket_, boost::asio::buffer(messaggio));
 	   
     socket_.async_read_some(boost::asio::buffer(data_, max_length),
         boost::bind(&Session::handle_read, this,

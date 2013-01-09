@@ -8,12 +8,14 @@ MGK_LIBS := `pkg-config --libs Magick++`
 ZBR_LIBS := /usr/local/lib/libzbar.dylib
 JSN_LIBS := `pkg-config --libs jsoncpp`
 JSN_PATH := `pkg-config --cflags jsoncpp`
-BST_LIBS := -lboost_system -lboost_system-mt -pthread
+BST_LIBS := -lboost_system -lboost_system-mt -pthread -lboost_thread
+
+BST_PATH := -L/usr/local/lib 
 
 QR_SOURCE := qr/main.cpp
 QR_LIB := decodeqr
 MY_LIB := launcher
-LD_FLAGS := -L. -l$(MY_LIB) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH) $(BST_LIBS)
+LD_FLAGS := -L. $(BST_PATH) -l$(MY_LIB) $(JSN_PATH) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH) $(BST_LIBS)
 CC_FLAGS := -c -fPIC 
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
@@ -49,6 +51,9 @@ obj/QRScanner.o: src/QRScanner.cpp
 	$(CC) $(OCV_PATH) $(MGK_PATH) $(CC_FLAGS) -o $@ $<
 	
 obj/Server.o: src/Server.cpp
+	$(CC) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+
+obj/Session.o: src/Session.cpp
 	$(CC) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
 
 obj/%.o: src/%.cpp

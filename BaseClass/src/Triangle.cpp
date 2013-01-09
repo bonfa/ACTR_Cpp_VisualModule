@@ -32,6 +32,7 @@ Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy){
 	this->area = erone(this->a, this->b, this->c);
 	this->setBoundingBox();
 	this->setCenter();
+	this->setRotation();
 }
 
 
@@ -71,6 +72,10 @@ Point Triangle::getC(){
 }
 
 
+void Triangle::setRotation(){
+	//TODO
+	rotation = 0;
+}
 
 Triangle::~Triangle() {
 

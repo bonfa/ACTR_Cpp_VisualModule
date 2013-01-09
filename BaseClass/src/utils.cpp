@@ -118,3 +118,13 @@ double myDistance(Point a, Point b){
 bool areSame(double a, double b){
     return fabs(a - b) < EPSILON;
 }
+
+
+double getMin(const std::vector<double>& values){
+	double min = values.at(0);
+	for (unsigned int i = 1; i< values.size(); i++){
+		if (values.at(i) < min)
+			min = values.at(i);
+	}
+	return min;
+}

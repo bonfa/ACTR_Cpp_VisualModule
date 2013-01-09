@@ -61,6 +61,7 @@ Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,in
 
 	setBbox(minX, minY, maxY - minY, maxX-minX);
 	this->setCenter();
+	this->setRotation();
 }
 
 
@@ -86,6 +87,43 @@ Point Quadrilateral::getD(){
 }
 
 
+void Quadrilateral::setRotation(){
+	//TODO --> testing
+	//Get the equations of the edges
+	std::vector<Segment> edgeList = this->getEdgesLine();
+
+	//Create a list which contains the artg(m) of every non vertical line
+	std::vector<double> rotationList;
+	for (unsigned int i=0; i<edgeList.size(); i++){
+		//exclude the vertical lines (which have the maximum slope)
+
+		//(edgeList.at(i)).isVertical();
+		if (!((edgeList.at(i)).isVertical())){
+			double atg = abs(atan((edgeList.at(i)).getSlope()));
+			rotationList.push_back(atg);
+		}
+
+	}
+	rotation = getMin(rotationList);
+	//rotation = 0;
+}
+
+
+std::vector<Segment> Quadrilateral::getEdgesLine(){
+	std::vector<Segment> lineList;
+
+	Segment line1 = Segment(a,b);
+	Segment line2 = Segment(b,c);
+	Segment line3 = Segment(c,d);
+	Segment line4 = Segment(d,a);
+
+	lineList.push_back(line1);
+	lineList.push_back(line2);
+	lineList.push_back(line3);
+	lineList.push_back(line4);
+
+	return lineList;
+}
 
 string Quadrilateral::getChunk(){
 	return "cianc, Quadrilateral\n";

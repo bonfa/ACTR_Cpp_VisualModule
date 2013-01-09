@@ -1,4 +1,5 @@
 /*
+ /*
  * FeatureExtractor.h
  *
  *  Created on: 04/dic/2012
@@ -34,7 +35,6 @@ using namespace std;
 #include "Circle.h"
 #include "Object.h"
 #include "Blob.h"
-#include "MarkerDetector.h"
 
 //todo: delete
 typedef enum {QUADRILATERAL, TRIANGLE, CIRCLE} ShapeType;
@@ -43,7 +43,6 @@ typedef enum {QUADRILATERAL, TRIANGLE, CIRCLE} ShapeType;
 class FeatureExtractor {
 public:
 	FeatureExtractor(cv::Mat img);
-	FeatureExtractor::FeatureExtractor();
 	/** Return the list of the recognized object in the image*/
 	std::vector<Object *> getExtractedFeature();
 	/** Return the color of a point*/
@@ -56,8 +55,6 @@ private:
 	void recognizeSquares();
 	/** Analizes the image and looks for triangles in it. The circles found are added in the triangleList*/
 	void recognizeTriangles();
-	/** Recognizes the QRCodes */
-	void recognizeQRCodes();
 	/** Receives as input the opencvValue of hue and returns it normalized in a "GimpLike" way*/
 	double normHue(int hueVal);
 	/** Receives as input the opencvValue of saturation or value and returns it normalized in a "GimpLike" way*/
@@ -76,8 +73,6 @@ private:
 	std::vector<Circle *> circleList;
 	/** The list of all the objects recognized in the input image*/
 	std::vector<Object *> objectList;
-	/** The list of all the QRCodes recognized by ARToolkit*/
-	std::vector<QRCode> qrList;
 
 };
 

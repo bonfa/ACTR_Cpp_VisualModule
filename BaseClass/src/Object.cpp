@@ -51,3 +51,9 @@ void Object::setCenter(){
 	int yCenter = bbox.y + bbox.height/2;
 	center = Point(xCenter,yCenter);
 }
+
+
+double Object::getRotation(){
+	return rotation;
+}
+

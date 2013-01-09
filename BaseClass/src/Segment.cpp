@@ -25,7 +25,7 @@ vector<Point> Segment::getPoints(){
 	return pointList;
 }
 
-//TODO: check that is correct --> nees testing
+//TODO: check that is correct --> need testing
 Point Segment::getInterceptionPoint(Segment segment2){
 	Point interception;
 	try {

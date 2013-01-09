@@ -28,6 +28,7 @@ public:
 protected:
 	/** The area of the object */
 	double area;
+	virtual void setRotation()=0;
 private:
 	//TODO: colore
 };

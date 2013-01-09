@@ -11,9 +11,11 @@
 using boost::asio::ip::tcp;
 
 
+
 class Session
 {
 public:
+//<<<<<<< HEAD
 	Session(boost::asio::io_service& io_service)
 : socket_(io_service)
 {
@@ -36,7 +38,34 @@ public:
 						boost::asio::placeholders::error,
 						boost::asio::placeholders::bytes_transferred));
 	}
+/*
+	=======
+  Session(boost::asio::io_service& io_service)
+    : socket_(io_service)
+  {
+  }
 
+  tcp::socket& socket()
+  {
+    return socket_;
+  }
+
+  void start()
+  {
+	 
+	  	  std::string messag = "Waiting to receive data\nIn telnet type: '{\"data\": \"Contenuto\"}' and hit return, close telnet to terminate\n";
+
+
+	   boost::asio::write(socket_, boost::asio::buffer(messag));
+
+	   
+    socket_.async_read_some(boost::asio::buffer(data_, max_length),
+        boost::bind(&Session::handle_read, this,
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred));
+  }
+>>>>>>> a17883ca40c3f829f39d833d82da8f1f26c5e561
+*/
 private:
 	void handle_read(const boost::system::error_code& error,
 			size_t bytes_transferred)

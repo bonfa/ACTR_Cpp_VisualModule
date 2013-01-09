@@ -18,10 +18,6 @@ FeatureExtractor::FeatureExtractor(cv::Mat img) {
 	std::vector<Circle> circleList;
 }
 
-FeatureExtractor::FeatureExtractor() {
-	image = NULL;
-	std::vector<QRCode> qrList;
-}
 
 
 FeatureExtractor::~FeatureExtractor() {
@@ -56,7 +52,8 @@ string FeatureExtractor::getPointColor(int x, int y){
  *  apply a threshold to distinguish foreground to background
  *  Using the thresholded image as a foreground background map,
  *  it averages all the values of HSV of the object.
- *  Then it calls the function to normalize the HSV value and then there is the recognition*/
+ *  Then it calls the function to normalize the HSV value and then there is the recognition
+ *  */
 string FeatureExtractor::getRegionColor(cv::vector<cv::Point> points){
 	//extract the bounding box of the shape in a new image
 	cv::Rect boundingBox = boundingRect(cv::Mat(points));
@@ -385,7 +382,6 @@ void FeatureExtractor::recognizeTriangles(){
 	cv::imshow("triangles",triangleImg);
 	cv::waitKey(0);
 }
-
 
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){

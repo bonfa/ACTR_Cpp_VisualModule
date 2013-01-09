@@ -21,8 +21,8 @@ FeatureGetter::~FeatureGetter() {
 
 void FeatureGetter::updateImage(){
 	//delete img;
-	//img = inputModule->getImage("./shapes.png");
-	img = inputModule->getImage("./01_02_1030797656577.bmp");
+	img = inputModule->getImage("./shapes.png");
+	//img = inputModule->getImage("./01_02_1030797656577.bmp");
 }
 
 
@@ -62,7 +62,7 @@ void FeatureGetter::terminate(){
 std::vector<Object *> FeatureGetter::getFeatureList(){
 	featureExtractor = new FeatureExtractor(this->img);
 	objectList = featureExtractor->getExtractedFeature();
-
+/*
 	//Examples
 	cout << isBigger(0,0) << endl; //equal
 	cout << isBigger(0,1) << endl; //smaller
@@ -79,8 +79,12 @@ std::vector<Object *> FeatureGetter::getFeatureList(){
 
 	//Examples
 	cout << getExtremeDistance(0,0) << endl; //0
-	cout << getExtremeDistance(0,2) << endl; //~17
-
+	//cout << getExtremeDistance(0,2) << endl << endl; //~17
+*/
+	//Examples
+	cout << "ROTATION" << endl;
+	cout << getRotation(0) << endl;
+	cout << getRotation(3) << endl;
 	return objectList;
 }
 
@@ -249,6 +253,16 @@ std::vector<Point> FeatureGetter::getPointList(Rect bbox){
 	return pointList;
 }
 
+
+double FeatureGetter::getRotation(int objIndex){
+	if (objIndex < 0)
+			throw(InputException("negative index of vector"));
+	if (this->outOfBound(objIndex))
+			throw(InputException("index out of bound"));
+
+	Object * obj = objectList.at(objIndex);
+	return obj->getRotation();
+}
 
 
 

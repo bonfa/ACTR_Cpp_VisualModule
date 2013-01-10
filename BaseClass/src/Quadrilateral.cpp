@@ -96,16 +96,15 @@ void Quadrilateral::setRotation(){
 	std::vector<double> rotationList;
 	for (unsigned int i=0; i<edgeList.size(); i++){
 		//exclude the vertical lines (which have the maximum slope)
-
-		//(edgeList.at(i)).isVertical();
 		if (!((edgeList.at(i)).isVertical())){
-			double atg = abs(atan((edgeList.at(i)).getSlope()));
+			double atg = atan2((edgeList.at(i)).getSlope(),1);
+			//when the angle is < 0, add PI to make it positive
+			if (atg < 0)
+				atg += M_PI;
 			rotationList.push_back(atg);
 		}
-
 	}
 	rotation = getMin(rotationList);
-	//rotation = 0;
 }
 
 

@@ -72,11 +72,51 @@ Point Triangle::getC(){
 }
 
 
+
+
+
 void Triangle::setRotation(){
-	//TODO
-	rotation = 0;
+	//TODO --> testing
+	//TODO --> as this method is the same as the 'Quadrilateral' one, extract it somewhere else to avoid the copy
+	//Get the equations of the edges
+	std::vector<Segment> edgeList = this->getEdgesLine();
+
+	//Create a list which contains the artg(m) of every non vertical line
+	std::vector<double> rotationList;
+	for (unsigned int i=0; i<edgeList.size(); i++){
+		//exclude the vertical lines (which have the maximum slope)
+		if (!((edgeList.at(i)).isVertical())){
+			double atg = atan2((edgeList.at(i)).getSlope(),1);
+			//when the angle is < 0, add PI to make it positive
+			if (atg < 0)
+				atg += M_PI;
+			rotationList.push_back(atg);
+		}
+	}
+	rotation = getMin(rotationList);
 }
+
+
+
+std::vector<Segment> Triangle::getEdgesLine(){
+	//TODO --> testing
+	std::vector<Segment> lineList;
+
+	Segment line1 = Segment(a,b);
+	Segment line2 = Segment(b,c);
+	Segment line3 = Segment(c,a);
+
+	lineList.push_back(line1);
+	lineList.push_back(line2);
+	lineList.push_back(line3);
+
+	return lineList;
+}
+
+
 
 Triangle::~Triangle() {
 
 }
+
+

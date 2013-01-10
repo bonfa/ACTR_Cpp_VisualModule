@@ -40,8 +40,11 @@ private:
 	Point c;
 	/** Set the bounding box around the triangle.*/
 	void setBoundingBox();
-
+	/** Set the 'rotation' of the quadrilateral.
+	 * The rotation is defined as the smallest angle of the segments in the counterclockwise direction starting from the horizontal direction*/
 	void setRotation();
+	/** Return a vector containing the three segments of the triangle*/
+	std::vector<Segment> getEdgesLine();
 };
 
 #endif /* TRIANGLE_H_ */

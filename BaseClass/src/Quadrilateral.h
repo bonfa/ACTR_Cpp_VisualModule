@@ -47,7 +47,8 @@ protected:
 	Point c;
 	/** The fourth vertex*/
 	Point d;
-	/** Set the 'rotation' of the quadrilateral. The rotation is defined as the angle of the less sloped segments of the shape*/
+	/** Set the 'rotation' of the quadrilateral.
+	 * The rotation is defined as the smallest positive angle of the segments in the counterclockwise direction starting from the horizontal direction*/
 	void setRotation();
 	/** Return a vector containing the four segment of the quadrilateral*/
 	std::vector<Segment> getEdgesLine();

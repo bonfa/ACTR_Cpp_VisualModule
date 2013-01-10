@@ -23,7 +23,7 @@ Button::~Button() {
  * */
 Button::Button(int x,int y, int height, int width, string txt) :text(""){
 	if(x< 0|| y < 0 || width <1 || height < 1)
-		throw InputException(("Inammisible values in the points coordinates"));
+		throw InputException(("Inammissible values in the points coordinates"));
 	if(txt.length()<1)
 		throw InputException(("Text is empty"));
 

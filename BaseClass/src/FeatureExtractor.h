@@ -55,6 +55,8 @@ private:
 	void recognizeSquares();
 	/** Analizes the image and looks for triangles in it. The circles found are added in the triangleList*/
 	void recognizeTriangles();
+	/** Analizes the image and looks for ellipses in it. The ellipses found are added in the ellipseList //TODO*/
+	void recognizeEllipses();
 	/** Receives as input the opencvValue of hue and returns it normalized in a "GimpLike" way*/
 	double normHue(int hueVal);
 	/** Receives as input the opencvValue of saturation or value and returns it normalized in a "GimpLike" way*/

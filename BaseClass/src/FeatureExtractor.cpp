@@ -383,6 +383,105 @@ void FeatureExtractor::recognizeTriangles(){
 	cv::waitKey(0);
 }
 
+/*
+ *  One way to tell if an object is an ellipse is to look at the relationship
+ *  of its area to its dimensions.  If its actual occupied area can be estimated
+ *  using the well-known area formula Area = PI*A*B, then it has a good chance of
+ *  being an ellipse.
+ * */
+void FeatureExtractor::recognizeEllipses(){
+	//TODO
+	/*
+	// We need this to be high enough to get rid of things that are too small too have a definite shape.
+	double minArea = 100.00;
+	// This value is the maximum permissible error between actual and estimated area.
+	double maxTol = 100.00;
+
+	// create the structure that contains the ellipses
+	cv::vector<cv::vector<cv::Point> > ellipses;
+
+	// blur will enhance edge detection
+	cv::Mat blurred(image);
+	cv::medianBlur(image, blurred, 9);
+
+	// create two gray images
+	cv::Mat gray0(blurred.size(), CV_8U), gray;
+	// create the structure that contains contours
+	cv::vector<cv::vector<cv::Point> > contours;
+
+	// find ellipses in every color plane of the image
+	for (int c = 0; c < 3; c++)
+	{
+		int ch[] = {c, 0};
+		// extract the single color level in gray0
+		cv::mixChannels(&blurred, 1, &gray0, 1, ch, 1);
+
+		// try several threshold levels (0,1 and 2)
+		const int threshold_level = 2;
+		for (int l = 0; l < threshold_level; l++) {
+			// Use Canny instead of zero threshold level!
+			// Canny helps to catch squares with gradient shading
+			if (l == 0) {
+				Canny(gray0, gray, 10, 20, 3); //
+
+				// Dilate helps to remove potential holes between edge segments
+				cv::dilate(gray, gray, cv::Mat(), cv::Point(-1,-1));
+			}
+			else {
+				gray = gray0 >= (l+1) * 255 / threshold_level;
+			}
+
+			// Find contours and store them in a list
+			cv::findContours(gray, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+
+			// Test contours
+			cv::vector<cv::Point> approx;
+			for (size_t i = 0; i < contours.size(); i++) {
+				//skip if the area is too small
+				double actual_area = fabs(cv::contourArea(contours[i], false));
+				if (actual_area < minArea)
+					continue;
+
+				// FIXME: Assuming the axes of the ellipse are vertical/perpendicular.
+
+				//cv::Rect rect = ((cv::Mat *)contours)->rect;
+				cv::Rect rect = boundingRect(cv::Mat(contours[i]));
+				int A = rect.width / 2;
+				int B = rect.height / 2;
+				double estimated_area = M_PI * A * B;
+				double error = fabs(actual_area - estimated_area);
+				//skip if the difference between the
+				if (error > maxTol)
+					continue;
+
+				//add the ellipse into the ellipse list
+				//ellipses.push_back();
+				printf
+					(
+						 "center x: %d y: %d A: %d B: %d\n",
+						 rect.x + A,
+						 rect.y + B,
+						 A,
+						 B
+					);
+					//if (approx.size() == 3 && cv::isContourConvex(cv::Mat(approx)))  {
+					//	triangles.push_back(approx);
+
+			}
+		}
+	}
+
+
+
+//            CvScalar color = CV_RGB( rand() % 255, rand() % 255, rand() % 255 );
+//            cvDrawContours( dst, contour, color, color, -1, CV_FILLED, 8, cvPoint(0,0));
+        }
+*/
+}
+
+
+
+
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 	//TODO: alla fine eliminare tutto questo schifo ee far ritornare solo la lista di oggetti
@@ -403,6 +502,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 	this->recognizeCircles();
 	this->recognizeSquares();
 	this->recognizeTriangles();
+	this->recognizeEllipses();
 
 	//concatenate everything in a vector of objects
 	this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());

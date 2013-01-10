@@ -74,7 +74,9 @@ Point Triangle::getC(){
 
 
 
-
+/**
+ * @ATTENTION: @see Object.h for a better explanation of the 'rotation' parameter
+ */
 void Triangle::setRotation(){
 	//TODO --> testing
 	//TODO --> as this method is the same as the 'Quadrilateral' one, extract it somewhere else to avoid the copy

@@ -42,7 +42,25 @@ protected:
 	void setCenter();
 	/** A boolean that is true if the object has already sent to actr ?(//todo: check if it is useful or not)? */
 	bool attended;
-	/** Gives the rotation in the counter clockwise order*/
+	/** Gives the rotation in the counter clockwise order
+	*
+	* * @ATTENTION: as in the images the y axis is positive moving downward
+	* and the x axis is positive moving rightward,
+	* the rotation is given starting from the horizontal direction in clockwise direction starting
+	* 							x
+	*  ---------------------------->
+	*  |\) rotation
+	*  | \
+	*  |  \
+	*  |   \
+	*  |    \
+	*  |
+	*  |
+	*  |
+	*  |
+	* y|
+	*
+	* */
 	double rotation;
 	/** The center of the object. It is defined as the center of the bounding box of the object */
 	Point center;

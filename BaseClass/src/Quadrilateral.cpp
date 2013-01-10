@@ -87,6 +87,9 @@ Point Quadrilateral::getD(){
 }
 
 
+/**
+ * @ATTENTION: @see Object.h for a better explanation of the 'rotation' parameter
+ */
 void Quadrilateral::setRotation(){
 	//TODO --> testing
 	//Get the equations of the edges

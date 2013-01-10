@@ -51,7 +51,7 @@ int Circle::getRadius(){
 }
 
 void Circle::setRotation(){
-	//A circle does not have a rotation
+	//A circle does not have a rotation parameter
 	rotation = 0;
 }
 

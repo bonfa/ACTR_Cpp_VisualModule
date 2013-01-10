@@ -37,6 +37,7 @@ private:
 	Point center;
 	/** The radius of the circle*/
 	int radius;
+	/** Set the 'rotation' of the circle, which is always zero*/
 	void setRotation();
 };
 

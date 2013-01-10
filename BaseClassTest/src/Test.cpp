@@ -1,3 +1,5 @@
+#define ASSERT_UNEQUAL(expected, actual) ASSERT_OP(expected, actual, !=)
+
 #include "cute.h"
 #include "ide_listener.h"
 #include "cute_runner.h"
@@ -17,6 +19,7 @@
 
 #include "MyPointTest.h"
 #include "RectTest.h"
+#include "InputTest.h"
 
 
 void runTest(){
@@ -62,6 +65,9 @@ void runTest(){
 
 	cute::suite segmentTest = make_suite_SegmentTest();
 	cute::makeRunner(lis)(segmentTest, "RectTest");
+
+	cute::suite inputTest = make_suite_InputTest();
+	cute::makeRunner(lis)(inputTest, "InputTest");
 
 }
 

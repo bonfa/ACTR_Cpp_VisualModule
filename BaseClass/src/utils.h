@@ -18,8 +18,10 @@
 #include <opencv/cv.h>
 #include <vector>
 #include <math.h>
+#include <ios>
 #include "MyPoint.h"
 #include "StraightLine.h"
+#include <fstream>
 
 
 
@@ -62,6 +64,10 @@ bool areSame(double a, double b);
  * */
 double getMin(const std::vector<double>& values);
 
+
+
+/** Return true if the file exists, otherwise false*/
+bool fileExists(char * path);
 
 
 #endif /* UTILS_H_ */

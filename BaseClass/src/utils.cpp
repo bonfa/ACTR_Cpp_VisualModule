@@ -128,3 +128,12 @@ double getMin(const std::vector<double>& values){
 	}
 	return min;
 }
+
+
+
+bool fileExists (char * path){
+	if(ifstream(path))
+		return true;
+	else
+		return false;
+}

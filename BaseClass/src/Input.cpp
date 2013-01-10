@@ -15,10 +15,16 @@ Input::Input() {
 
 cv::Mat Input::getImage(string path){
 	cv::Mat img;
+	char * filename;
+	strcpy(filename, path.c_str());
+	if (!fileExists(filename))
+		throw InputException("error in the input image");
+	else {
+		img = cv::imread(path);
+		return img;
+	}
+	//TODO: raise an exception if the image does not exists
 
-	img = cv::imread(path);
-	//TODO: raise an exception if the image does ont exists
-	return img;
 }
 
 

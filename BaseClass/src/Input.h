@@ -19,6 +19,10 @@
 #include <opencv/highgui.h>
 #include <iostream>
 #include <string>
+#include "FeatureGetterExceptions.h"
+#include "utils.h"
+#include <string.h>
+
 using namespace std;
 
 

@@ -326,6 +326,10 @@ struct QuadrilateralTest_01{
 		expectedRotation = 0;
 		expectedBBox = Rect(0,0,2,2);
 		expectedCenter = Point(1,1);
+		expectedEdgeLines.push_back(Segment(expectedA,expectedB));
+		expectedEdgeLines.push_back(Segment(expectedB,expectedC));
+		expectedEdgeLines.push_back(Segment(expectedC,expectedD));
+		expectedEdgeLines.push_back(Segment(expectedD,expectedA));
 	}
 
 	void Constructor_01(){
@@ -368,6 +372,11 @@ struct QuadrilateralTest_01{
 		ASSERT_EQUAL(expectedCenter,q.getCenter());
 	}
 
+	void checkEdgelines(){
+		std::vector<Segment> lines = q.getEdgesLine();
+		ASSERT_EQUAL(expectedEdgeLines,lines);
+	}
+
 	Quadrilateral q;
 	Point expectedA;
 	Point expectedB;
@@ -378,6 +387,7 @@ struct QuadrilateralTest_01{
 	double expectedRotation;
 	Rect expectedBBox;
 	Point expectedCenter;
+	std::vector<Segment> expectedEdgeLines;
 };
 
 
@@ -394,6 +404,10 @@ struct QuadrilateralTest_02{
 		expectedRotation = 0;
 		expectedBBox = Rect(0,0,3,2);
 		expectedCenter = Point(1,1.5);
+		expectedEdgeLines.push_back(Segment(expectedA,expectedB));
+		expectedEdgeLines.push_back(Segment(expectedB,expectedC));
+		expectedEdgeLines.push_back(Segment(expectedC,expectedD));
+		expectedEdgeLines.push_back(Segment(expectedD,expectedA));
 	}
 
 	void Constructor_01(){
@@ -436,6 +450,11 @@ struct QuadrilateralTest_02{
 		ASSERT_EQUAL(expectedCenter,q.getCenter());
 	}
 
+	void checkEdgelines(){
+		std::vector<Segment> lines = q.getEdgesLine();
+		ASSERT_EQUAL(expectedEdgeLines,lines);
+	}
+
 	Quadrilateral q;
 	Point expectedA;
 	Point expectedB;
@@ -446,12 +465,163 @@ struct QuadrilateralTest_02{
 	double expectedRotation;
 	Rect expectedBBox;
 	Point expectedCenter;
+	std::vector<Segment> expectedEdgeLines;
 };
 
 
 
+struct QuadrilateralTest_03{
+
+	QuadrilateralTest_03(): q(0,0,1,1,1,2,0,1){
+		expectedChunkString = "cianc, Quadrilateral\n";
+		expectedArea = 1.0;
+		expectedA = Point(0,0);
+		expectedB = Point(1,1);
+		expectedC = Point(1,2);
+		expectedD = Point(0,1);
+		expectedRotation = M_PI/4;
+		expectedBBox = Rect(0,0,2,1);
+		expectedCenter = Point(0.5,1);
+		expectedEdgeLines.push_back(Segment(expectedA,expectedB));
+		expectedEdgeLines.push_back(Segment(expectedB,expectedC));
+		expectedEdgeLines.push_back(Segment(expectedC,expectedD));
+		expectedEdgeLines.push_back(Segment(expectedD,expectedA));
+	}
+
+	void Constructor_01(){
+		ASSERT_EQUAL(false, &q==NULL);
+	}
+
+	void getA(){
+		ASSERT_EQUAL(expectedA,q.getA());
+	}
+
+	void getB(){
+		ASSERT_EQUAL(expectedB,q.getB());
+	}
+
+	void getC(){
+		ASSERT_EQUAL(expectedC,q.getC());
+	}
+
+	void getD(){
+		ASSERT_EQUAL(expectedD,q.getD());
+	}
+
+	void getChunk(){
+		ASSERT_EQUAL(expectedChunkString,q.getChunk());
+	}
+
+	void checkRotation(){
+		ASSERT_EQUAL(expectedRotation,q.getRotation());
+	}
+
+	void checkArea(){
+		ASSERT_EQUAL(expectedArea,q.getArea());
+	}
+
+	void checkBoundingBox(){
+		ASSERT_EQUAL(expectedBBox,q.getBbox());
+	}
+
+	void checkCenter(){
+		ASSERT_EQUAL(expectedCenter,q.getCenter());
+	}
+
+	void checkEdgelines(){
+		std::vector<Segment> lines = q.getEdgesLine();
+		ASSERT_EQUAL(expectedEdgeLines,lines);
+	}
+
+	Quadrilateral q;
+	Point expectedA;
+	Point expectedB;
+	Point expectedC;
+	Point expectedD;
+	string expectedChunkString;
+	double expectedArea;
+	double expectedRotation;
+	Rect expectedBBox;
+	Point expectedCenter;
+	std::vector<Segment> expectedEdgeLines;
+};
 
 
+struct QuadrilateralTest_04{
+
+	QuadrilateralTest_04(): q(2,0,2,1,1,2,1,1){
+		expectedChunkString = "cianc, Quadrilateral\n";
+		expectedArea = 1.0;
+		expectedA = Point(2,0);
+		expectedB = Point(2,1);
+		expectedC = Point(1,2);
+		expectedD = Point(1,1);
+		expectedRotation = M_PI/2;
+		expectedBBox = Rect(1,0,2,1);
+		expectedCenter = Point(1.5,1);
+		expectedEdgeLines.push_back(Segment(expectedA,expectedB));
+		expectedEdgeLines.push_back(Segment(expectedB,expectedC));
+		expectedEdgeLines.push_back(Segment(expectedC,expectedD));
+		expectedEdgeLines.push_back(Segment(expectedD,expectedA));
+	}
+
+	void Constructor_01(){
+		ASSERT_EQUAL(false, &q==NULL);
+	}
+
+	void getA(){
+		ASSERT_EQUAL(expectedA,q.getA());
+	}
+
+	void getB(){
+		ASSERT_EQUAL(expectedB,q.getB());
+	}
+
+	void getC(){
+		ASSERT_EQUAL(expectedC,q.getC());
+	}
+
+	void getD(){
+		ASSERT_EQUAL(expectedD,q.getD());
+	}
+
+	void getChunk(){
+		ASSERT_EQUAL(expectedChunkString,q.getChunk());
+	}
+
+	void checkRotation(){
+		ASSERT_EQUAL(expectedRotation,q.getRotation());
+	}
+
+	void checkArea(){
+		ASSERT_EQUAL(expectedArea,q.getArea());
+	}
+
+	void checkBoundingBox(){
+		ASSERT_EQUAL(expectedBBox,q.getBbox());
+	}
+
+	void checkCenter(){
+		ASSERT_EQUAL(expectedCenter,q.getCenter());
+	}
+
+	void checkEdgelines(){
+		std::vector<Segment> lines = q.getEdgesLine();
+		ASSERT_EQUAL(expectedEdgeLines,lines);
+	}
+
+	Quadrilateral q;
+	Point expectedA;
+	Point expectedB;
+	Point expectedC;
+	Point expectedD;
+	string expectedChunkString;
+	double expectedArea;
+	double expectedRotation;
+	Rect expectedBBox;
+	Point expectedCenter;
+	std::vector<Segment> expectedEdgeLines;
+};
 
 
 
@@ -491,6 +661,7 @@ cute::suite make_suite_QuadrilateralTest(){
 	s+= CUTE_SMEMFUN(QuadrilateralTest_01,checkArea);
 	s+= CUTE_SMEMFUN(QuadrilateralTest_01,checkBoundingBox);
 	s+= CUTE_SMEMFUN(QuadrilateralTest_01,checkCenter);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_01,checkEdgelines);
 
 	s+= CUTE_SMEMFUN(QuadrilateralTest_02,Constructor_01);
 	s+= CUTE_SMEMFUN(QuadrilateralTest_02,getA);
@@ -502,10 +673,31 @@ cute::suite make_suite_QuadrilateralTest(){
 	s+= CUTE_SMEMFUN(QuadrilateralTest_02,checkArea);
 	s+= CUTE_SMEMFUN(QuadrilateralTest_02,checkBoundingBox);
 	s+= CUTE_SMEMFUN(QuadrilateralTest_02,checkCenter);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_02,checkEdgelines);
 
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,Constructor_01);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,getA);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,getB);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,getC);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,getD);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,getChunk);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,checkRotation);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,checkArea);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,checkBoundingBox);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,checkCenter);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_03,checkEdgelines);
 
-
-
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,Constructor_01);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,getA);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,getB);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,getC);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,getD);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,getChunk);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,checkRotation);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,checkArea);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,checkBoundingBox);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,checkCenter);
+	s+= CUTE_SMEMFUN(QuadrilateralTest_04,checkEdgelines);
 
 	return s;
 }

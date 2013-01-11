@@ -43,9 +43,9 @@ int main(){
     std::cout << "c\n";
     
     //Prevent program from terminating, needed for server to stay alive
-	std::cout << "Press enter to terminate whenever you want!" << std::endl;
-	std::string request;
-	std::getline(std::cin, request);
+	std::string str;
+	std::cout<<"Press enter to terminate whenever you want!\n";
+	std::cin >>str;
 
 	#else 	  //Run Francesco's code
 	std::cout << "Running Francesco's stuff \n";

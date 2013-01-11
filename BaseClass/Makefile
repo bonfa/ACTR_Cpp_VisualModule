@@ -1,3 +1,5 @@
+DEBUG := -g
+
 CPP_FILES := $(wildcard src/*.cpp)
 OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))
 MAIN_SRC := main.cpp
@@ -25,7 +27,7 @@ CC_FLAGS := -c -fPIC
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
 DYNAMIC_LIB := lib$(MY_LIB).so
-CC := g++
+CC := g++ $(DEBUG)
 EXEC := test
 SCAN := scan_image
 
@@ -76,7 +78,7 @@ obj/proxy.o: src/proxy.cpp
 	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
 	
 obj/%.o: src/%.c
-	cc $(ART_CFLAG) $(OCV_PATH)  $(CC_FLAGS) -o $@ $<
+	$(CC) $(ART_CFLAG) $(OCV_PATH)  $(CC_FLAGS) -o $@ $<
 	
 obj/%.o: src/%.cpp
 	$(CC) $(OCV_PATH)  $(CC_FLAGS) -o $@ $<

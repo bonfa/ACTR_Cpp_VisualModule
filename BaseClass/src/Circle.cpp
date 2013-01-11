@@ -18,6 +18,7 @@
  * 5) the center of the bounding box is the center of the circle
  * */
 Circle::Circle(int rad, int x, int y) {
+	//TODO mettere a posto questo controllo!!!!
 	if(x < 0 || y < 0 || rad <= 0 || x-rad <0 || y-rad <0)
 		throw InputException(("Negative values in the points coordinates"));
 	radius = rad;

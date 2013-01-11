@@ -21,6 +21,7 @@ Rect::Rect(){
  * 3) creates the rectangle
  * */
 Rect::Rect(int x_, int y_, int height_, int width_) {
+	//TODO mettere a posto questo controllo!!!
 	if(x_< 0 || y_ < 0 || height_ <= 0 || width_ <= 0)
 				throw InputException(("Negative values in the coordinates"));
 	x = x_;

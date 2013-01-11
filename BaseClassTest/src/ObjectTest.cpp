@@ -3,6 +3,7 @@
 #include "cute_runner.h"
 #include "ObjectTest.h"
 
+//TODO: test for object class (it could be not necessary because it should have never been called directly
 void ObjectTest01(){
 	;
 }

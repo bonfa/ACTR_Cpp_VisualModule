@@ -1,34 +1,10 @@
 #include "author.h"
 
-#ifdef ENRICO
+//#ifdef ENRICO
 
 #define NO_IMG
 
-
-#ifdef _WIN32
-#  include <windows.h>
-#endif
-#include <stdio.h>
-#include <stdlib.h>
-#ifndef __APPLE__
-#  include <GL/glut.h>
-#else
-#  include <GLUT/glut.h>
-#endif
-#include <AR/gsub.h>
-#include <AR/video.h>
-#include <AR/param.h>
-#include <AR/ar.h>
-
-#define  OBJ1_PATT_NAME    "Data/patt.hiro"
-#define  OBJ2_PATT_NAME    "Data/patt.kanji"
-#define  OBJ1_SIZE         80.0
-#define  OBJ2_SIZE         80.0
-
-#define  OBJ1_MODEL_ID      1
-#define  OBJ2_MODEL_ID      2
-
-
+#include "MarkerDetector.h"
 
 
 typedef struct {
@@ -68,7 +44,7 @@ static void   keyEvent( unsigned char key, int x, int y);
 static void   mainLoop(void);
 static void   draw( int object, double trans[3][4] );
 
-
+#ifdef STANDALONE
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
@@ -77,6 +53,11 @@ int main(int argc, char *argv[])
     arVideoCapStart();
     argMainLoop( NULL, keyEvent, mainLoop );
 	return (0);
+}
+#endif //STANDALONE
+
+int stub(){
+	return 2;	
 }
 
 static void   keyEvent( unsigned char key, int x, int y)
@@ -258,4 +239,4 @@ static void draw( int object, double trans[3][4] )
     glDisable( GL_LIGHTING );
     glDisable( GL_DEPTH_TEST );
 }
-#endif
+// #endif ENRICO

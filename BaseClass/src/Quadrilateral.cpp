@@ -10,6 +10,7 @@
 
 Quadrilateral::Quadrilateral() {
 	// TODO Auto-generated constructor stub
+	//TODo cancellare
 }
 
 Quadrilateral::~Quadrilateral() {
@@ -26,6 +27,7 @@ Quadrilateral::~Quadrilateral() {
  * 7) set the center of the bounding box
  * */
 Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy){
+	//TODO sistemare questo controllo!!!
 	if(ax<0 || ay<0 || bx<0 || by<0 || cx<0 || cy<0 || dx<0 || dy<0)
 		throw InputException("Negative coordinate");
 

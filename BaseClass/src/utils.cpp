@@ -121,6 +121,11 @@ bool areSame(double a, double b){
 
 
 double getMin(const std::vector<double>& values){
+	//except if vector is empty
+	if (values.size() == 0)
+		throw InputException("Empty Vector");
+
+	//calculate the minimum
 	double min = values.at(0);
 	for (unsigned int i = 1; i< values.size(); i++){
 		if (values.at(i) < min)

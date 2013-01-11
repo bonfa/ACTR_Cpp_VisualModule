@@ -244,6 +244,109 @@ void areSameTest_06(){
 }
 
 
+void getMinTest_01(){
+	std::vector<double> values;
+	values.push_back(0);
+	values.push_back(1);
+	values.push_back(2);
+	values.push_back(3);
+	double min = getMin(values);
+
+	ASSERT_EQUAL(0,min);
+}
+
+
+void getMinTest_02(){
+	std::vector<double> values;
+	values.push_back(0.0002);
+	values.push_back(0.0001);
+	values.push_back(0.0001);
+	values.push_back(0.0001);
+	double min = getMin(values);
+
+	ASSERT_EQUAL(0.0001,min);
+}
+
+
+void getMinTest_03(){
+	std::vector<double> values;
+	values.push_back(0.0002);
+	values.push_back(0.0001);
+	values.push_back(0.0001);
+	values.push_back(0.00001);
+	double min = getMin(values);
+
+	ASSERT_EQUAL(0.00001,min);
+}
+
+
+void getMinTest_04(){
+	std::vector<double> values;
+	values.push_back(0.43);
+	values.push_back(1.55);
+	values.push_back(0.05);
+	values.push_back(3);
+	double min = getMin(values);
+
+	ASSERT_EQUAL(0.05,min);
+}
+
+
+void getMinTest_05(){
+	std::vector<double> values;
+	values.push_back(0.43);
+	values.push_back(-1.55);
+	values.push_back(20.05);
+	values.push_back(3);
+	double min = getMin(values);
+
+	ASSERT_EQUAL(-1.55,min);
+}
+
+
+void getMinTest_06(){
+	std::vector<double> values;
+	values.push_back(-0.43);
+	values.push_back(-1.55);
+	values.push_back(20.05);
+	values.push_back(-3);
+	double min = getMin(values);
+
+	ASSERT_EQUAL(-3,min);
+}
+
+
+void getMinTest_07(){
+	std::vector<double> values;
+	values.push_back(-0.43);
+	double min = getMin(values);
+
+	ASSERT_EQUAL(-0.43,min);
+}
+
+
+void getMinTest_Error(){
+	std::vector<double> values;
+
+	ASSERT_THROWS(getMin(values),InputException);
+}
+
+
+void fileExistsTest_01(){
+	char * filename = "./src/utilsTest.cpp";
+	ASSERT_EQUAL(true,fileExists(filename));
+}
+
+
+void fileExistsTest_02(){
+	char * filename = "error";
+	ASSERT_EQUAL(false,fileExists(filename));
+}
+
+
+
+
+
 cute::suite make_suite_utilsTest(){
 	cute::suite s;
 	s.push_back(CUTE(utilsTest01));
@@ -272,6 +375,18 @@ cute::suite make_suite_utilsTest(){
 	s.push_back(CUTE(areSameTest_04));
 	s.push_back(CUTE(areSameTest_05));
 	s.push_back(CUTE(areSameTest_06));
+
+	s.push_back(CUTE(getMinTest_01));
+	s.push_back(CUTE(getMinTest_02));
+	s.push_back(CUTE(getMinTest_03));
+	s.push_back(CUTE(getMinTest_04));
+	s.push_back(CUTE(getMinTest_05));
+	s.push_back(CUTE(getMinTest_06));
+	s.push_back(CUTE(getMinTest_07));
+	s.push_back(CUTE(getMinTest_Error));
+
+	s.push_back(CUTE(fileExistsTest_01));
+	s.push_back(CUTE(fileExistsTest_02));
 
 	return s;
 }

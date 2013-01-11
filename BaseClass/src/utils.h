@@ -21,6 +21,7 @@
 #include <ios>
 #include "MyPoint.h"
 #include "StraightLine.h"
+#include "FeatureGetterExceptions.h"
 #include <fstream>
 
 

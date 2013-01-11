@@ -1,9 +1,8 @@
 #include "author.h"
 
-#ifdef ENRICO
+//#ifdef ENRICO
 
 #define NO_IMG
-
 
 #include "MarkerDetector.h"
 
@@ -45,7 +44,7 @@ static void   keyEvent( unsigned char key, int x, int y);
 static void   mainLoop(void);
 static void   draw( int object, double trans[3][4] );
 
-
+#ifdef STANDALONE
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
@@ -54,6 +53,11 @@ int main(int argc, char *argv[])
     arVideoCapStart();
     argMainLoop( NULL, keyEvent, mainLoop );
 	return (0);
+}
+#endif //STANDALONE
+
+int stub(){
+	return 2;	
 }
 
 static void   keyEvent( unsigned char key, int x, int y)
@@ -235,4 +239,4 @@ static void draw( int object, double trans[3][4] )
     glDisable( GL_LIGHTING );
     glDisable( GL_DEPTH_TEST );
 }
-#endif
+// #endif ENRICO

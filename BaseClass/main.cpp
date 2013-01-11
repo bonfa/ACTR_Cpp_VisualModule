@@ -7,6 +7,10 @@
 
 #include "src/proxy.h"
 #include "src/Server.h"
+
+#include "src/MarkerDetector.h"
+
+
 #include "src/utils.h"
 #include "src/author.h"
 #include <iostream>
@@ -24,6 +28,7 @@ int main(){
   {
 	  
 	 #ifdef ENRICO //Run Enrico's code
+	 std::cout << stub();
 	 std::cout << "Running Enrico's stuff \n";
      boost::asio::io_service io_service;
      //Create server listening on port 4114, and put it in the list of services to be run

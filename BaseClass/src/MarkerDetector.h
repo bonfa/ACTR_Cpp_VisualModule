@@ -5,6 +5,10 @@
  *
  */
 
+#include "author.h"
+
+//#ifdef ENRICO
+
 #ifndef MDETECT_H_
 #define MDETECT_H_
 
@@ -31,4 +35,10 @@
 #define  OBJ1_MODEL_ID      1
 #define  OBJ2_MODEL_ID      2
 
+int stub();
+
 #endif /* MDETECT_H_ */
+
+
+
+// #endif /* ENRICO */

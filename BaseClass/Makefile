@@ -65,8 +65,7 @@ obj/Session.o: src/Session.cpp
 	$(CC) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
 	
 obj/MarkerDetector.o: src/MarkerDetector.cpp
-	echo "Compilo il MarkerDetector"
-	cc $(ART_CFLAG)  $(CC_FLAGS) -o $@ $<
+	$(CC) $(ART_CFLAG)  $(CC_FLAGS) -Wno-write-strings -o $@ $<
 
 obj/FeatureExtractor.o: src/FeatureExtractor.cpp
 	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<

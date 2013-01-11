@@ -6,6 +6,7 @@
 
 #include "MarkerDetector.h"
 
+//double 	*vertex[4][2];
 
 typedef struct {
   char    *patt_name;
@@ -28,7 +29,8 @@ OBJECT_T   object[2] = {
 #ifdef _WIN32
 char			*vconf = "Data\\WDM_camera_flipV.xml";
 #else
-char			*vconf = "v4l2src device=/dev/video0 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=320,height=240 ! identity name=artoolkit ! fakesink";
+//Variabile d'ambiente per usare la webcam, buildare le librerie con gstreamer, cambiare device=/dev/video0 in device=/dev/video1 per usare la seconda webcam
+char			*vconf = "v4l2src device=/dev/video0 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=640,height=480 ! identity name=artoolkit ! fakesink";
 #endif
 
 int             xsize, ysize;
@@ -36,6 +38,7 @@ int             thresh = 100;
 int             count = 0;
 
 char           *cparam_name    = "Data/camera_para.dat";
+
 ARParam         cparam;
 
 static void   init(void);
@@ -47,14 +50,27 @@ static void   draw( int object, double trans[3][4] );
 #ifdef STANDALONE
 int main(int argc, char *argv[])
 {
+	#ifndef NO_IMG
 	glutInit(&argc, argv);
-    init();
-
-    arVideoCapStart();
-    argMainLoop( NULL, keyEvent, mainLoop );
+	#endif
+	startDetection();
+	printf("Exiting\n");
 	return (0);
 }
 #endif //STANDALONE
+
+void startDetection(){
+	printf("Init ARToolkit stuff\n");
+	int argc = 1;
+	char *argv[] = {"./fake"};
+	//char const*[]={"./fake"};
+	glutInit(&argc, argv);
+	init();
+	printf("Setup done\n");
+    arVideoCapStart();
+    printf("Capture started\n");
+    argMainLoop( NULL, keyEvent, mainLoop );
+}
 
 int stub(){
 	return 2;	
@@ -117,6 +133,7 @@ static void mainLoop(void)
         object[i].visible = k;
 
         if( k >= 0 ) {
+			//vertex = &marker_info[k].vertex;
             arGetTransMat(&marker_info[k],
                           object[i].center, object[i].width,
                           object[i].trans);
@@ -145,8 +162,6 @@ static void mainLoop(void)
 
 static void init( void )
 {
-		int  number;
-	
     ARParam  wparam;
     int      i;
 
@@ -172,8 +187,7 @@ static void init( void )
             exit(0);
         }
     }
-printf("Type in a number \n");
-	getchar();
+
     /* open the graphics window */
     argInit( &cparam, 1.0, 0, 0, 0, 0 );
 }
@@ -185,7 +199,6 @@ static void cleanup(void)
     arVideoClose();
     argCleanup();
 }
-
 
 //disegna figure
 static void draw( int object, double trans[3][4] )

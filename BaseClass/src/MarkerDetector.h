@@ -36,6 +36,7 @@
 #define  OBJ2_MODEL_ID      2
 
 int stub();
+void startDetection();
 
 #endif /* MDETECT_H_ */
 

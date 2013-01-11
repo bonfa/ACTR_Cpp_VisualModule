@@ -71,15 +71,20 @@ std::vector<Segment> Rect::getEdgesLine(){
 
 	std::vector<Point> pointList = this->getPoints();
 
-	Segment line1 = Segment(pointList.at(0),pointList.at(1));
-	Segment line2 = Segment(pointList.at(1),pointList.at(2));
-	Segment line3 = Segment(pointList.at(2),pointList.at(3));
-	Segment line4 = Segment(pointList.at(3),pointList.at(0));
+	try{
+		Segment line1 = Segment(pointList.at(0),pointList.at(1));
+		Segment line2 = Segment(pointList.at(1),pointList.at(2));
+		Segment line3 = Segment(pointList.at(2),pointList.at(3));
+		Segment line4 = Segment(pointList.at(3),pointList.at(0));
 
-	lineList.push_back(line1);
-	lineList.push_back(line2);
-	lineList.push_back(line3);
-	lineList.push_back(line4);
+		lineList.push_back(line1);
+		lineList.push_back(line2);
+		lineList.push_back(line3);
+		lineList.push_back(line4);
+	}
+	catch (InputException &e) {
+		throw InputException("Coincident Points [default constructor]");
+	}
 
 	return lineList;
 }

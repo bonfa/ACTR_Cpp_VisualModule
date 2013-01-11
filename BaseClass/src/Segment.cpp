@@ -87,6 +87,9 @@ int Segment::getMinY(){
 }
 
 
+bool Segment::operator==(const Segment &other) const {
+	return (((this->p1 == other.p1) && (this->p2 == other.p2)) || ((this->p1 == other.p2) && (this->p2 == other.p1)));
+}
 
 
 

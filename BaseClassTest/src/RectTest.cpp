@@ -95,6 +95,11 @@ struct RectTest_01{
 		ASSERT_EQUAL(expectedPointList,pointList);
 	}
 
+	void checkGetEdgeLines(){
+		ASSERT_THROWS(r.getEdgesLine(),InputException);
+	}
+
+
 	Rect r;
 	std::vector<Point> expectedPointList;
 };
@@ -103,10 +108,18 @@ struct RectTest_01{
 struct RectTest_02{
 
 	RectTest_02(): r(4,3,7,5){
-		expectedPointList.push_back(Point(4,3));
-		expectedPointList.push_back(Point(9,3));
-		expectedPointList.push_back(Point(9,10));
-		expectedPointList.push_back(Point(4,10));
+		Point p1(4,3);
+		Point p2(9,3);
+		Point p3(9,10);
+		Point p4(4,10);
+		expectedPointList.push_back(p1);
+		expectedPointList.push_back(p2);
+		expectedPointList.push_back(p3);
+		expectedPointList.push_back(p4);
+		expectedEdgeList.push_back(Segment(p1,p2));
+		expectedEdgeList.push_back(Segment(p2,p3));
+		expectedEdgeList.push_back(Segment(p3,p4));
+		expectedEdgeList.push_back(Segment(p4,p1));
 	}
 
 	void Constructor(){
@@ -149,8 +162,14 @@ struct RectTest_02{
 		ASSERT_EQUAL(expectedPointList,pointList);
 	}
 
+	void checkGetEdgeLines(){
+		std::vector<Segment> edgeList = r.getEdgesLine();
+		ASSERT_EQUAL(expectedEdgeList,edgeList);
+	}
+
 	Rect r;
 	std::vector<Point> expectedPointList;
+	std::vector<Segment> expectedEdgeList;
 };
 
 
@@ -173,6 +192,8 @@ cute::suite make_suite_RectTest(){
 	s+= CUTE_SMEMFUN(RectTest_01,checkEqual_02);
 	s+= CUTE_SMEMFUN(RectTest_01,checkEqual_03);
 	s+= CUTE_SMEMFUN(RectTest_01,checkGetPoints);
+	s+= CUTE_SMEMFUN(RectTest_01,checkGetEdgeLines);
+
 
 	s+= CUTE_SMEMFUN(RectTest_02,Constructor);
 	s+= CUTE_SMEMFUN(RectTest_02,checkX);
@@ -183,17 +204,8 @@ cute::suite make_suite_RectTest(){
 	s+= CUTE_SMEMFUN(RectTest_02,checkEqual_02);
 	s+= CUTE_SMEMFUN(RectTest_02,checkEqual_03);
 	s+= CUTE_SMEMFUN(RectTest_02,checkGetPoints);
+	s+= CUTE_SMEMFUN(RectTest_02,checkGetEdgeLines);
 
-
-	/*
-	//s.push_back(CUTE(RectTest_Constructor_01));
-	s.push_back(CUTE(RectTest_Constructor_02));
-	//s.push_back(CUTE(RectTest_ParameterCheck_01));
-	s.push_back(CUTE(RectTest_ParameterCheck_02));
-
-	s.push_back(CUTE(RectTest_Operator_01));
-	//s.push_back(CUTE(RectTest_Operator_02));
-	 * */
 
 	return s;
 }

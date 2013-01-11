@@ -31,6 +31,10 @@ public:
 
 	/** Return true if the input point is inside the square defined by the two points whose the segment is the diagonal*/
 	bool isPointBetweenSegmentExtremes(Point p);
+
+	/** Two segments are equal when the extremes, that is the points a and b, are equal*/
+	bool operator==(const Segment &other) const;
+
 	virtual ~Segment();
 private:
 	/** Return the max between the x of a and the x of b*/

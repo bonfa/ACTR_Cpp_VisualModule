@@ -61,7 +61,7 @@ bool areSame(double a, double b);
 
 
 /**
- * This method returns the minimum value of the list
+ * This method returns the minimum value of the input list
  * */
 double getMin(const std::vector<double>& values);
 

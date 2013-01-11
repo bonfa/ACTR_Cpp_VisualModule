@@ -91,19 +91,24 @@ Point Quadrilateral::getD(){
 
 /**
  * @ATTENTION: @see Object.h for a better explanation of the 'rotation' parameter
+ *
+ * @ATTENTION: tested by the test 'checkRotation'
  */
 void Quadrilateral::setRotation(){
-	//TODO --> testing
 	//Get the equations of the edges
 	std::vector<Segment> edgeList = this->getEdgesLine();
 
-	//Create a list which contains the artg(m) of every non vertical line
+	//Create a list which contains the artg(m) of every non vertical line (all the values are >= 0)
 	std::vector<double> rotationList;
 	for (unsigned int i=0; i<edgeList.size(); i++){
-		//exclude the vertical lines (which have the maximum slope)
-		if (!((edgeList.at(i)).isVertical())){
+
+		//If the line is vertical insert directly PI/2
+		if (((edgeList.at(i)).isVertical()))
+			rotationList.push_back(M_PI/2);
+		//Else, calculate the angle
+		else {
 			double atg = atan2((edgeList.at(i)).getSlope(),1);
-			//when the angle is < 0, add PI to make it positive
+			//when the angle is < 0, add PI to make it positive (this does not change the m)
 			if (atg < 0)
 				atg += M_PI;
 			rotationList.push_back(atg);

@@ -38,6 +38,8 @@ public:
 	Point getC();
 	/** Returns the fourth vertex of the quadrilateral*/
 	Point getD();
+	/** Return a vector containing the four segment of the quadrilateral*/
+	std::vector<Segment> getEdgesLine();
 protected:
 	/** The first vertex*/
 	Point a;
@@ -50,8 +52,7 @@ protected:
 	/** Set the 'rotation' of the quadrilateral.
 	 * The rotation is defined as the smallest positive angle of the segments in the counterclockwise direction starting from the horizontal direction, on the right*/
 	void setRotation();
-	/** Return a vector containing the four segment of the quadrilateral*/
-	std::vector<Segment> getEdgesLine();
+
 };
 
 #endif /* Quadrilateral_H_ */

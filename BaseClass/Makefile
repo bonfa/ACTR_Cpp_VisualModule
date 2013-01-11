@@ -9,13 +9,21 @@ ZBR_LIBS := /usr/local/lib/libzbar.dylib
 JSN_LIBS := `pkg-config --libs jsoncpp`
 JSN_PATH := `pkg-config --cflags jsoncpp`
 BST_LIBS := -lboost_system -lboost_system-mt -pthread -lboost_thread
+ART_FLAGS := -pthread -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lxml2 -lglib-2.0 -L/usr/X11R6/lib -L/usr/local/lib
+ART_LIBS= -lARgsub -lARvideo -lAR -lpthread -lglut -lGLU -lGL -lXi -lX11 -lm -pthread -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lxml2 -lglib-2.0
+
+
+
+INC_DIR= /usr/local/include/AR
+ART_CFLAG = -O -pthread -I/usr/include/gstreamer-0.10 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/libxml2 -I/usr/X11R6/include -g -I$(INC_DIR)
+
 
 BST_PATH := -L/usr/local/lib 
 
 QR_SOURCE := qr/main.cpp
 QR_LIB := decodeqr
 MY_LIB := launcher
-LD_FLAGS := -L. $(BST_PATH) -l$(MY_LIB) $(JSN_PATH) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH) $(BST_LIBS)
+LD_FLAGS := -L. $(BST_PATH) -l$(MY_LIB) $(JSN_PATH) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH) $(BST_LIBS) $(ART_FLAGS) $(ART_LIBS)
 CC_FLAGS := -c -fPIC 
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
@@ -47,6 +55,9 @@ dyn_main:
 dyn_lib: $(OBJ_FILES)
 	$(CC) -shared $(OCV_LIBS) $(ZBR_LIBS) -o $(DYNAMIC_LIB) $^
 
+obj/MarkerDetector.o: src/MarkerDetector.c 
+	$(CC) -c $(CFLAG)  $(CC_FLAGS) -o $@ $<
+
 obj/QRScanner.o: src/QRScanner.cpp
 	$(CC) $(OCV_PATH) $(MGK_PATH) $(CC_FLAGS) -o $@ $<
 	
@@ -55,6 +66,15 @@ obj/Server.o: src/Server.cpp
 
 obj/Session.o: src/Session.cpp
 	$(CC) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+
+obj/FeatureExtractor.o: src/FeatureExtractor.cpp
+	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+	
+obj/FeatureGetter.o: src/FeatureGetter.cpp
+	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+
+obj/proxy.o: src/proxy.cpp
+	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
 
 obj/%.o: src/%.cpp
 	$(CC) $(OCV_PATH)  $(CC_FLAGS) -o $@ $<

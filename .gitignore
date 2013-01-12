@@ -18,6 +18,7 @@ BaseClass/src/author.h
 
 #solo progetto locale
 .gitignore
+BaseClass/qr/main.cpp
 BaseClass/src/QRScanner.h
 BaseClass/src/QRScanner.cpp
 BaseClass/src/Session.h

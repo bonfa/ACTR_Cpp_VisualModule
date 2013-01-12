@@ -7,7 +7,7 @@
 
 #include "author.h"
 
-//#ifdef ENRICO
+#ifdef ENRICO
 
 #ifndef MDETECT_H_
 #define MDETECT_H_
@@ -41,4 +41,4 @@ int stub();
 
 
 
-// #endif /* ENRICO */
+ #endif /* ENRICO */

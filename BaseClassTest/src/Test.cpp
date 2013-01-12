@@ -20,7 +20,7 @@
 #include "MyPointTest.h"
 #include "RectTest.h"
 #include "InputTest.h"
-
+#include <string>
 
 void runTest(){
 	cute::ide_listener lis;

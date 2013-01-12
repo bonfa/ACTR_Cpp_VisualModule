@@ -1,6 +1,6 @@
 #include "author.h"
 
-//#ifdef ENRICO
+#ifdef ENRICO
 
 #define NO_IMG
 
@@ -239,4 +239,4 @@ static void draw( int object, double trans[3][4] )
     glDisable( GL_LIGHTING );
     glDisable( GL_DEPTH_TEST );
 }
-// #endif ENRICO
+ #endif ENRICO

@@ -15,3 +15,13 @@ library/
 *.o
 *.a
 BaseClass/src/author.h
+
+#solo progetto locale
+.gitignore
+BaseClass/src/QRScanner.h
+BaseClass/src/QRScanner.cpp
+BaseClass/src/Session.h
+BaseClass/src/Server.h
+BaseClass/src/MarkerDetector.h
+BaseClass/src/MarkerDetector.cpp
+BaseClassTest/src/QRScannerTest.cpp

@@ -5,8 +5,11 @@
  *      Author: enrico
  */
 
+
 #ifndef SERVER_H_
 #define SERVER_H_
+
+#ifdef ENRICO
 
 #include <cstdlib>
 #include <iostream>
@@ -14,6 +17,8 @@
 #include <boost/asio.hpp>
 
 #include <json/json.h>
+#include <json/value.h>
+//#include <json.h>
 #include "Session.h"
 
 using boost::asio::ip::tcp;
@@ -59,4 +64,7 @@ private:
 	tcp::acceptor acceptor_;
 };
 
+#endif
+
 #endif /* SERVER_H_ */
+

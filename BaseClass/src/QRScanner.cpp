@@ -1,3 +1,4 @@
+#ifdef ENRICO
 #include <iostream>
 #include <Magick++.h>
 #include <zbar.h>
@@ -73,3 +74,4 @@ string QRScanner::getQRCode()
 
 
 
+#endif

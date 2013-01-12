@@ -15,9 +15,11 @@
 #include "src/author.h"
 #include <iostream>
 
+#ifdef ENRICO
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>  
+#endif
 
 //int runServer(int port);
 
@@ -26,7 +28,7 @@ int main(){
 	std::cout << "a\n";
 	try
   {
-	  
+
 	 #ifdef ENRICO //Run Enrico's code
 	 std::cout << stub();
 	 std::cout << "Running Enrico's stuff \n";

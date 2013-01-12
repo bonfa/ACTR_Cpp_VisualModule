@@ -1,14 +1,17 @@
 #include <iostream>
+#ifdef ENRICO
 #include <Magick++.h>
 #include <zbar.h>
+#endif
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <opencv/cxcore.h>
 
 using namespace std;
+#ifdef ENRICO
 using namespace zbar;
-
+#endif
 /*
 int main (int argc, char **argv)
 {

@@ -64,10 +64,11 @@ void runTest(){
 	cute::makeRunner(lis)(extractorUtilsTest, "extractorUtilsTest");
 
 	cute::suite segmentTest = make_suite_SegmentTest();
-	cute::makeRunner(lis)(segmentTest, "RectTest");
+	cute::makeRunner(lis)(segmentTest, "SegmentTest");
 
-	cute::suite inputTest = make_suite_InputTest();
-	cute::makeRunner(lis)(inputTest, "InputTest");
+	//TODO: add again the suite
+	//cute::suite inputTest = make_suite_InputTest();
+	//cute::makeRunner(lis)(inputTest, "InputTest");
 
 }
 

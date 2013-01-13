@@ -27,6 +27,9 @@
 #include <AR/param.h>
 #include <AR/ar.h>
 
+#include <boost/thread/mutex.hpp>
+#include "Quadrilateral.h"
+
 #define  OBJ1_PATT_NAME    "Data/patt.hiro"
 #define  OBJ2_PATT_NAME    "Data/patt.kanji"
 #define  OBJ1_SIZE         80.0
@@ -35,9 +38,14 @@
 #define  OBJ1_MODEL_ID      1
 #define  OBJ2_MODEL_ID      2
 
-int stub();
-void startDetection();
+//public static boost::mutex mutex_;
 
+	int stub();
+	
+	static boost::mutex io_mutex;
+	void startDetection();//boost::mutex& mutex);
+	static std::vector<Quadrilateral *> markersList;
+	static std::vector<Quadrilateral *> getMarkers();
 #endif /* MDETECT_H_ */
 
 

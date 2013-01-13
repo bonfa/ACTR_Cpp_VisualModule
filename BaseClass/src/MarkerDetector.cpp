@@ -2,11 +2,13 @@
 
 //#ifdef ENRICO
 
-#define NO_IMG
+#define NO_IM
 
 #include "MarkerDetector.h"
 
-//double 	*vertex[4][2];
+double 	vertex[4][2];
+//std::vector<Quadrilateral> marker_list;
+//Quadrilateral q1;
 
 typedef struct {
   char    *patt_name;
@@ -35,7 +37,7 @@ char			*vconf = "v4l2src device=/dev/video0 use-fixed-fps=false ! ffmpegcolorspa
 
 int             xsize, ysize;
 int             thresh = 100;
-int             count = 0;
+int             ciunt = 0;
 
 char           *cparam_name    = "Data/camera_para.dat";
 
@@ -59,7 +61,16 @@ int main(int argc, char *argv[])
 }
 #endif //STANDALONE
 
+
+
+#ifdef STANDALONE
 void startDetection(){
+#else
+void startDetection(){//boost::mutex& mutex){
+	 //boost::mutex& mutex_;
+	//mutex_= mutex;
+	 
+#endif //STANDALONE
 	printf("Init ARToolkit stuff\n");
 	int argc = 1;
 	char *argv[] = {"./fake"};
@@ -80,11 +91,15 @@ static void   keyEvent( unsigned char key, int x, int y)
 {
     /* quit if the ESC key is pressed */
     if( key == 0x1b ) {
-        printf("*** %f (frame/sec)\n", (double)count/arUtilTimer());
+        printf("*** %f (frame/sec)\n", (double)ciunt/arUtilTimer());
         cleanup();
         exit(0);
     }
 }
+
+static std::vector<Quadrilateral *> getMarkers(){
+	return markersList;
+	}
 
 /* main loop */
 static void mainLoop(void)
@@ -99,8 +114,8 @@ static void mainLoop(void)
         arUtilSleep(2);
         return;
     }
-    if( count == 0 ) arUtilTimerReset();
-    count++;
+    if( ciunt == 0 ) arUtilTimerReset();
+    ciunt++;
 
 	#ifndef NO_IMG
     argDrawMode2D();
@@ -120,7 +135,10 @@ static void mainLoop(void)
     glClearDepth( 1.0 );
     glClear(GL_DEPTH_BUFFER_BIT);
 	#endif
-
+	
+	boost::mutex::scoped_lock lock(io_mutex);
+	markersList.clear();
+	
     /* check for object visibility */
     for( i = 0; i < 2; i++ ) {
         k = -1;
@@ -133,16 +151,31 @@ static void mainLoop(void)
         object[i].visible = k;
 
         if( k >= 0 ) {
-			//vertex = &marker_info[k].vertex;
+			//vertex = marker_info[k].vertex;
+			
+			//Lock to prevent race conditions while reading vertex from other threads
+			
+			memcpy(vertex, marker_info[k].vertex, sizeof (float) * 2 * 4); //2 colonne * 4 righe
+			//markersList.push_back(new Quadrilateral(1,2, 4,6, 4,3, 2,7));
+			//new Quadrilateral(1,2, 4,6, 4,3, 2,7);
+			markersList.push_back(new Quadrilateral((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1])));
+			
+			
+			//vertex[0][0] = marker_info[k].vertex[0][0];
+			//printf("Flottiamo %f\n", vertex[0][0]);
+			//printf("Flottare %f\n", vertex[1][0]);
             arGetTransMat(&marker_info[k],
                           object[i].center, object[i].width,
                           object[i].trans);
-		printf("***(frame/sec)\n");
+			printf("***(frame/sec)\n");
+			
 	#ifndef NO_IMG
             draw( object[i].model_id, object[i].trans );
 	#endif
         }
     }
+    lock.unlock();
+    
     argSwapBuffers();
 
     if( object[0].visible >= 0

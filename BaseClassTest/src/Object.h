@@ -9,6 +9,7 @@
  *	An object can be a geometric shape as well as a qr code.
  */
 
+//TODO make it abstract
 
 #include <iostream>
 #include "utils.h"

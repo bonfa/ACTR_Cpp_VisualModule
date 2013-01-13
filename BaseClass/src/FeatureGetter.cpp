@@ -23,8 +23,8 @@ void FeatureGetter::updateImage(){
 	//delete img;
 	//img = inputModule->getImage("./shapes.png");
 	//img = inputModule->getImage("./01_02_1030797656577.bmp");
-	//img = inputModule->getImage("./ellipses.jpg");
-	img = inputModule->getImage("./cndicdbnidvb.jpg");
+	img = inputModule->getImage("./ellipses.jpg");
+	//img = inputModule->getImage("./cndicdbnidvb.jpg");
 }
 
 

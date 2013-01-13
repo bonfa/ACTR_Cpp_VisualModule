@@ -25,7 +25,7 @@ vector<Point> Segment::getPoints(){
 	return pointList;
 }
 
-//TODO: check that is correct --> need testing
+
 Point Segment::getInterceptionPoint(Segment segment2){
 	Point interception;
 	try {
@@ -55,7 +55,7 @@ bool Segment::isPointBetweenSegmentExtremes(Point p){
 		return false;
 }
 
-
+//TODO testing
 int Segment::getMaxX(){
 	if (p1.x >= p2.x)
 		return p1.x;
@@ -63,6 +63,7 @@ int Segment::getMaxX(){
 		return p2.x;
 }
 
+//TODO testing
 int Segment::getMinX(){
 	if (p1.x <= p2.x)
 		return p1.x;
@@ -70,7 +71,7 @@ int Segment::getMinX(){
 		return p2.x;
 }
 
-
+//TODO testing
 int Segment::getMaxY(){
 	if(p1.y >= p2.y)
 		return p1.y;
@@ -78,7 +79,7 @@ int Segment::getMaxY(){
 		return p2.y;
 }
 
-
+//TODO testing
 int Segment::getMinY(){
 	if(p1.y <= p2.y)
 		return p1.y;

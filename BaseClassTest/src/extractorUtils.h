@@ -20,7 +20,8 @@
 
 //TODO: trasformare in classi
 
-/**TODO */
+/**TODO documentation
+ * TODO testing*/
 double angle( cv::Point pt1, cv::Point pt2, cv::Point pt0 );
 
 /** Gives the distance between two 2D points */
@@ -30,37 +31,46 @@ double myDistance(cv::Point a, cv::Point b);
  * This method is used to delete similar shapes which differ only for a few things.
  *
  * For example, a shape and another one obtained adding +1 to all the pixel coordinates are similar.
+ *
  *   */
 bool similar(cv::vector<cv::Point> a, cv::vector<cv::Point> b);
 
-/** Return true if the two points are very close one to each other */
+/** Return true if the two points are very close one to each other
+ * */
 bool tooClose(cv::Point a, cv::Point b);
 
 /** Return true if the square is not a real square.
- * For example, if two vertices are too close one each other, the shape is not a square. */
+ * For example, if two vertices are too close one each other, the shape is not a square.
+ * */
 bool isFalse(cv::vector<cv::Point> square);
 
 /** Return true if the triangle is a real square.
- * For example, if two vertices are too close one each other, the shape is not a triangle. */
+ * For example, if two vertices are too close one each other, the shape is not a triangle.
+ * TODO rename this method: it is just a threshold on the area*/
 bool isTriangle(cv::vector<cv::Point> terna);
 
-/** deletes the overlapped squares from the input square list*/
+/** deletes the overlapped squares from the input square list
+ * */
 cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList);
 
 /** Sort the points of every square in the list putting as the first element the point nearest
  * to the origin (0,0) and then following the clockwise order.
- * If there are two points with the same distance, it puts the one with minimum x. */
+ * If there are two points with the same distance, it puts the one with minimum x.
+ * */
 cv::vector<cv::vector<cv::Point> > squaresSort(cv::vector<cv::vector<cv::Point> > squareList);
 
-/** delete the false squares from the input square list*/
+/** delete the false squares from the input square list
+ * */
 cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::Point> > oldList);
 
 /**  Sort the points of the list starting from the first element nearest to the origin (0,0)
  * and then following the clockwise order.
- * If there are two points with the same distance, the first point is the one with minimum x. */
+ * If there are two points with the same distance, the first point is the one with minimum x.
+ * */
 cv::vector<cv::Point> sort4PointsClockwise(cv::vector<cv::Point> points);
 
-/** delete the false triangles from the input triangle list*/
+/** delete the false triangles from the input triangle list
+ * */
 cv::vector<cv::vector<cv::Point> > deleteFalseTriangles(cv::vector<cv::vector<cv::Point> > oldList);
 
 
@@ -70,6 +80,7 @@ cv::vector<cv::vector<cv::Point> > deleteFalseTriangles(cv::vector<cv::vector<cv
  * 	The possible orders are:
  * 	1) clockwise starting from the point nearest to the origin (0,0).
  * 		If there are two points with the same distance, the first point is the one with minimum x.
+ *
  *  */
 class FourPointsSorter{
 public:
@@ -90,7 +101,7 @@ private:
 	/** Sort the point clockwise*/
 	void sortClockWise();
 	/**TODO: change the name of this method
-	 * Rotate until the point with smalled distance from the origin is in first position*/
+	 * Rotate until the point with smaller distance from the origin is in first position*/
 	void rotateUntilMinXFirst();
 	/** Return the position of the first point*/
 	int getFirstPointPosition();

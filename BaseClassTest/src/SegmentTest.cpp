@@ -174,7 +174,6 @@ struct SegmentTest_01{
 
 };
 
-//TODO: tests
 
 
 cute::suite make_suite_SegmentTest(){

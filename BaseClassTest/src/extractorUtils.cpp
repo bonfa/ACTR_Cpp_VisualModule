@@ -16,8 +16,11 @@ double myDistance(cv::Point a, cv::Point b){
 	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 }
 
-
+//@ATTENTION: this method assumes that the point are already sorted
 bool similar(cv::vector<cv::Point> a, cv::vector<cv::Point> b){
+	if(a.size() != b.size())
+		return false;
+
 	double distance = myDistance(a.at(0),b.at(0));
 	if (distance > 10)
 		return false;
@@ -126,7 +129,7 @@ cv::vector<cv::vector<cv::Point> > deleteFalseTriangles(cv::vector<cv::vector<cv
 }
 
 
-
+//@ATTENTION: this method assumes that the point are already sorted
 cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::Point> > oldList){
 	if (oldList.size() == 0)
 			return oldList;
@@ -142,7 +145,7 @@ cv::vector<cv::vector<cv::Point> > deleteFalseSquares(cv::vector<cv::vector<cv::
 	return withoutFalseSquares;
 }
 
-
+//@ATTENTION: this method assumes that the point are already sorted
 cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Point> > oldList){
 	cv::vector<cv::vector<cv::Point> > withoutDuplicates;
 	if (oldList.size()== 0)
@@ -169,6 +172,8 @@ cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Po
 //--------------------------------------------------------------------------------------------------
 
 FourPointsSorter::FourPointsSorter(cv::vector<cv::Point> points_){
+	if (points_.size()==0)
+		throw InputException("Empty Vector");
 	points = points_;
 	setCenter();
 }

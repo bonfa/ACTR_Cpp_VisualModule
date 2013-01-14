@@ -493,8 +493,11 @@ void FeatureExtractor::recognizeEllipses(){
 
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){
+#ifdef ENRICO
+
 	//Modifica il comportamento: separa le parti che usano ARToolkit da quelle che non lo usano
 	if(!findMarkers){
+#endif
 		//TODO: alla fine eliminare tutto questo schifo ee far ritornare solo la lista di oggetti
 		cout<<"color: "+this->getPointColor(100, 100)+"\n";   //rosso
 		cout<<"color: "+this->getPointColor(200, 100)+"\n";		//verde
@@ -521,6 +524,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		this->objectList.insert(objectList.end(),this->circleList.begin(),this->circleList.end());
 
 		return objectList;
+#ifdef ENRICO
 	}
 	else {
 		quadrilateralList = getMarkers();
@@ -528,7 +532,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 
 		return objectList;
 	}
+#endif
 }
-
 
 //------------------------------------------------------------------------------------------------------------

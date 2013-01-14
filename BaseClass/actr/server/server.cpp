@@ -1,3 +1,4 @@
+#ifdef ENRICO
 #include <iostream>
 #include <cstring>      // Needed for memset
 #include <sys/socket.h> // Needed for the socket functions
@@ -107,3 +108,4 @@ r2 = (struct c_struct *) malloc (sizeof(struct c_struct));
 
 }
 
+#endif

@@ -15,7 +15,7 @@ Input::Input() {
 
 cv::Mat Input::getImage(string path){
 	cv::Mat img;
-	char * filename;
+	char * filename = (char *)malloc(path.length()+1);
 	strcpy(filename, path.c_str());
 	if (!fileExists(filename))
 		throw InputException("error in the input image");

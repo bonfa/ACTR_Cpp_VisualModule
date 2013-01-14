@@ -5,6 +5,7 @@
  *      Author: enrico
  */
 
+
 #include "QRScannerTest.h"
 #include "cute.h"
 #include "ide_listener.h"
@@ -14,6 +15,8 @@
 #include <algorithm>
 #include <cctype>
 using namespace std;
+
+#ifdef ENRICO
 
 void QRScannerTest01(){
 	QRScanner * qrs = new QRScanner("./qrtest.png");
@@ -115,9 +118,12 @@ void QRScannerTest10(){
 	ASSERT_EQUAL(false,qrs->QRDetected());
 
 }
+#endif
 
 cute::suite make_suite_QRScannerTest(){
+
 	cute::suite s;
+#ifdef ENRICO
 	s.push_back(CUTE(QRScannerTest01));
 	s.push_back(CUTE(QRScannerTest02));
 	s.push_back(CUTE(QRScannerTest03));
@@ -128,5 +134,9 @@ cute::suite make_suite_QRScannerTest(){
 	s.push_back(CUTE(QRScannerTest08));
 	s.push_back(CUTE(QRScannerTest09));
 	s.push_back(CUTE(QRScannerTest10));
+#endif
 	return s;
+
 }
+
+

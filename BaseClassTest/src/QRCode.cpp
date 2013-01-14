@@ -1,1 +1,0 @@
-../../BaseClass/src/QRCode.cpp

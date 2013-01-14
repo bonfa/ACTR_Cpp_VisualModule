@@ -345,8 +345,6 @@ void fileExistsTest_02(){
 
 
 
-
-
 cute::suite make_suite_utilsTest(){
 	cute::suite s;
 	s.push_back(CUTE(utilsTest01));

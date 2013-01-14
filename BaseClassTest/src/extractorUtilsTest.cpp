@@ -629,6 +629,7 @@ void sort4PointsClockwiseTest_06(){
 }
 
 
+
 	/*
 
 	cv::vector <cv::vector<cv::Point> > prova;
@@ -673,6 +674,25 @@ void sort4PointsClockwiseTest_06(){
 	ASSERTM("start writing tests", true);
 	*/
 
+void debug(){
+	cv::vector<cv::Point> a;
+	a.push_back(cv::Point(252,377));
+	a.push_back(cv::Point(258,495));
+	a.push_back(cv::Point(495,492));
+	a.push_back(cv::Point(491,377));
+
+	cv::vector<cv::Point> b;
+	b.push_back(cv::Point(256,387));
+	b.push_back(cv::Point(260,493));
+	b.push_back(cv::Point(493,490));
+	b.push_back(cv::Point(488,381));
+
+	bool sim = similar(a,b);
+	ASSERT_EQUAL(true,sim);
+}
+
+
+
 
 cute::suite make_suite_extractorUtilsTest(){
 	cute::suite s;
@@ -683,6 +703,7 @@ cute::suite make_suite_extractorUtilsTest(){
 	s.push_back(CUTE(myDistanceTest_05));
 	s.push_back(CUTE(myDistanceTest_06));
 	s.push_back(CUTE(myDistanceTest_07));
+
 
 	s.push_back(CUTE(tooCloseTest_01));
 	s.push_back(CUTE(tooCloseTest_02));
@@ -727,6 +748,8 @@ cute::suite make_suite_extractorUtilsTest(){
 	s.push_back(CUTE(sort4PointsClockwiseTest_04));
 	s.push_back(CUTE(sort4PointsClockwiseTest_05));
 	s.push_back(CUTE(sort4PointsClockwiseTest_06));
+
+	s.push_back(CUTE(debug));
 
 	return s;
 }

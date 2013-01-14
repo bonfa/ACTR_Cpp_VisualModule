@@ -15,6 +15,7 @@
 
 #include <json/json.h>
 #include "Session.h"
+#include "FeatureExtractor.h"
 
 using boost::asio::ip::tcp;
 
@@ -27,7 +28,8 @@ public:
 : io_service_(io_service),
   acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
 {
-		start_accept();
+	
+	start_accept();
 }
 
 

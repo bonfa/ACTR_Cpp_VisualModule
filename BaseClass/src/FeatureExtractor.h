@@ -35,6 +35,7 @@ using namespace std;
 #include "Circle.h"
 #include "Object.h"
 #include "Blob.h"
+#include "MarkerDetector.h"
 
 //todo: delete
 typedef enum {QUADRILATERAL, TRIANGLE, CIRCLE} ShapeType;
@@ -42,7 +43,10 @@ typedef enum {QUADRILATERAL, TRIANGLE, CIRCLE} ShapeType;
 
 class FeatureExtractor {
 public:
+	/** Estrazione di features con opencv*/
 	FeatureExtractor(cv::Mat img);
+	/** Estrazione di features con ARToolkit*/
+	FeatureExtractor();
 	/** Return the list of the recognized object in the image*/
 	std::vector<Object *> getExtractedFeature();
 	/** Return the color of a point*/
@@ -75,7 +79,8 @@ private:
 	std::vector<Circle *> circleList;
 	/** The list of all the objects recognized in the input image*/
 	std::vector<Object *> objectList;
-
+	/** Defines if there will be the extraction of Markers from ARToolkit */
+	bool findMarkers;
 };
 
 #endif /* FEATUREEXTRACTOR_H_ */

@@ -16,8 +16,17 @@ FeatureExtractor::FeatureExtractor(cv::Mat img) {
 	std::vector<Quadrilateral> quadrilateralList;
 	std::vector<Triangle> triangleList;
 	std::vector<Circle> circleList;
+	findMarkers = false;
 }
 
+//Serve ad iniziare l'estrazione di features nel caso in cui si usi ARToolkit
+FeatureExtractor::FeatureExtractor(){
+	//image = NULL;
+	std::vector<Quadrilateral> quadrilateralList;
+	std::vector<Triangle> triangleList;
+	std::vector<Circle> circleList;
+	findMarkers = true;
+}
 
 
 FeatureExtractor::~FeatureExtractor() {
@@ -484,32 +493,41 @@ void FeatureExtractor::recognizeEllipses(){
 
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){
-	//TODO: alla fine eliminare tutto questo schifo ee far ritornare solo la lista di oggetti
-	cout<<"color: "+this->getPointColor(100, 100)+"\n";   //rosso
-	cout<<"color: "+this->getPointColor(200, 100)+"\n";		//verde
-	cout<<"color: "+this->getPointColor(100, 250)+"\n";		//blue
-	cout<<"color: "+this->getPointColor(240, 240)+"\n";		//giallo
-	cout<<"color: "+this->getPointColor(118, 42)+"\n";		//bianco
-	cout<<"color: "+this->getPointColor(580,367)+"\n";		//nero
+	//Modifica il comportamento: separa le parti che usano ARToolkit da quelle che non lo usano
+	if(!findMarkers){
+		//TODO: alla fine eliminare tutto questo schifo ee far ritornare solo la lista di oggetti
+		cout<<"color: "+this->getPointColor(100, 100)+"\n";   //rosso
+		cout<<"color: "+this->getPointColor(200, 100)+"\n";		//verde
+		cout<<"color: "+this->getPointColor(100, 250)+"\n";		//blue
+		cout<<"color: "+this->getPointColor(240, 240)+"\n";		//giallo
+		cout<<"color: "+this->getPointColor(118, 42)+"\n";		//bianco
+		cout<<"color: "+this->getPointColor(580,367)+"\n";		//nero
 
-	//init(0);
-	cv::vector<cv::Point> p1;
-	p1.push_back(cv::Point(77,42));
-	p1.push_back(cv::Point(29,127));
-	p1.push_back(cv::Point(127,130));
-	cout<<"color: "+this->getRegionColor(p1)+"\n";	//rosso
+		//init(0);
+		cv::vector<cv::Point> p1;
+		p1.push_back(cv::Point(77,42));
+		p1.push_back(cv::Point(29,127));
+		p1.push_back(cv::Point(127,130));
+		cout<<"color: "+this->getRegionColor(p1)+"\n";	//rosso
 
-	this->recognizeCircles();
-	this->recognizeSquares();
-	this->recognizeTriangles();
-	this->recognizeEllipses();
+		this->recognizeCircles();
+		this->recognizeSquares();
+		this->recognizeTriangles();
+		this->recognizeEllipses();
 
-	//concatenate everything in a vector of objects
-	this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());
-	this->objectList.insert(objectList.end(),this->triangleList.begin(),this->triangleList.end());
-	this->objectList.insert(objectList.end(),this->circleList.begin(),this->circleList.end());
+		//concatenate everything in a vector of objects
+		this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());
+		this->objectList.insert(objectList.end(),this->triangleList.begin(),this->triangleList.end());
+		this->objectList.insert(objectList.end(),this->circleList.begin(),this->circleList.end());
 
-	return objectList;
+		return objectList;
+	}
+	else {
+		quadrilateralList = getMarkers();
+		this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());
+
+		return objectList;
+	}
 }
 
 

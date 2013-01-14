@@ -97,7 +97,7 @@ static void   keyEvent( unsigned char key, int x, int y)
     }
 }
 
-static std::vector<Quadrilateral *> getMarkers(){
+std::vector<Quadrilateral *> getMarkers(){
 	return markersList;
 	}
 

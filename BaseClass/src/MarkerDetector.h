@@ -7,7 +7,7 @@
 
 #include "author.h"
 
-//#ifdef ENRICO
+#ifdef ENRICO
 
 #ifndef MDETECT_H_
 #define MDETECT_H_
@@ -45,9 +45,13 @@
 	static boost::mutex io_mutex;
 	void startDetection();//boost::mutex& mutex);
 	static std::vector<Quadrilateral *> markersList;
-	static std::vector<Quadrilateral *> getMarkers();
+	std::vector<Quadrilateral *> getMarkers();
 #endif /* MDETECT_H_ */
 
+#else
+#include "Quadrilateral.h"
+	static std::vector<Quadrilateral *> getMarkers(){
+		return NULL;
+	};
 
-
-// #endif /* ENRICO */
+#endif /* ENRICO */

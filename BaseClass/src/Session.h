@@ -1,7 +1,7 @@
 #ifndef SESSION_H_
 #define SESSION_H_
 
-#ifdef ENRICO
+
 
 #include <cstdlib>
 #include <iostream>
@@ -144,6 +144,6 @@ private:
 	char data_[max_length];
 };
 
-#endif
+
 
 #endif /* SESSION_H_ */

@@ -1,0 +1,12 @@
+{
+    "object": {
+        "type": "Rectangle",
+        "bbox": {
+            "x1": "value_x1",
+            "y1": "value_y1",
+            "x2": "value_x2",
+            "y2": "value_y2",
+            "red": "yes-no"
+        }
+    }
+}

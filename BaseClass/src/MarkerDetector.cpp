@@ -101,6 +101,12 @@ std::vector<Quadrilateral *> getMarkers(){
 	return markersList;
 	}
 
+void parseNextFrame(){
+	boost::mutex::scoped_lock lock(io_mutex);
+	getNext = true;
+	lock.unlock();
+}
+
 /* main loop */
 static void mainLoop(void)
 {
@@ -136,45 +142,37 @@ static void mainLoop(void)
     glClear(GL_DEPTH_BUFFER_BIT);
 	#endif
 	
-	boost::mutex::scoped_lock lock(io_mutex);
-	markersList.clear();
-	
-    /* check for object visibility */
-    for( i = 0; i < 2; i++ ) {
-        k = -1;
-        for( j = 0; j < marker_num; j++ ) {
-            if( object[i].patt_id == marker_info[j].id ) {
-                if( k == -1 ) k = j;
-                else if( marker_info[k].cf < marker_info[j].cf ) k = j;
-            }
-        }
-        object[i].visible = k;
+    boost::mutex::scoped_lock lock(io_mutex);
+        /** svuoto la lista dei markers solo se c'è stata la richiesta */
+        if(getNext)
+        	markersList.clear();
 
-        if( k >= 0 ) {
-			//vertex = marker_info[k].vertex;
-			
-			//Lock to prevent race conditions while reading vertex from other threads
-			
-			memcpy(vertex, marker_info[k].vertex, sizeof (float) * 2 * 4); //2 colonne * 4 righe
-			//markersList.push_back(new Quadrilateral(1,2, 4,6, 4,3, 2,7));
-			//new Quadrilateral(1,2, 4,6, 4,3, 2,7);
-			markersList.push_back(new Quadrilateral((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1])));
-			
-			
-			//vertex[0][0] = marker_info[k].vertex[0][0];
-			//printf("Flottiamo %f\n", vertex[0][0]);
-			//printf("Flottare %f\n", vertex[1][0]);
-            arGetTransMat(&marker_info[k],
-                          object[i].center, object[i].width,
-                          object[i].trans);
-			printf("***(frame/sec)\n");
-			
-	#ifndef NO_IMG
-            draw( object[i].model_id, object[i].trans );
-	#endif
-        }
-    }
-    lock.unlock();
+        	/* check for object visibility */
+        	for( i = 0; i < 2; i++ ) {
+        		k = -1;
+        		for( j = 0; j < marker_num; j++ ) {
+        			if( object[i].patt_id == marker_info[j].id ) {
+        				if( k == -1 ) k = j;
+        				else if( marker_info[k].cf < marker_info[j].cf ) k = j;
+        			}
+        		}
+        		object[i].visible = k;
+
+        		if( k >= 0 ) {
+        			/** riempio la lista dei markers */
+        			if(getNext)
+        				markersList.push_back(new Quadrilateral((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1])));
+        				//TODO: salvare anche il frame da qualche parte
+        			arGetTransMat(&marker_info[k], object[i].center, object[i].width, object[i].trans);
+        			printf("***(frame/sec)\n");
+
+    #ifndef NO_IMG
+        			draw( object[i].model_id, object[i].trans );
+    #endif
+        		}
+        	}
+        	getNext = false;
+        	lock.unlock();
     
     argSwapBuffers();
 

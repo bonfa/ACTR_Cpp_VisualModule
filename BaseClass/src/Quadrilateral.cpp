@@ -164,7 +164,7 @@ string Quadrilateral::getChunk(){
 			chunk.append("\"");
 		chunk.append("}");
 		chunk.append("\"color\": ");
-		//chunk.append(this->);
+		chunk.append(this->color);
 		chunk.append("}");
 	chunk.append("}");
 

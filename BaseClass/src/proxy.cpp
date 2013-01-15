@@ -15,12 +15,19 @@ void Proxy::demo() {
 	fg->updateImage();
 	fg->showImage();
 
-	fg->getFeatureList();
+	fg->setFeatureList();
 	//fg->startVideoCapture();
 	//fg->showVideo();
 
-	fg->terminate();
+	vector<string> chunkList = fg->getObjectChunkList();
 
+	//printChunkList
+	for (unsigned int i=0; i<chunkList.size();i++){
+			cout << chunkList.at(i) << endl;
+		}
+
+
+	fg->terminate();
 	delete fg;
 }
 

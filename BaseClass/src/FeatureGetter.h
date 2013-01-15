@@ -41,8 +41,8 @@ public:
 	void startVideoCapture();
 	/** TODO: ??*/
 	void terminate();
-	/** Return the list of the recognized objects*/
-	std::vector<Object *> getFeatureList();
+	/** Extract the list of the recognized objects*/
+	void setFeatureList();
 	/** Returns a string which tells if the object in the first position has area greater less or equal
 	 * to the area in the second position*/
 	string isBigger(int aIndex, int bIndex);
@@ -56,6 +56,9 @@ public:
 	/** Gives the rotation of shape in counterclockwise starting from the horizontal position of an object.
 	 *  ATTENTION: check how this method works*/
 	double getRotation(int index);
+	/** Return the list of all the chunks in a JSON way */
+	vector<string> getObjectChunkList();
+
 
 	//TODO: da cancellare una volta finito lo sviluppo
 	void showImage();

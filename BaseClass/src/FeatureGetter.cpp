@@ -85,9 +85,10 @@ void FeatureGetter::terminate(){
 }
 
 
-std::vector<Object *> FeatureGetter::getFeatureList(){
+void FeatureGetter::setFeatureList(){
 	featureExtractor = new FeatureExtractor(this->img);
 	objectList = featureExtractor->getExtractedFeature();
+	//return objectList;
 /*
 	//Examples
 	cout << isBigger(0,0) << endl; //equal
@@ -106,12 +107,13 @@ std::vector<Object *> FeatureGetter::getFeatureList(){
 	//Examples
 	cout << getExtremeDistance(0,0) << endl; //0
 	//cout << getExtremeDistance(0,2) << endl << endl; //~17
-*/
+
 	//Examples
 	cout << "ROTATION" << endl;
 	cout << getRotation(0) << endl;
-	cout << getRotation(3) << endl;
-	return objectList;
+	cout << getRotation(3) << endl
+*/
+
 }
 
 
@@ -292,4 +294,9 @@ double FeatureGetter::getRotation(int objIndex){
 
 
 
-
+vector<string> FeatureGetter::getObjectChunkList(){
+	vector<string> chunkList;
+	for (unsigned int i=0; i<this->objectList.size();i++)
+		chunkList.push_back(objectList.at(i)->getChunk());
+	return chunkList;
+}

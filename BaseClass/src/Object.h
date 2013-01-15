@@ -35,6 +35,8 @@ public:
 	Point getCenter();
 	/** Returns the 'rotation' of the object*/
 	double getRotation();
+	/** Set the color of the object //TODO testing*/
+	virtual void setColor(string color);
 protected:
 	/** Set the bounding box around the object*/
 	void setBbox(int x, int y, int height, int width);

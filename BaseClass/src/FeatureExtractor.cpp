@@ -283,8 +283,16 @@ void FeatureExtractor::recognizeSquares(){
 			}
 			printf("\n\n");
 
+			//create the quadrilateral
+			Quadrilateral *q = new Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y);
+
+			//calculate the color of the quadrilateral
+			string color = this->getPointColor(q->getCenter().x,q->getCenter().y);
+			//add the color to the quadrilateral
+			q->setColor(color);
+
 			//add each square to the quadrilaterl list
-			this->quadrilateralList.push_back(new Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y));
+			this->quadrilateralList.push_back(q);
 		}
 	}
 	cv::imshow("quadr",rects);

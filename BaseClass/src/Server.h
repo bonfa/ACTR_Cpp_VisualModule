@@ -21,6 +21,7 @@
 //#include <json.h>
 #include "Session.h"
 #include "FeatureExtractor.h"
+#include "FeatureGetter.h"
 
 using boost::asio::ip::tcp;
 
@@ -33,14 +34,15 @@ public:
 : io_service_(io_service),
   acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
 {
-	
-	start_accept();
+
+		start_accept();
 }
 
 
 private:
 	void start_accept()
 	{
+		//fg = new FeatureGetter(1);
 		Session* new_session = new Session(io_service_);
 		acceptor_.async_accept(new_session->socket(),
 				boost::bind(&Server::handle_accept, this, new_session,
@@ -64,6 +66,7 @@ private:
 
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;
+	//FeatureGetter *fg;
 };
 
 #endif

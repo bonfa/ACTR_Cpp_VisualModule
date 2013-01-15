@@ -23,7 +23,8 @@
 
 //int runServer(int port);
 
-#ifdef ENRICO //Run Enrico's code
+#ifdef ENRICO
+ //Run Enrico's code
 //ottimo esempio sui mutex
 //http://www.drdobbs.com/cpp/the-boostthreads-library/184401518?pgno=2
 //public static boost::mutex io_mutex;
@@ -33,7 +34,8 @@ int main(){
 	try
   {
 
-	 #ifdef ENRICO //Run Enrico's code
+	 #ifdef ENRICO
+	  //Run Enrico's code
 	 //std::cout << stub();
 	 std::cout << "Running Enrico's stuff \n";
 	 

@@ -43,11 +43,13 @@ e <AR/gsub.h>
 //public static boost::mutex mutex_;
 
 	int stub();
-	
+
 	static boost::mutex io_mutex;
 	void startDetection();//boost::mutex& mutex);
 	static std::vector<Quadrilateral *> markersList;
 	std::vector<Quadrilateral *> getMarkers();
+	static bool getNext = true;
+	static void parseNextFrame();
 #endif /* MDETECT_H_ */
 
 #else

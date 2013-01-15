@@ -34,6 +34,7 @@ using namespace std;
 class FeatureGetter {
 public:
 	FeatureGetter();
+	FeatureGetter(int i);
 	virtual ~FeatureGetter();
 	/** Update the input image to be processed*/
 	void updateImage();
@@ -78,6 +79,8 @@ private:
 	bool outOfBound(unsigned int index);
 	/** Returns the list of the points of a rect TODO: delete this method*/
 	std::vector<Point> getPointList(Rect bbox);
+	/** Define if the imput method is Artoolkit */
+	bool withArToolkit;
 };
 
 #endif /* BASECLASS_H_ */

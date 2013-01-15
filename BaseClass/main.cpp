@@ -47,7 +47,9 @@ int main(){
  	std::cout << "Server running in background \n";
    
     //io_service.run();
-    
+    Proxy *p = new Proxy();
+	p->demoEnrico();	
+	
     //Prevent program from terminating, needed for server to stay alive
 	startDetection();	
 	

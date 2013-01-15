@@ -31,6 +31,17 @@ void Proxy::demo() {
 	delete fg;
 }
 
+void Proxy::demoEnrico() {
+	FeatureGetter *fg = new FeatureGetter(1);
+
+	fg->startVideoCapture();
+	//fg->showVideo();
+
+	fg->terminate();
+
+	delete fg;
+}
+
 int Proxy::test() {
 
 	return 10;

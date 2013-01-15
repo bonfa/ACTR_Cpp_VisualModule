@@ -15,6 +15,7 @@
 class Proxy {
 public:
 	void demo();
+	void demoEnrico();
 	int test();
 	double area();
 };

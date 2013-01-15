@@ -6,12 +6,17 @@
  */
 
 #include "FeatureGetter.h"
-
+#define ARTOOLKIT 1
 
 FeatureGetter::FeatureGetter() {
+	withArToolkit = false;
 	inputModule = new Input();
 }
 
+FeatureGetter::FeatureGetter(int i) {
+	withArToolkit = true;
+	//inputModule = new Input();
+}
 
 FeatureGetter::~FeatureGetter() {
 	// TODO Auto-generated destructor stub

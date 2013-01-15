@@ -19,6 +19,8 @@
 #include "Segment.h"
 #include "StraightLine.h"
 #include <cmath>
+#include "utils.h"
+#include <string>
 
 
 

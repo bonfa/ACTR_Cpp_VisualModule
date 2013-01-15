@@ -283,8 +283,16 @@ void FeatureExtractor::recognizeSquares(){
 			}
 			printf("\n\n");
 
+			//create the quadrilateral
+			Quadrilateral *q = new Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y);
+
+			//calculate the color of the quadrilateral
+			string color = this->getPointColor(q->getCenter().x,q->getCenter().y);
+			//add the color to the quadrilateral
+			q->setColor(color);
+
 			//add each square to the quadrilaterl list
-			this->quadrilateralList.push_back(new Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y));
+			this->quadrilateralList.push_back(q);
 		}
 	}
 	cv::imshow("quadr",rects);
@@ -493,8 +501,11 @@ void FeatureExtractor::recognizeEllipses(){
 
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){
+#ifdef ENRICO
+
 	//Modifica il comportamento: separa le parti che usano ARToolkit da quelle che non lo usano
 	if(!findMarkers){
+#endif
 		//TODO: alla fine eliminare tutto questo schifo ee far ritornare solo la lista di oggetti
 		cout<<"color: "+this->getPointColor(100, 100)+"\n";   //rosso
 		cout<<"color: "+this->getPointColor(200, 100)+"\n";		//verde
@@ -521,6 +532,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		this->objectList.insert(objectList.end(),this->circleList.begin(),this->circleList.end());
 
 		return objectList;
+#ifdef ENRICO
 	}
 	else {
 		quadrilateralList = getMarkers();
@@ -528,7 +540,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 
 		return objectList;
 	}
+#endif
 }
-
 
 //------------------------------------------------------------------------------------------------------------

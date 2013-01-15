@@ -18,8 +18,9 @@ double myDistance(cv::Point a, cv::Point b){
 
 
 bool similar(cv::vector<cv::Point> a, cv::vector<cv::Point> b){
+	//TODO make a function smarter than this
 	double distance = myDistance(a.at(0),b.at(0));
-	if (distance > 10)
+	if (distance > 15)
 		return false;
 
 	double totalDistance = 0;

@@ -53,6 +53,11 @@ void Object::setCenter(){
 }
 
 
+void Object::setColor(string color){
+	this->color = color;
+}
+
+
 double Object::getRotation(){
 	return rotation;
 }

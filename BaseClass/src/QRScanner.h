@@ -4,7 +4,7 @@
  *  Created on: 13/nov/2012
  *      Author: enrico
  */
-
+#ifdef ENRICO
 #ifndef QRSCANNER_H_
 #define QRSCANNER_H_
 #include <zbar.h>
@@ -22,3 +22,4 @@ private:
 };
 
 #endif /* QRSCANNER_H_ */
+#endif

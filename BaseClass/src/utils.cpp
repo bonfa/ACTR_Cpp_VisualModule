@@ -142,3 +142,14 @@ bool fileExists (char * path){
 	else
 		return false;
 }
+
+
+string intToString(int a){
+	stringstream ss;
+	ss << a;
+	string str = ss.str();
+
+	return str;
+}
+
+

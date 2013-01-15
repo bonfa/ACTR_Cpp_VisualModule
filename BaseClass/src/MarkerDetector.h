@@ -7,6 +7,7 @@
 
 #include "author.h"
 
+#ifdef NIENTE
 #ifdef ENRICO
 
 #ifndef MDETECT_H_
@@ -22,7 +23,8 @@
 #else
 #  include <GLUT/glut.h>
 #endif
-#include <AR/gsub.h>
+#includ#ifdef NIENTE
+e <AR/gsub.h>
 #include <AR/video.h>
 #include <AR/param.h>
 #include <AR/ar.h>
@@ -56,4 +58,7 @@
 		return NULL;
 	};
 
-#endif /* ENRICO */
+
+ #endif /* ENRICO */
+
+#endif //NIENTE

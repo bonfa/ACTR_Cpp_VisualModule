@@ -163,9 +163,13 @@ string Quadrilateral::getChunk(){
 			chunk.append(intToString(this->bbox.y+this->bbox.height));
 			chunk.append("\"");
 		chunk.append("}");
+		chunk.append(",");
 		chunk.append("\"color\": ");
+		chunk.append("\"");
 		chunk.append(this->color);
+		chunk.append("\"");
 		chunk.append("}");
+		//chunk.append(",");
 	chunk.append("}");
 
 	return 	chunk;

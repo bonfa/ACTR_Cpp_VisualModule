@@ -49,7 +49,7 @@ int main(){
 	p->demoEnrico();	
 	
     //Prevent program from terminating, needed for server to stay alive
-	//startDetection();	
+	startDetection();	
 	
 	std::string str;
 	std::cout<<"Ctrl + c to terminate!\n";

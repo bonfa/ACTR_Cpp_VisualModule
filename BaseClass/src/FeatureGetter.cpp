@@ -40,10 +40,7 @@ void FeatureGetter::showImage(){
 
 
 void FeatureGetter::startVideoCapture(){
-	if(withArToolkit)
-		startDetection();
-	else
-		video = inputModule->getStream();
+	video = inputModule->getStream();
 
 }
 

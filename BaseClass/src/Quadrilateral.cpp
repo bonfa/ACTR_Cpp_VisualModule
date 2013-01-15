@@ -135,6 +135,54 @@ std::vector<Segment> Quadrilateral::getEdgesLine(){
 }
 
 string Quadrilateral::getChunk(){
-	return "cianc, Quadrilateral\n";
+	//return "cianc, Quadrilateral\n";
+
+	string chunk = "{";
+		chunk.append("\"object\"");
+		chunk.append(":");
+		chunk.append("{");
+		chunk.append("\"type\": \"Rectangle\",");
+		chunk.append("\"bbox\": {");
+			chunk.append("\"x1\":");
+			chunk.append("\"");
+			chunk.append(intToString(this->bbox.x));
+			chunk.append("\",");
+
+			chunk.append("\"y1\":");
+			chunk.append("\"");
+			chunk.append(intToString(this->bbox.y));
+			chunk.append("\",");
+
+			chunk.append("\"x2\":");
+			chunk.append("\"");
+			chunk.append(intToString(this->bbox.x+this->bbox.width));
+			chunk.append("\",");
+
+			chunk.append("\"y2\":");
+			chunk.append("\"");
+			chunk.append(intToString(this->bbox.y+this->bbox.height));
+			chunk.append("\"");
+		chunk.append("}");
+		chunk.append("\"color\": ");
+		//chunk.append(this->);
+		chunk.append("}");
+	chunk.append("}");
+
+	return 	chunk;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -71,4 +71,8 @@ double getMin(const std::vector<double>& values);
 bool fileExists(char * path);
 
 
+/** Converts the integer input value to a string value //TODO testing*/
+string intToString(int a);
+
+
 #endif /* UTILS_H_ */

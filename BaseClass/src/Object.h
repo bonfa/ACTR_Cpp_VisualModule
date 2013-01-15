@@ -66,6 +66,8 @@ protected:
 	Point center;
 	/** The bounding box of the object. It has rectangular shape */
 	Rect bbox;
+	/** The color of the object (supposed to be only one color) */
+	string color;
 };
 
 

@@ -103,7 +103,7 @@ std::vector<Quadrilateral *> getMarkers(){
 
 void parseNextFrame(){
 	boost::mutex::scoped_lock lock(io_mutex);
-	getNext = true;
+	//getNext = true;
 	lock.unlock();
 }
 
@@ -144,7 +144,7 @@ static void mainLoop(void)
 
 	boost::mutex::scoped_lock lock(io_mutex);
 	/** svuoto la lista dei markers solo se c'è stata la richiesta */
-	if(getNext)
+	//if(getNext)
 		markersList.clear();
 
 	/* check for object visibility */
@@ -160,7 +160,7 @@ static void mainLoop(void)
 
 		if( k >= 0 ) {
 			/** riempio la lista dei markers */
-			if(getNext)
+			//if(getNext)
 				markersList.push_back(new Quadrilateral((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1])));
 			//TODO: salvare anche il frame da qualche parte
 			arGetTransMat(&marker_info[k], object[i].center, object[i].width, object[i].trans);
@@ -171,7 +171,7 @@ static void mainLoop(void)
 #endif
 		}
 	}
-	getNext = false;
+	//getNext = false;
 	lock.unlock();
 
 	argSwapBuffers();

@@ -231,7 +231,7 @@ void FeatureExtractor::recognizeSquares(){
 
 			// Test contours
 			cv::vector<cv::Point> approx;
-			cout << contours.size();
+			//cout << contours.size();
 			for (size_t i = 0; i < contours.size(); i++) {
 					// approximate contour with accuracy proportional to the contour perimeter
 					cv::approxPolyDP(cv::Mat(contours[i]), approx, arcLength(cv::Mat(contours[i]), true)*0.02, true);
@@ -276,13 +276,14 @@ void FeatureExtractor::recognizeSquares(){
 			cv::Rect rect = boundingRect(cv::Mat(squares[i]));
 			cv::rectangle(rects, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
 
+/*
 			//prints the coordinates of the square
 			printf("F %d: ",i+1);
 			for (unsigned int j=0;j<squares.at(i).size();j++){
 				printf("(%d,%d)  ",squares.at(i).at(j).x,squares.at(i).at(j).y);
 			}
 			printf("\n\n");
-
+*/
 			//create the quadrilateral
 			Quadrilateral *q = new Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y);
 
@@ -385,13 +386,13 @@ void FeatureExtractor::recognizeTriangles(){
 			// draw bounding rect
 			cv::Rect rect = boundingRect(cv::Mat(triangles[i]));
 			cv::rectangle(triangleImg, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
-
+			/*
 			printf("F %d: ",i+1);
 			for (unsigned int j=0;j<triangles.at(i).size();j++){
 				printf("(%d,%d)  ",triangles.at(i).at(j).x,triangles.at(i).at(j).y);
 			}
 			printf("\n\n");
-
+			*/
 			//add each square to the quadrilaterl list
 			this->triangleList.push_back(new Triangle(triangles.at(i).at(0).x,triangles.at(i).at(0).y,triangles.at(i).at(1).x,triangles.at(i).at(1).y,triangles.at(i).at(2).x,triangles.at(i).at(2).y));
 		}
@@ -506,6 +507,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 	//Modifica il comportamento: separa le parti che usano ARToolkit da quelle che non lo usano
 	if(!findMarkers){
 #endif
+/*
 		//TODO: alla fine eliminare tutto questo schifo ee far ritornare solo la lista di oggetti
 		cout<<"color: "+this->getPointColor(100, 100)+"\n";   //rosso
 		cout<<"color: "+this->getPointColor(200, 100)+"\n";		//verde
@@ -519,7 +521,8 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		p1.push_back(cv::Point(77,42));
 		p1.push_back(cv::Point(29,127));
 		p1.push_back(cv::Point(127,130));
-		cout<<"color: "+this->getRegionColor(p1)+"\n";	//rosso
+		//cout<<"color: "+this->getRegionColor(p1)+"\n";	//rosso
+*/
 
 		this->recognizeCircles();
 		this->recognizeSquares();

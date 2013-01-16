@@ -40,6 +40,7 @@ void Proxy::demo() {
 	FeatureGetter *fg = new FeatureGetter(imgPath);
 
 	fg->updateImage();
+
 	fg->showImage();
 
 	fg->setFeatureList();

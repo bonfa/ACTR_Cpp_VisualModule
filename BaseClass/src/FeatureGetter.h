@@ -62,6 +62,7 @@ public:
 
 
 	//TODO: da cancellare una volta finito lo sviluppo
+	//ATTENTION: if the variable NO_IMG_SHOW is defined showImage does not show images at all
 	void showImage();
 	void showVideo();
 private:

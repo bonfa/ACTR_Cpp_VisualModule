@@ -37,8 +37,8 @@ using namespace std;
 #include "Blob.h"
 #include "MarkerDetector.h"
 
-//todo: delete
-typedef enum {QUADRILATERAL, TRIANGLE, CIRCLE} ShapeType;
+//Comment this variable to see every step of the shape detection
+#define NO_IMG_SHOW
 
 
 class FeatureExtractor {

@@ -33,8 +33,10 @@ void FeatureGetter::updateImage(){
 
 
 void FeatureGetter::showImage(){
+#ifndef NO_IMG_SHOW
 	cv::imshow("finestra",img);
 	cv::waitKey(0);
+#endif
 }
 
 

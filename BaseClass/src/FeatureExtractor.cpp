@@ -184,10 +184,12 @@ void FeatureExtractor::recognizeCircles(){
 	}
 
 	/// Show your results
+#ifndef NO_IMG_SHOW
 	cv::namedWindow( "Hough Circle Transform Demo", CV_WINDOW_AUTOSIZE );
 	cv::imshow( "Hough Circle Transform Demo", circleImg );
 
 	cv::waitKey(0);
+#endif
 }
 
 
@@ -296,8 +298,11 @@ void FeatureExtractor::recognizeSquares(){
 			this->quadrilateralList.push_back(q);
 		}
 	}
+
+#ifndef NO_IMG_SHOW
 	cv::imshow("quadr",rects);
 	cv::waitKey(0);
+#endif
 }
 
 
@@ -397,8 +402,10 @@ void FeatureExtractor::recognizeTriangles(){
 			this->triangleList.push_back(new Triangle(triangles.at(i).at(0).x,triangles.at(i).at(0).y,triangles.at(i).at(1).x,triangles.at(i).at(1).y,triangles.at(i).at(2).x,triangles.at(i).at(2).y));
 		}
 	}
+#ifndef NO_IMG_SHOW
 	cv::imshow("triangles",triangleImg);
 	cv::waitKey(0);
+#endif
 }
 
 /*

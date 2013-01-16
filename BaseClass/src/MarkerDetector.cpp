@@ -1,14 +1,26 @@
 #include "author.h"
 
-#ifdef ENRICO
+//#ifdef ENRICO
 
 #define NO_IM
 
 #include "MarkerDetector.h"
 
+
 double 	vertex[4][2];
 //std::vector<Quadrilateral> marker_list;
 //Quadrilateral q1;
+
+IplImage *image;
+CvSize *size;
+int channels, maxlength;
+IplImage *m_pEdge;  // result of canny edge detection
+IplImage *m_pGray;  // result of conversion to grayscale
+IplImage *img;		// tmp prescale gray
+IplImage *pyr;		// tmp afterscale gray
+int canny_thres;
+CvPoint myCenter;
+ARUint8         *dataPtr;
 
 typedef struct {
   char    *patt_name;
@@ -104,7 +116,7 @@ std::vector<Quadrilateral *> getMarkers(){
 /* main loop */
 static void mainLoop(void)
 {
-    ARUint8         *dataPtr;
+
     ARMarkerInfo    *marker_info;
     int             marker_num;
     int             i, j, k;
@@ -127,6 +139,9 @@ static void mainLoop(void)
         cleanup();
         exit(0);
     }
+
+    cvSetImageData( image, dataPtr, size->width * channels );
+    cvSaveImage("prova.jpg", image);
     arVideoCapNext();
 
 	#ifndef NO_IMG
@@ -223,6 +238,28 @@ static void init( void )
 
     /* open the graphics window */
     argInit( &cparam, 1.0, 0, 0, 0, 0 );
+
+    //Opencv init
+    m_pGray = m_pEdge = NULL;
+    channels = 3;
+    size = new CvSize();
+    size->width = xsize;
+    size->height = ysize;
+    image = cvCreateImage(*size, IPL_DEPTH_8U, channels );
+    //IplImage imagedf =  cvCreateImage(*size, IPL_DEPTH_8U, channels );
+
+    canny_thres = 50;
+    //cvInitImageHeader( image, *size, IPL_DEPTH_8U, channels );
+
+    m_pGray = cvCreateImage( *size, IPL_DEPTH_8U , 1);
+    int byte_per_pixel = (IPL_DEPTH_8U & 255) >> 3 ;
+    img = cvCreateImage(	*size,
+    		byte_per_pixel*8,
+    		1 );
+
+    pyr = cvCreateImage(	cvSize(size->width/2, size->height/2),
+    		byte_per_pixel*8,
+    		1 );
 }
 
 /* cleanup function called when program exits */
@@ -285,4 +322,4 @@ static void draw( int object, double trans[3][4] )
     glDisable( GL_LIGHTING );
     glDisable( GL_DEPTH_TEST );
 }
- #endif ENRICO
+ //#endif ENRICO

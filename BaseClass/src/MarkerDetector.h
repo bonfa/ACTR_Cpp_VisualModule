@@ -46,8 +46,9 @@
 	void startDetection();//boost::mutex& mutex);
 	static std::vector<Quadrilateral *> markersList;
 	std::vector<Quadrilateral *> getMarkers();
-	static bool getNext = true;
 	static void parseNextFrame();
+
+#endif /* MDETECT_H_ */
 
 
 #else
@@ -55,7 +56,6 @@
 	static std::vector<Quadrilateral *> getMarkers(){
 		return NULL;
 	};
-#endif /* MDETECT_H_ */
 
 
 #endif /* ENRICO */

@@ -3,6 +3,45 @@
 #include "cute_runner.h"
 #include "QuadrilateralTest.h"
 
+//Prepare the chunk for the quadrilateral
+string createExpectedChunk(int x1,int y1,int x2,int y2,string color){
+	string chunk = "{";
+			chunk.append("\"object\"");
+			chunk.append(":");
+			chunk.append("{");
+			chunk.append("\"type\": \"Rectangle\",");
+			chunk.append("\"bbox\": {");
+				chunk.append("\"x1\":");
+				chunk.append("\"");
+				chunk.append(intToString(x1));
+				chunk.append("\",");
+
+				chunk.append("\"y1\":");
+				chunk.append("\"");
+				chunk.append(intToString(y1));
+				chunk.append("\",");
+
+				chunk.append("\"x2\":");
+				chunk.append("\"");
+				chunk.append(intToString(x2));
+				chunk.append("\",");
+
+				chunk.append("\"y2\":");
+				chunk.append("\"");
+				chunk.append(intToString(y2));
+				chunk.append("\"");
+			chunk.append("}");
+			chunk.append(",");
+			chunk.append("\"color\": ");
+			chunk.append("\"");
+			chunk.append(color);
+			chunk.append("\"");
+			chunk.append("}");
+		chunk.append("}");
+
+		return 	chunk;
+}
+
 
 struct ConstructorError{
 
@@ -317,7 +356,6 @@ struct ConstructorError{
 struct QuadrilateralTest_01{
 
 	QuadrilateralTest_01(): q(0,0,2,0,2,2,0,2){
-		expectedChunkString = "cianc, Quadrilateral\n";
 		expectedArea = 4;
 		expectedA = Point(0,0);
 		expectedB = Point(2,0);
@@ -330,6 +368,7 @@ struct QuadrilateralTest_01{
 		expectedEdgeLines.push_back(Segment(expectedB,expectedC));
 		expectedEdgeLines.push_back(Segment(expectedC,expectedD));
 		expectedEdgeLines.push_back(Segment(expectedD,expectedA));
+		expectedChunkString = createExpectedChunk(expectedA.x,expectedA.y,expectedC.x,expectedC.y,"");
 	}
 
 	void Constructor_01(){
@@ -395,7 +434,6 @@ struct QuadrilateralTest_01{
 struct QuadrilateralTest_02{
 
 	QuadrilateralTest_02(): q(0,0,2,0,2,3,0,3){
-		expectedChunkString = "cianc, Quadrilateral\n";
 		expectedArea = 6.0;
 		expectedA = Point(0,0);
 		expectedB = Point(2,0);
@@ -408,6 +446,7 @@ struct QuadrilateralTest_02{
 		expectedEdgeLines.push_back(Segment(expectedB,expectedC));
 		expectedEdgeLines.push_back(Segment(expectedC,expectedD));
 		expectedEdgeLines.push_back(Segment(expectedD,expectedA));
+		expectedChunkString = createExpectedChunk(expectedA.x,expectedA.y,expectedC.x,expectedC.y,"");
 	}
 
 	void Constructor_01(){
@@ -473,7 +512,6 @@ struct QuadrilateralTest_02{
 struct QuadrilateralTest_03{
 
 	QuadrilateralTest_03(): q(0,0,1,1,1,2,0,1){
-		expectedChunkString = "cianc, Quadrilateral\n";
 		expectedArea = 1.0;
 		expectedA = Point(0,0);
 		expectedB = Point(1,1);
@@ -486,6 +524,7 @@ struct QuadrilateralTest_03{
 		expectedEdgeLines.push_back(Segment(expectedB,expectedC));
 		expectedEdgeLines.push_back(Segment(expectedC,expectedD));
 		expectedEdgeLines.push_back(Segment(expectedD,expectedA));
+		expectedChunkString = createExpectedChunk(expectedA.x,expectedA.y,expectedC.x,expectedC.y,"");
 	}
 
 	void Constructor_01(){
@@ -550,7 +589,6 @@ struct QuadrilateralTest_03{
 struct QuadrilateralTest_04{
 
 	QuadrilateralTest_04(): q(2,0,2,1,1,2,1,1){
-		expectedChunkString = "cianc, Quadrilateral\n";
 		expectedArea = 1.0;
 		expectedA = Point(2,0);
 		expectedB = Point(2,1);
@@ -563,6 +601,7 @@ struct QuadrilateralTest_04{
 		expectedEdgeLines.push_back(Segment(expectedB,expectedC));
 		expectedEdgeLines.push_back(Segment(expectedC,expectedD));
 		expectedEdgeLines.push_back(Segment(expectedD,expectedA));
+		expectedChunkString = createExpectedChunk(1,0,2,2,"");
 	}
 
 	void Constructor_01(){

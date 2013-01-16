@@ -12,16 +12,16 @@
 #ifndef MDETECT_H_
 #define MDETECT_H_
 
-#ifdef _WIN32
-#  include <windows.h>
-#endif
+	#ifdef _WIN32
+	#  include <windows.h>
+	#endif
 #include <stdio.h>
 #include <stdlib.h>
-#ifndef __APPLE__
-#  include <GL/glut.h>
-#else
-#  include <GLUT/glut.h>
-#endif
+	#ifndef __APPLE__
+	#  include <GL/glut.h>
+	#else
+	#  include <GLUT/glut.h>
+	#endif
 #include <AR/gsub.h>
 #include <AR/video.h>
 #include <AR/param.h>
@@ -48,14 +48,14 @@
 	std::vector<Quadrilateral *> getMarkers();
 	static bool getNext = true;
 	static void parseNextFrame();
-#endif /* MDETECT_H_ */
+
 
 #else
 #include "Quadrilateral.h"
 	static std::vector<Quadrilateral *> getMarkers(){
 		return NULL;
 	};
-
+#endif /* MDETECT_H_ */
 
  #endif /* ENRICO */
 

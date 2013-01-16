@@ -15,11 +15,11 @@
 #include "src/author.h"
 #include <iostream>
 
-#ifdef ENRICO
+//#ifdef ENRICO
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>  
-#endif
+//#endif
 
 //int runServer(int port);
 
@@ -34,7 +34,7 @@ int main(){
 	try
   {
 
-	 #ifdef ENRICO
+
 	  //Run Enrico's code
 	 //std::cout << stub();
 	 std::cout << "Running Enrico's stuff \n";
@@ -51,7 +51,8 @@ int main(){
     //io_service.run();
     Proxy *p = new Proxy();
 	p->demoEnrico();	
-	
+
+	 #ifdef ENRICO
     //Prevent program from terminating, needed for server to stay alive
 	startDetection();	
 	
@@ -63,7 +64,7 @@ int main(){
 
 	#else 	  //Run Francesco's code
 	std::cout << "Running Francesco's stuff \n";
-	Proxy *p = new Proxy();
+	//Proxy *p = new Proxy();
 	p->demo();	
 	#endif
 	

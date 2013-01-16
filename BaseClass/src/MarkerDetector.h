@@ -50,12 +50,4 @@
 
 #endif /* MDETECT_H_ */
 
-
-#else
-#include "Quadrilateral.h"
-	static std::vector<Quadrilateral *> getMarkers(){
-		return NULL;
-	};
-
-
 #endif /* ENRICO */

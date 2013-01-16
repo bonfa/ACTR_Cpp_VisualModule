@@ -1,6 +1,6 @@
 #include "author.h"
 
-#ifdef ENRICO
+//#ifdef ENRICO
 
 #define NO_IM
 
@@ -101,80 +101,82 @@ std::vector<Quadrilateral *> getMarkers(){
 	return markersList;
 	}
 
-void parseNextFrame(){
-	boost::mutex::scoped_lock lock(io_mutex);
-	//getNext = true;
-	lock.unlock();
-}
-
 /* main loop */
 static void mainLoop(void)
 {
-	ARUint8         *dataPtr;
-	ARMarkerInfo    *marker_info;
-	int             marker_num;
-	int             i, j, k;
+    ARUint8         *dataPtr;
+    ARMarkerInfo    *marker_info;
+    int             marker_num;
+    int             i, j, k;
 
-	/* grab a vide frame */
-	if( (dataPtr = (ARUint8 *)arVideoGetImage()) == NULL ) {
-		arUtilSleep(2);
-		return;
-	}
-	if( ciunt == 0 ) arUtilTimerReset();
-	ciunt++;
+    /* grab a vide frame */
+    if( (dataPtr = (ARUint8 *)arVideoGetImage()) == NULL ) {
+        arUtilSleep(2);
+        return;
+    }
+    if( ciunt == 0 ) arUtilTimerReset();
+    ciunt++;
 
-#ifndef NO_IMG
-	argDrawMode2D();
-	argDispImage( dataPtr, 0,0 );
-#endif
+	#ifndef NO_IMG
+    argDrawMode2D();
+    argDispImage( dataPtr, 0,0 );
+	#endif
 
-	/* detect the markers in the video frame */
-	if( arDetectMarker(dataPtr, thresh, &marker_info, &marker_num) < 0 ) {
-		cleanup();
-		exit(0);
-	}
-	arVideoCapNext();
+    /* detect the markers in the video frame */
+    if( arDetectMarker(dataPtr, thresh, &marker_info, &marker_num) < 0 ) {
+        cleanup();
+        exit(0);
+    }
+    arVideoCapNext();
 
-#ifndef NO_IMG
-	argDrawMode3D();
-	argDraw3dCamera( 0, 0 );
-	glClearDepth( 1.0 );
-	glClear(GL_DEPTH_BUFFER_BIT);
-#endif
-
+	#ifndef NO_IMG
+    argDrawMode3D();
+    argDraw3dCamera( 0, 0 );
+    glClearDepth( 1.0 );
+    glClear(GL_DEPTH_BUFFER_BIT);
+	#endif
+	
 	boost::mutex::scoped_lock lock(io_mutex);
-	/** svuoto la lista dei markers solo se c'è stata la richiesta */
-	//if(getNext)
-		markersList.clear();
+	markersList.clear();
+	
+    /* check for object visibility */
+    for( i = 0; i < 2; i++ ) {
+        k = -1;
+        for( j = 0; j < marker_num; j++ ) {
+            if( object[i].patt_id == marker_info[j].id ) {
+                if( k == -1 ) k = j;
+                else if( marker_info[k].cf < marker_info[j].cf ) k = j;
+            }
+        }
+        object[i].visible = k;
 
-	/* check for object visibility */
-	for( i = 0; i < 2; i++ ) {
-		k = -1;
-		for( j = 0; j < marker_num; j++ ) {
-			if( object[i].patt_id == marker_info[j].id ) {
-				if( k == -1 ) k = j;
-				else if( marker_info[k].cf < marker_info[j].cf ) k = j;
-			}
-		}
-		object[i].visible = k;
-
-		if( k >= 0 ) {
-			/** riempio la lista dei markers */
-			//if(getNext)
-				markersList.push_back(new Quadrilateral((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1])));
-			//TODO: salvare anche il frame da qualche parte
-			arGetTransMat(&marker_info[k], object[i].center, object[i].width, object[i].trans);
+        if( k >= 0 ) {
+			//vertex = marker_info[k].vertex;
+			
+			//Lock to prevent race conditions while reading vertex from other threads
+			
+			memcpy(vertex, marker_info[k].vertex, sizeof (float) * 2 * 4); //2 colonne * 4 righe
+			//markersList.push_back(new Quadrilateral(1,2, 4,6, 4,3, 2,7));
+			//new Quadrilateral(1,2, 4,6, 4,3, 2,7);
+			markersList.push_back(new Quadrilateral((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1])));
+			
+			
+			//vertex[0][0] = marker_info[k].vertex[0][0];
+			//printf("Flottiamo %f\n", vertex[0][0]);
+			//printf("Flottare %f\n", vertex[1][0]);
+            arGetTransMat(&marker_info[k],
+                          object[i].center, object[i].width,
+                          object[i].trans);
 			printf("***(frame/sec)\n");
-
-#ifndef NO_IMG
-			draw( object[i].model_id, object[i].trans );
-#endif
-		}
-	}
-	//getNext = false;
-	lock.unlock();
-
-	argSwapBuffers();
+			
+	#ifndef NO_IMG
+            draw( object[i].model_id, object[i].trans );
+	#endif
+        }
+    }
+    lock.unlock();
+    
+    argSwapBuffers();
 
     if( object[0].visible >= 0
      && object[1].visible >= 0 ) {
@@ -283,4 +285,4 @@ static void draw( int object, double trans[3][4] )
     glDisable( GL_LIGHTING );
     glDisable( GL_DEPTH_TEST );
 }
- #endif ENRICO
+// #endif ENRICO

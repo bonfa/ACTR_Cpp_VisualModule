@@ -27,8 +27,17 @@
 #include <AR/param.h>
 #include <AR/ar.h>
 
+
+#include <cv.hpp>
+#include <cxcore.hpp>
+#include <cv.h>
+#include <highgui.h>
+#include <legacy/legacy.hpp>
+#include <math.h>
 #include <boost/thread/mutex.hpp>
 #include "Quadrilateral.h"
+
+
 
 #define  OBJ1_PATT_NAME    "Data/patt.hiro"
 #define  OBJ2_PATT_NAME    "Data/patt.kanji"
@@ -37,6 +46,7 @@
 
 #define  OBJ1_MODEL_ID      1
 #define  OBJ2_MODEL_ID      2
+
 
 //public static boost::mutex mutex_;
 

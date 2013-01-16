@@ -12,8 +12,6 @@
 void Proxy::demo() {
 	//img = inputModule->getImage("./shapes.png");
 	//img = inputModule->getImage("./ellipses.jpg");
-	//img = inputModule->getImage("./cndicdbnidvb.jpg");
-
 	//img = inputModule->getImage("./images/01_02_1030797656577.bmp");
 	//img = inputModule->getImage("./images/02_08_447099175936.bmp");
 	//img = inputModule->getImage("./images/03_32_9007255098753112.bmp");
@@ -38,6 +36,7 @@ void Proxy::demo() {
 	//img = inputModule->getImage("./images/22_NA_865966563026534912.bmp");
 	//img = inputModule->getImage("./images/23_NA_867083665762158848.bmp");
 	string imgPath = "./images/24_M01_216770917518016516.bmp";
+
 	FeatureGetter *fg = new FeatureGetter(imgPath);
 
 	fg->updateImage();

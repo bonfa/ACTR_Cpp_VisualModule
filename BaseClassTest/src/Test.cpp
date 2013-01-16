@@ -72,7 +72,7 @@ void runTest(){
 	//cute::makeRunner(lis)(inputTest, "InputTest");
 
 	cute::suite quadrilateralDetectionTest = make_suite_QuadrilateralDetectionTest();
-	cute::makeRunner(lis)(segmentTest, "QuadrilateralDetectionTest");
+	cute::makeRunner(lis)(quadrilateralDetectionTest, "QuadrilateralDetectionTest");
 
 
 }

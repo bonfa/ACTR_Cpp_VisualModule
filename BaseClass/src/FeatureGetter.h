@@ -33,7 +33,7 @@ using namespace std;
 
 class FeatureGetter {
 public:
-	FeatureGetter();
+	FeatureGetter(string imgPath);
 	FeatureGetter(int i);
 	virtual ~FeatureGetter();
 	/** Update the input image to be processed*/
@@ -62,9 +62,12 @@ public:
 
 
 	//TODO: da cancellare una volta finito lo sviluppo
+	//ATTENTION: if the variable NO_IMG_SHOW is defined showImage does not show images at all
 	void showImage();
 	void showVideo();
 private:
+	/** The path of the image*/
+	string imgPath;
 	/** The input module*/
 	Input *inputModule;
 	/** The feature extractor*/

@@ -171,6 +171,22 @@ string Quadrilateral::getChunk(){
 		chunk.append("}");
 	chunk.append("}");
 
+	/*
+	 *
+	 string chunk = "expectedChunkList.push_back(prepareChunk(";
+	chunk.append(intToString(this->bbox.x));
+	chunk.append(",");
+	chunk.append(intToString(this->bbox.y));
+	chunk.append(",");
+	chunk.append(intToString(this->bbox.x+this->bbox.width));
+	chunk.append(",");
+	chunk.append(intToString(this->bbox.y+this->bbox.height));
+	chunk.append(",\"");
+	chunk.append(this->color);
+	chunk.append("\"));");
+	*/
+
+
 	return 	chunk;
 }
 

@@ -50,10 +50,8 @@ void runTest(){
 	cute::suite utilsTest = make_suite_utilsTest();
 	cute::makeRunner(lis)(utilsTest, "utilsTest");
 
-
 	cute::suite QRScannerTest = make_suite_QRScannerTest();
 	cute::makeRunner(lis)(QRScannerTest, "QRScannerTest");
-
 
 	cute::suite PointTest = make_suite_MyPointTest();
 	cute::makeRunner(lis)(PointTest, "PointTest");
@@ -67,9 +65,8 @@ void runTest(){
 	cute::suite segmentTest = make_suite_SegmentTest();
 	cute::makeRunner(lis)(segmentTest, "SegmentTest");
 
-	//TODO: add again the suite
-	//cute::suite inputTest = make_suite_InputTest();
-	//cute::makeRunner(lis)(inputTest, "InputTest");
+	cute::suite inputTest = make_suite_InputTest();
+	cute::makeRunner(lis)(inputTest, "InputTest");
 
 	cute::suite quadrilateralDetectionTest = make_suite_QuadrilateralDetectionTest();
 	cute::makeRunner(lis)(quadrilateralDetectionTest, "QuadrilateralDetectionTest");

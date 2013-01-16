@@ -14,6 +14,7 @@
 #include "utilsTest.h"
 #include "extractorUtilsTest.h"
 #include "SegmentTest.h"
+#include "QuadrilateralDetectionTest.h"
 
 #include "QRScannerTest.h"
 
@@ -69,6 +70,9 @@ void runTest(){
 	//TODO: add again the suite
 	//cute::suite inputTest = make_suite_InputTest();
 	//cute::makeRunner(lis)(inputTest, "InputTest");
+
+	cute::suite quadrilateralDetectionTest = make_suite_QuadrilateralDetectionTest();
+	cute::makeRunner(lis)(segmentTest, "QuadrilateralDetectionTest");
 
 
 }

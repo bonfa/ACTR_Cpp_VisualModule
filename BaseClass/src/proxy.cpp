@@ -34,7 +34,7 @@ void Proxy::demo() {
 void Proxy::demoEnrico() {
 	FeatureGetter *fg = new FeatureGetter(1);
 
-	fg->startVideoCapture();
+	//fg->startVideoCapture();
 	//fg->showVideo();
 
 	fg->terminate();

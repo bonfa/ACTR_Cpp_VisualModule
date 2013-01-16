@@ -4,14 +4,24 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+<<<<<<< HEAD
+BaseClass	BaseClass.h	5;"	c
+BaseClass	BaseClass.h	7;"	p	class:BaseClass	access:public
+=======
 BaseClass	BaseClass.h	19;"	c
 BaseClass	BaseClass.h	21;"	p	class:BaseClass	access:public
+>>>>>>> d363547104d6170ee2b64edf90cbca08e519787e
 Blob	Blob.h	16;"	c	inherits:Object
 Blob	Blob.h	18;"	p	class:Blob	access:public
 Button	Button.h	16;"	c	inherits:Quadrilateral
 Button	Button.h	19;"	p	class:Button	access:public
+<<<<<<< HEAD
+Circle	Circle.h	13;"	c	inherits:Blob
+Circle	Circle.h	15;"	p	class:Circle	access:public
+=======
 Circle	Circle.h	15;"	c	inherits:Blob
 Circle	Circle.h	17;"	p	class:Circle	access:public
+>>>>>>> d363547104d6170ee2b64edf90cbca08e519787e
 InputException	BaseClassException.h	11;"	c	inherits:runtime_error
 Object	Object.h	26;"	c
 Object	Object.h	28;"	p	class:Object	access:public
@@ -20,6 +30,11 @@ Object	Object.h	30;"	p	class:Object	access:public
 Point	MyPoint.h	13;"	c
 Point	MyPoint.h	15;"	p	class:Point	access:public
 Point	MyPoint.h	16;"	p	class:Point	access:public
+<<<<<<< HEAD
+QRCode	QRCode.h	11;"	c
+QRCode	QRCode.h	13;"	p	class:QRCode	access:public
+=======
+>>>>>>> d363547104d6170ee2b64edf90cbca08e519787e
 QRDetected	QRScanner.h	18;"	p	class:QRScanner	access:public
 QRScanner	QRScanner.h	13;"	c
 QRScanner	QRScanner.h	15;"	p	class:QRScanner	access:public
@@ -40,7 +55,11 @@ a	Quadrilateral.h	30;"	m	class:Quadrilateral	access:protected
 a	StraightLine.h	29;"	m	class:StraightLine	access:private
 a	Triangle.h	27;"	m	class:Triangle	access:private
 area	Blob.h	23;"	m	class:Blob	access:protected
+<<<<<<< HEAD
+area	Circle.h	22;"	m	class:Circle	access:private
+=======
 area	Circle.h	25;"	m	class:Circle	access:private
+>>>>>>> d363547104d6170ee2b64edf90cbca08e519787e
 attended	Object.h	36;"	m	class:Object	access:protected
 b	Quadrilateral.h	31;"	m	class:Quadrilateral	access:protected
 b	StraightLine.h	30;"	m	class:StraightLine	access:private
@@ -51,7 +70,10 @@ c	StraightLine.h	31;"	m	class:StraightLine	access:private
 c	Triangle.h	29;"	m	class:Triangle	access:private
 calculateIntercept	StraightLine.h	28;"	p	class:StraightLine	access:private
 calculateSlope	StraightLine.h	27;"	p	class:StraightLine	access:private
+<<<<<<< HEAD
+=======
 center	Circle.h	26;"	m	class:Circle	access:private
+>>>>>>> d363547104d6170ee2b64edf90cbca08e519787e
 d	Quadrilateral.h	33;"	m	class:Quadrilateral	access:protected
 doesPointBelongTo	StraightLine.h	24;"	p	class:StraightLine	access:public
 erone	utils.h	28;"	p
@@ -66,14 +88,32 @@ getBbox	Object.h	33;"	p	class:Object	access:public
 getC	Quadrilateral.h	27;"	p	class:Quadrilateral	access:public
 getC	StraightLine.h	20;"	p	class:StraightLine	access:public
 getC	Triangle.h	25;"	p	class:Triangle	access:public
+<<<<<<< HEAD
+getChunk	Blob.h	20;"	p	class:Blob	access:public	implementation:pure virtual
+getChunk	Button.h	20;"	p	class:Button	access:public
+getChunk	Circle.h	16;"	p	class:Circle	access:public
+=======
 getCenter	Circle.h	22;"	p	class:Circle	access:public
 getChunk	Blob.h	20;"	p	class:Blob	access:public	implementation:pure virtual
 getChunk	Button.h	20;"	p	class:Button	access:public
 getChunk	Circle.h	18;"	p	class:Circle	access:public
+>>>>>>> d363547104d6170ee2b64edf90cbca08e519787e
 getChunk	Object.h	32;"	p	class:Object	access:public	implementation:pure virtual
 getChunk	Quadrilateral.h	24;"	p	class:Quadrilateral	access:public
 getChunk	Triangle.h	22;"	p	class:Triangle	access:public
 getD	Quadrilateral.h	28;"	p	class:Quadrilateral	access:public
+<<<<<<< HEAD
+getImage	BaseClass.h	11;"	p	class:BaseClass	access:public
+getIntercept	StraightLine.h	22;"	p	class:StraightLine	access:public
+getMinMax	utils.h	25;"	p
+getQRCode	QRScanner.h	17;"	p	class:QRScanner	access:public
+getRadius	Circle.h	19;"	p	class:Circle	access:public
+getSlope	StraightLine.h	21;"	p	class:StraightLine	access:public
+getStream	BaseClass.h	14;"	p	class:BaseClass	access:public
+getText	Button.h	21;"	p	class:Button	access:public
+getXCenter	Circle.h	17;"	p	class:Circle	access:public
+getYCenter	Circle.h	18;"	p	class:Circle	access:public
+=======
 getImage	BaseClass.h	23;"	p	class:BaseClass	access:public
 getIntercept	StraightLine.h	22;"	p	class:StraightLine	access:public
 getMinMax	utils.h	25;"	p
@@ -84,6 +124,7 @@ getStream	BaseClass.h	24;"	p	class:BaseClass	access:public
 getText	Button.h	21;"	p	class:Button	access:public
 getXCenter	Circle.h	19;"	p	class:Circle	access:public
 getYCenter	Circle.h	20;"	p	class:Circle	access:public
+>>>>>>> d363547104d6170ee2b64edf90cbca08e519787e
 height	Rect.h	21;"	m	class:Rect	access:public
 inLinePoints	utils.h	27;"	p
 intercept	StraightLine.h	33;"	m	class:StraightLine	access:private
@@ -93,16 +134,37 @@ myImage	QRScanner.h	20;"	m	class:QRScanner	access:private
 numLines	QRScanner.h	21;"	m	class:QRScanner	access:private
 operator ==	MyPoint.h	18;"	p	class:Point	access:public
 operator ==	Rect.h	18;"	p	class:Rect	access:public
+<<<<<<< HEAD
+radius	Circle.h	23;"	m	class:Circle	access:private
+rotation	Object.h	37;"	m	class:Object	access:protected
+setBbox	Object.h	35;"	p	class:Object	access:protected
+setBoundingBox	Triangle.h	30;"	p	class:Triangle	access:private
+showVideo	BaseClass.h	17;"	p	class:BaseClass	access:public
+=======
 radius	Circle.h	27;"	m	class:Circle	access:private
 rotation	Object.h	37;"	m	class:Object	access:protected
 setBbox	Object.h	35;"	p	class:Object	access:protected
 setBoundingBox	Triangle.h	30;"	p	class:Triangle	access:private
 showVideo	BaseClass.h	25;"	p	class:BaseClass	access:public
+>>>>>>> d363547104d6170ee2b64edf90cbca08e519787e
 slope	StraightLine.h	32;"	m	class:StraightLine	access:private
 text	Button.h	23;"	m	class:Button	access:private
 width	Rect.h	22;"	m	class:Rect	access:public
 x	MyPoint.h	19;"	m	class:Point	access:public
 x	Rect.h	19;"	m	class:Rect	access:public
+<<<<<<< HEAD
+xCenter	Circle.h	24;"	m	class:Circle	access:private
+y	MyPoint.h	20;"	m	class:Point	access:public
+y	Rect.h	20;"	m	class:Rect	access:public
+yCenter	Circle.h	25;"	m	class:Circle	access:private
+~BaseClass	BaseClass.h	9;"	p	class:BaseClass	access:public	implementation:virtual
+~Blob	Blob.h	19;"	p	class:Blob	access:public	implementation:virtual
+~Button	Button.h	18;"	p	class:Button	access:public	implementation:virtual
+~Circle	Circle.h	20;"	p	class:Circle	access:public	implementation:virtual
+~Object	Object.h	31;"	p	class:Object	access:public	implementation:virtual
+~Point	MyPoint.h	17;"	p	class:Point	access:public	implementation:virtual
+~QRCode	QRCode.h	14;"	p	class:QRCode	access:public	implementation:virtual
+=======
 y	MyPoint.h	20;"	m	class:Point	access:public
 y	Rect.h	20;"	m	class:Rect	access:public
 ~BaseClass	BaseClass.h	22;"	p	class:BaseClass	access:public	implementation:virtual
@@ -111,6 +173,7 @@ y	Rect.h	20;"	m	class:Rect	access:public
 ~Circle	Circle.h	23;"	p	class:Circle	access:public	implementation:virtual
 ~Object	Object.h	31;"	p	class:Object	access:public	implementation:virtual
 ~Point	MyPoint.h	17;"	p	class:Point	access:public	implementation:virtual
+>>>>>>> d363547104d6170ee2b64edf90cbca08e519787e
 ~QRScanner	QRScanner.h	16;"	p	class:QRScanner	access:public
 ~Quadrilateral	Quadrilateral.h	23;"	p	class:Quadrilateral	access:public	implementation:virtual
 ~Rect	Rect.h	17;"	p	class:Rect	access:public	implementation:virtual

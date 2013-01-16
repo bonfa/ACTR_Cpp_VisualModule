@@ -15,6 +15,7 @@ FeatureGetter::FeatureGetter() {
 
 FeatureGetter::FeatureGetter(int i) {
 	withArToolkit = true;
+	featureExtractor = 0;
 	//inputModule = new Input();
 }
 
@@ -91,10 +92,17 @@ void FeatureGetter::terminate(){
 
 
 void FeatureGetter::setFeatureList(){
-	featureExtractor = new FeatureExtractor(this->img);
-	objectList = featureExtractor->getExtractedFeature();
+	if(withArToolkit){
+		if( featureExtractor == 0)
+			featureExtractor = new FeatureExtractor();
+		objectList = featureExtractor->getExtractedFeature();
+	}
+	else{
+		featureExtractor = new FeatureExtractor(this->img);
+		objectList = featureExtractor->getExtractedFeature();
+	}
 	//return objectList;
-/*
+	/*
 	//Examples
 	cout << isBigger(0,0) << endl; //equal
 	cout << isBigger(0,1) << endl; //smaller

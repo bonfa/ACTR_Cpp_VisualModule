@@ -19,6 +19,10 @@ double myDistance(cv::Point a, cv::Point b){
 
 bool similar(cv::vector<cv::Point> a, cv::vector<cv::Point> b){
 	//TODO make a function smarter than this
+	if(a.size() != b.size())
+		return false;
+
+
 	double distance = myDistance(a.at(0),b.at(0));
 	if (distance > 15)
 		return false;
@@ -170,6 +174,9 @@ cv::vector<cv::vector<cv::Point> > deleteOverlapped(cv::vector<cv::vector<cv::Po
 //--------------------------------------------------------------------------------------------------
 
 FourPointsSorter::FourPointsSorter(cv::vector<cv::Point> points_){
+	if (points_.size()==0)
+		throw InputException("Empty Vector");
+
 	points = points_;
 	setCenter();
 }

@@ -30,7 +30,6 @@ using namespace std;
 #include "utils.h"
 #include "extractorUtils.h"
 #include "Quadrilateral.h"
-#include "Server.h"
 #include "Triangle.h"
 #include "Circle.h"
 #include "Object.h"

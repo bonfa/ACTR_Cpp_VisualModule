@@ -16,6 +16,9 @@
 #include <json/json.h>
 #include "Session.h"
 #include "FeatureExtractor.h"
+#include "PathConstants.h"
+#include "proxy.h"
+
 
 using boost::asio::ip::tcp;
 
@@ -28,15 +31,18 @@ public:
 : io_service_(io_service),
   acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
 {
-	
-	start_accept();
+		p2 = new Proxy(IMG_PATH_12);
+		vector<string> chunkList = p2->getChunkList();
+		//vector<string> chunkList;
+		chunks = chunkList;
+		start_accept();
 }
 
 
 private:
 	void start_accept()
 	{
-		Session* new_session = new Session(io_service_);
+		Session* new_session = new Session(io_service_, chunks);
 		acceptor_.async_accept(new_session->socket(),
 				boost::bind(&Server::handle_accept, this, new_session,
 						boost::asio::placeholders::error));
@@ -59,6 +65,8 @@ private:
 
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;
+	vector<string> chunks;
+	Proxy *p2;
 };
 
 #endif /* SERVER_H_ */

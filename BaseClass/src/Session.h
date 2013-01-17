@@ -7,6 +7,7 @@
 #include <iostream>
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
+#include <boost/algorithm/string/join.hpp>
 
 #include <json/json.h>
 
@@ -14,13 +15,15 @@ using boost::asio::ip::tcp;
 
 
 
+
 class Session
 {
 public:
 //<<<<<<< HEAD
-	Session(boost::asio::io_service& io_service)
+	Session(boost::asio::io_service& io_service, vector<string> chunks_)
 : socket_(io_service)
 {
+		chunks = chunks_;
 }
 
 	tcp::socket& socket()
@@ -31,7 +34,7 @@ public:
 	void start()
 	{
 
-		std::string messag = "Waiting to receive data\nIn telnet type: '{\"data\": \"Contenuto\"}' and hit return, close telnet to terminate\n";
+		std::string messag = "Waiting to receive data\nIn telnet type: '{\"cmd\":\"get\"}' and hit return, close telnet to terminate\n";
 
 		boost::asio::write(socket_, boost::asio::buffer(messag));
 
@@ -67,24 +70,27 @@ public:
           boost::asio::placeholders::bytes_transferred));
   }
 >>>>>>> a17883ca40c3f829f39d833d82da8f1f26c5e561
-*/
+ */
 private:
 	void handle_read(const boost::system::error_code& error,
 			size_t bytes_transferred)
 	{
 		if (!error)
 		{
-			std::string output = decodeJson(data_);
-			/*
-		std::string s = "Hello, world";
-		std::vector<char> v(s.begin(), s.end());
-		v.push_back('\0'); // Make sure we are null-terminated
-		char* c = &v[0];
+			std::string command = decodeJson(data_);
 
-		str.assign(data_, 6);*/
+			std::string finalString = "";
+
+			//If the command is getChunks
+			if(command.compare("get") == 0){
+				finalString = "[";
+				std::string joinedString = boost::algorithm::join(chunks, ",");
+				finalString.append(joinedString);
+				finalString.append("]");
+			}
 
 			boost::asio::async_write(socket_,
-					boost::asio::buffer(output.c_str(),output.length()),
+					boost::asio::buffer(finalString.c_str(),finalString.length()),
 					boost::bind(&Session::handle_write, this,
 							boost::asio::placeholders::error));
 		}
@@ -117,6 +123,7 @@ private:
 
 		Json::Value root;
 		Json::Reader reader;
+
 		bool parsedSuccess = reader.parse(json, root, false);
 
 		if(not parsedSuccess)
@@ -127,14 +134,18 @@ private:
 		}
 
 		//suppongo che ci sia un campo chiamato "data" ed estraggo il relativo valore
-		const Json::Value notAnArray = root["data"];
+		const Json::Value notAnArray = root["cmd"];
 
 		if(not notAnArray.isNull())
 		{
-			stream<< notAnArray.asString() <<std::endl;
+			stream<< notAnArray.asString();
 		}
 
+		if(stream.str().compare("get\n") == 0)
+			cout << "barra enne \n";
+
 		//stream<<"Json Example pretty print: " <<std::endl<<root.toStyledString() <<std::endl;
+		cout << stream.str();
 
 		return stream.str();
 	}
@@ -142,6 +153,7 @@ private:
 	tcp::socket socket_;
 	enum { max_length = 1024 };
 	char data_[max_length];
+	vector<string> chunks;
 };
 
 

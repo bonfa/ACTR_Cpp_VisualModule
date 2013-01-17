@@ -79,7 +79,10 @@ int main(){
 	std::cout << "Running Francesco's stuff \n";
 	Proxy *p2 = new Proxy(IMG_PATH_12);
 	vector<string> chunkList = p2->getChunkList();
-	printChunkList(chunkList);
+	//printChunkList(chunkList);
+	std::string str;
+	std::cout<<"Ctrl + c to terminate!\n";
+	std::cin >>str;
 	#endif
 	
     

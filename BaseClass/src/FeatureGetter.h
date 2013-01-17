@@ -58,7 +58,7 @@ public:
 	 *  ATTENTION: check how this method works*/
 	double getRotation(int index);
 	/** Return the list of all the chunks in a JSON way */
-	vector<string> getObjectChunkList();
+	std::vector<Object *> getObjectList();
 
 
 	//TODO: da cancellare una volta finito lo sviluppo

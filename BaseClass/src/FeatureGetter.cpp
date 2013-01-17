@@ -283,9 +283,6 @@ double FeatureGetter::getRotation(int objIndex){
 
 
 
-vector<string> FeatureGetter::getObjectChunkList(){
-	vector<string> chunkList;
-	for (unsigned int i=0; i<this->objectList.size();i++)
-		chunkList.push_back(objectList.at(i)->getChunk());
-	return chunkList;
+std::vector<Object *> FeatureGetter::getObjectList(){
+	return this->objectList;
 }

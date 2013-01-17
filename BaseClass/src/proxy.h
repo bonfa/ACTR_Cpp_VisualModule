@@ -17,11 +17,12 @@ public:
 	Proxy(string imgPath);
 	Proxy();
 	//void demo();
-	void demoEnrico();
 	int test();
 	double area();
 	/** Extract the chunk list from the input object list */
 	vector<string> getChunkList();
+	/** Extract the marker list from the input object list */
+	vector<string> getMarkerList();
 private:
 	/** the path of the image to process*/
 	string imgPath;
@@ -34,6 +35,8 @@ private:
 	 * TODO: move this somewhere else*/
 	std::vector<Object *> filterObjectList(std::vector<Object *> objectList);
 	//std::vector<Object *> shiftObjectList(std::vector<Object *> objectList);
+	/** Featuregetter needed to extract markers with ArToolkit */
+	FeatureGetter *fg;
 };
 
 #endif

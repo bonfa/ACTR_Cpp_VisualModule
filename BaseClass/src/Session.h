@@ -11,6 +11,9 @@
 
 #include <json/json.h>
 
+#include "PathConstants.h"
+#include "proxy.h"
+
 using boost::asio::ip::tcp;
 
 
@@ -20,10 +23,10 @@ class Session
 {
 public:
 //<<<<<<< HEAD
-	Session(boost::asio::io_service& io_service, vector<string> chunks_)
+	Session(boost::asio::io_service& io_service)
 : socket_(io_service)
 {
-		chunks = chunks_;
+		proxyMarker = new Proxy();
 }
 
 	tcp::socket& socket()
@@ -63,7 +66,7 @@ public:
 
 	   boost::asio::write(socket_, boost::asio::buffer(messag));
 
-	   
+	   IMG_PATH_12
     socket_.async_read_some(boost::asio::buffer(data_, max_length),
         boost::bind(&Session::handle_read, this,
           boost::asio::placeholders::error,
@@ -72,6 +75,12 @@ public:
 >>>>>>> a17883ca40c3f829f39d833d82da8f1f26c5e561
  */
 private:
+	void setChunk(Proxy *p){
+
+		chunks = p->getChunkList();
+		//vector<string> chunkList;
+	}
+
 	void handle_read(const boost::system::error_code& error,
 			size_t bytes_transferred)
 	{
@@ -79,10 +88,23 @@ private:
 		{
 			std::string command = decodeJson(data_);
 
+
+
+
 			std::string finalString = "";
 
 			//If the command is getChunks
-			if(command.compare("get") == 0){
+			if(command.compare("getFeature") == 0){
+				proxyFeature = new Proxy(IMG_PATH_12);
+				setChunk(proxyFeature);
+				finalString = "[";
+				std::string joinedString = boost::algorithm::join(chunks, ",");
+				finalString.append(joinedString);
+				finalString.append("]");
+			}
+			else if(command.compare("getMarker") == 0){
+				chunks = proxyMarker->getMarkerList();
+				//setChunk(proxyMarker);
 				finalString = "[";
 				std::string joinedString = boost::algorithm::join(chunks, ",");
 				finalString.append(joinedString);
@@ -154,6 +176,9 @@ private:
 	enum { max_length = 1024 };
 	char data_[max_length];
 	vector<string> chunks;
+	Proxy *proxyFeature;
+	Proxy *proxyMarker;
+
 };
 
 

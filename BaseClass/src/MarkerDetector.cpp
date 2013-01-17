@@ -93,6 +93,7 @@ void startDetection(){//boost::mutex& mutex){
     arVideoCapStart();
     printf("Capture started\n");
     argMainLoop( NULL, keyEvent, mainLoop );
+
 }
 
 int stub(){

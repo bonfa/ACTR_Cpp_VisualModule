@@ -15,6 +15,7 @@ Proxy::Proxy(string imgPath){
 
 Proxy::Proxy(){
 	this->imgPath = "";
+	fg = new FeatureGetter(1);
 }
 
 /*
@@ -47,15 +48,17 @@ void Proxy::demo() {
 }
 */
 
-void Proxy::demoEnrico() {
-	FeatureGetter *fg = new FeatureGetter(1);
+vector<string>  Proxy::getMarkerList() {
 
+	fg->setFeatureList();
 	//fg->startVideoCapture();
 	//fg->showVideo();
+	objectList = fg->getObjectList();
 
-	fg->terminate();
-
-	delete fg;
+	vector<string> chunkList;
+	for (unsigned int i=0; i<objectList.size();i++)
+		chunkList.push_back(objectList.at(i)->getChunk());
+	return chunkList;
 }
 
 int Proxy::test() {

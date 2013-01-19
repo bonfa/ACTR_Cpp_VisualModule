@@ -89,7 +89,7 @@ private:
 			std::string command = decodeJson(data_);
 
 
-
+			std::cout << "comando ricevuto :" << command << "\n";
 
 			std::string finalString = "";
 

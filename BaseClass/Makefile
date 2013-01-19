@@ -59,11 +59,11 @@ obj/QRScanner.o: src/QRScanner.cpp
 	$(CC) $(OCV_PATH) $(MGK_PATH) $(CC_FLAGS) -o $@ $<
 	
 obj/Server.o: src/Server.cpp
-	$(CC) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
 
 obj/Session.o: src/Session.cpp
 	echo "Compilo il Session"	
-	$(CC) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
 	
 obj/MarkerDetector.o: src/MarkerDetector.cpp
 	$(CC) $(ART_CFLAG)  $(CC_FLAGS) -Wno-write-strings -o $@ $<

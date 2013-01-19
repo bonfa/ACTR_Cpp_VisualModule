@@ -111,6 +111,7 @@ static void   keyEvent( unsigned char key, int x, int y)
 }
 
 std::vector<Quadrilateral *> getMarkers(){
+	std::cout << "Dimensione in MD: " << markersList.size() << "\n";
 	return markersList;
 	}
 
@@ -183,7 +184,7 @@ static void mainLoop(void)
             arGetTransMat(&marker_info[k],
                           object[i].center, object[i].width,
                           object[i].trans);
-			printf("***(frame/sec)\n");
+			//printf("***(frame/sec)\n");
 			
 	#ifndef NO_IMG
             draw( object[i].model_id, object[i].trans );

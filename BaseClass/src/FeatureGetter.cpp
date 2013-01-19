@@ -71,6 +71,7 @@ void FeatureGetter::setFeatureList(){
 	if(withArToolkit){
 		if( featureExtractor == 0)
 			featureExtractor = new FeatureExtractor();
+		objectList.clear();
 		objectList = featureExtractor->getExtractedFeature();
 	}
 	else{

@@ -545,9 +545,10 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 #ifdef ENRICO
 	}
 	else {
+		quadrilateralList.clear();
 		quadrilateralList = getMarkers();
+		this->objectList.clear();
 		this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());
-
 		return objectList;
 	}
 #endif

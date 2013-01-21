@@ -4,6 +4,7 @@
 
 #define NO_IM
 
+
 #include "MarkerDetector.h"
 
 
@@ -111,7 +112,9 @@ static void   keyEvent( unsigned char key, int x, int y)
 }
 
 std::vector<Quadrilateral *> getMarkers(){
-	std::cout << "Dimensione in MD: " << markersList.size() << "\n";
+	boost::mutex::scoped_lock lock(io_mutex);
+	cvSetImageData( image, dataPtr, size->width * channels );
+    cvSaveImage(IMG_NAME, image);
 	return markersList;
 	}
 
@@ -142,8 +145,9 @@ static void mainLoop(void)
         exit(0);
     }
 
-    cvSetImageData( image, dataPtr, size->width * channels );
-    cvSaveImage("prova.jpg", image);
+	/** Prevents ArToolkit from grabbing next frame if the current frame needs to be written to file system */
+    boost::mutex::scoped_lock lock(io_mutex);
+
     arVideoCapNext();
 
 	#ifndef NO_IMG
@@ -153,7 +157,6 @@ static void mainLoop(void)
     glClear(GL_DEPTH_BUFFER_BIT);
 	#endif
 	
-	boost::mutex::scoped_lock lock(io_mutex);
 	markersList.clear();
 	
     /* check for object visibility */

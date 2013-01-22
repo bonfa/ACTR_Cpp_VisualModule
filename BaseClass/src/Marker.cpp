@@ -29,5 +29,38 @@ Marker::Marker(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, int id_)
 
 
 string Marker::getChunk(){
-	return "cianc, bottone\n";
+	stringstream buffer;
+	buffer << this->id;
+
+	string chunk = "{";
+			chunk.append("\"object\"");
+			chunk.append(":");
+			chunk.append("\"type\": \"Marker\",");
+
+				chunk.append(Quadrilateral::getChunk());
+
+			chunk.append(",");
+
+				chunk.append("\"qrStatus\": ");
+				chunk.append("\"");
+				chunk.append( this->QRStatus ? "true" : "false");
+				chunk.append("\"");
+
+			chunk.append(",");
+
+			chunk.append(",");
+
+				chunk.append("\"id\": ");
+				chunk.append("\"");
+				chunk.append( buffer.str());
+				chunk.append("\"");
+
+			if(this->QRStatus){
+				chunk.append(",");
+				//TODO
+
+			}
+
+		chunk.append("}");
+		return chunk;
 }

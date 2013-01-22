@@ -18,7 +18,8 @@
 #define MARKER_H_
 
 #include "Quadrilateral.h"
-
+#include "QRObject.h"
+#include <sstream>
 
 class Marker: public Quadrilateral {
 public:
@@ -28,18 +29,18 @@ public:
 	/** Returns a string which contains the basic information about the button*/
 	string getChunk();
 	
-	/*void setQr(QRObject *qr_){
+	void setQr(QRObject *qr_){
 		qr = qr_;
 		QRStatus = true;
-	};*/
+	};
 	
-	//QRObject* getQR(){return qr;};
+	QRObject* getQR(){return qr;};
 	int getId(){return id;};
 	bool getQRStatus(){return QRStatus;};
 
 private:
 
-	//QRObject *qr;
+	QRObject *qr;
 	int id;
 	bool QRStatus; 
 };

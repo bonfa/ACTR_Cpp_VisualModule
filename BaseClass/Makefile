@@ -10,7 +10,8 @@ MGK_LIBS := `pkg-config --libs Magick++`
 ZBR_LIBS := `pkg-config --libs zbar`
 ## Verificare che vada bene anche in ufficio
 ZBR_PATH := -I/usr/lib/
-ZBR_LIBS := ##/usr/local/lib/libzbar.dylib 
+ZBR_LIBS := `pkg-config --libs zbar`
+##/usr/local/lib/libzbar.dylib 
 JSN_LIBS := `pkg-config --libs jsoncpp`
 JSN_PATH := `pkg-config --cflags jsoncpp`
 BST_LIBS := -lboost_system -lboost_system-mt -pthread -lboost_thread

@@ -11,8 +11,8 @@
 
 
 
-#ifndef QRObject_H_
-#define QRObject_H_
+#ifndef QROBJECT_H_
+#define QROBJECT_H_
 
 #include <iostream>
 #include "Object.h"
@@ -34,4 +34,4 @@ private:
 	//TODO: colore
 };
 
-#endif /* QRObject_H_ */
+#endif /* QROBJECT_H_ */

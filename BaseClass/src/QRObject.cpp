@@ -31,14 +31,14 @@ string QRObject::getChunk(){
 			chunk.append("\"type\": \"QRCode\",");
 			chunk.append("\"detected\": ");
 			chunk.append("\"");
-			chunk.append(this->detected);
+			chunk.append( this->detected ? "true" : "false");
 			chunk.append("\"");
 			
 			chunk.append(",");
 			
 			chunk.append("\"decoded\": ");
 			chunk.append("\"");
-			chunk.append(this->decoded);
+			chunk.append( this->decoded ? "true" : "false");
 			chunk.append("\"");
 		
 			chunk.append(",");

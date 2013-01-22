@@ -176,9 +176,8 @@ static void mainLoop(void)
 			//Lock to prevent race conditions while reading vertex from other threads
 			
 			memcpy(vertex, marker_info[k].vertex, sizeof (float) * 2 * 4); //2 colonne * 4 righe
-			//markersList.push_back(new Quadrilateral(1,2, 4,6, 4,3, 2,7));
-			//new Quadrilateral(1,2, 4,6, 4,3, 2,7);
-			markersList.push_back(new Quadrilateral((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1])));
+
+			markersList.push_back(dynamic_cast<Quadrilateral*>(new Marker((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1]), object[i].model_id)));
 			
 			
 			//vertex[0][0] = marker_info[k].vertex[0][0];

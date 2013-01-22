@@ -141,7 +141,7 @@ string Quadrilateral::getChunk(){
 		chunk.append("\"object\"");
 		chunk.append(":");
 		chunk.append("{");
-		chunk.append("\"type\": \"Rectangle\",");
+		chunk.append("\"type\": \"Quadrilateral\",");
 		chunk.append("\"bbox\": {");
 			chunk.append("\"x1\":");
 			chunk.append("\"");

@@ -114,7 +114,12 @@ static void   keyEvent( unsigned char key, int x, int y)
 std::vector<Quadrilateral *> getMarkers(){
 	boost::mutex::scoped_lock lock(io_mutex);
 	cvSetImageData( image, dataPtr, size->width * channels );
-    cvSaveImage(IMG_PATH, image);
+    //TODO: check if file is writeable
+	if ( ! boost::filesystem::is_regular_file( IMG_PATH ) )
+		{
+			std::cerr << "QRScanner: Can't read file: " << IMG_PATH  << std::endl;
+		}
+	cvSaveImage(IMG_PATH, image);
 	return markersList;
 	}
 

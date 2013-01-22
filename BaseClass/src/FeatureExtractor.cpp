@@ -548,9 +548,16 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		quadrilateralList.clear();
 		quadrilateralList = getMarkers();
 
-		/*
+
 		QRScanner * qrs;// = new QRScanner("./img.jpg");
-		qrs = new QRScanner("./qrtest.png");*/
+		qrs = new QRScanner(IMG_PATH);
+
+		if(qrs->QRDetected()){
+			QRObject * qro;
+			qro = new QRObject(qrs->getQRCode());
+			dynamic_cast<Marker*>(quadrilateralList.at(0))->setQr(qro);
+		}
+
 		//qrs->QRDetected();
 		//qrs->getQRCode();
 

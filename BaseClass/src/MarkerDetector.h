@@ -39,7 +39,8 @@
 #include <boost/thread/mutex.hpp>
 #include "Marker.h"
 
-
+#include <boost/filesystem.hpp>
+//using namespace boost::filesystem;
 
 #define  OBJ1_PATT_NAME    "Data/patt.hiro"
 #define  OBJ2_PATT_NAME    "Data/patt.kanji"

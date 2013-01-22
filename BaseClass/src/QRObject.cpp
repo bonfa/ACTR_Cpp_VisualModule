@@ -7,14 +7,8 @@
 
 #include "QRObject.h"
 
-QRObject::QRObject(bool detected_, std::string content_) {
-	detected = detected_;
+QRObject::QRObject(std::string content_) {
 	content = content_;
-	if(content.compare("") == 0)
-		decoded = false;
-	else
-		decoded = true;
-	//TODO verificare se non da area zero
 }
 
 QRObject::~QRObject() {
@@ -29,17 +23,6 @@ string QRObject::getChunk(){
 			chunk.append("{");
 			
 			chunk.append("\"type\": \"QRCode\",");
-			chunk.append("\"detected\": ");
-			chunk.append("\"");
-			chunk.append( this->detected ? "true" : "false");
-			chunk.append("\"");
-			
-			chunk.append(",");
-			
-			chunk.append("\"decoded\": ");
-			chunk.append("\"");
-			chunk.append( this->decoded ? "true" : "false");
-			chunk.append("\"");
 		
 			chunk.append(",");
 			
@@ -53,13 +36,6 @@ string QRObject::getChunk(){
 	return chunk;
 }
 
-bool QRObject::isDetected(){
-	return detected;
-	}
-	
-bool QRObject::isDecoded(){
-	return decoded;
-	}
 	
 string QRObject::getContent(){
 	return content;

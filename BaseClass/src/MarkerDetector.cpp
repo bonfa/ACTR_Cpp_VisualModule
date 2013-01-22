@@ -205,11 +205,12 @@ static void mainLoop(void)
         arUtilMatInv(object[0].trans, wmat1);
         arUtilMatMul(wmat1, object[1].trans, wmat2);
 
+        /*
         for( j = 0; j < 3; j++ ) {
             for( i = 0; i < 4; i++ ) printf("%8.4f ", wmat2[j][i]);
             printf("\n");
         }
-        printf("\n\n");
+        printf("\n\n");*/
     }
 }
 

@@ -38,7 +38,7 @@ public:
 	void start()
 	{
 
-		std::string messag = "Waiting to receive data\nIn telnet type: '{\"cmd\":\"get\"}' and hit return, close telnet to terminate\n";
+		std::string messag = "Waiting to receive data\nIn telnet type: '{\"cmd\":\"getMarker\"}' and hit return, close telnet to terminate\n";
 
 		boost::asio::write(socket_, boost::asio::buffer(messag));
 
@@ -141,9 +141,6 @@ private:
 	}
 
 	static std::string decodeJson(std::string json){
-
-		QRScanner * qrs;// = new QRScanner("./img.jpg");
-		qrs = new QRScanner("./qrtest.png");
 
 		std::stringstream stream;
 

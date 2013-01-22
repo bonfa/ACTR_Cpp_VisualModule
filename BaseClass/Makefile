@@ -14,7 +14,7 @@ ZBR_LIBS := `pkg-config --libs zbar`
 ##/usr/local/lib/libzbar.dylib 
 JSN_LIBS := `pkg-config --libs jsoncpp`
 JSN_PATH := `pkg-config --cflags jsoncpp`
-BST_LIBS := -lboost_system -lboost_system-mt -pthread -lboost_thread
+BST_LIBS := -lboost_system -lboost_system-mt -pthread -lboost_thread -lboost_filesystem
 
 ART_FLAGS := -pthread -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lxml2 -lglib-2.0 $(OCV_LIBS) -L/usr/X11R6/lib -L/usr/local/lib
 ART_LIBS= -lARgsub -lARvideo -lAR -lpthread -lglut -lGLU -lGL -lXi -lX11 -lm -pthread -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lxml2 -lglib-2.0

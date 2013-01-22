@@ -9,24 +9,30 @@ using namespace cv;
 
 
 QRScanner::QRScanner(std::string path){
+	if ( !boost::filesystem::exists( path ) )
+	{
+		std::cerr << "QRScanner: Can't read file: " << path  << std::endl;
+	}
+	else{
+		CvMat *cv_matrix = cvLoadImageM(path.c_str(),CV_LOAD_IMAGE_GRAYSCALE); //"./debian.or.jp.qr.jpg"
 
-	CvMat *cv_matrix = cvLoadImageM(path.c_str(),CV_LOAD_IMAGE_GRAYSCALE); //"./debian.or.jp.qr.jpg"
+		int width = cv_matrix->width;
+		int height= cv_matrix->height;
+		char *raw = (char*)cv_matrix->data.ptr;
 
-	int width = cv_matrix->width;
-	int height= cv_matrix->height;
-	char *raw = (char*)cv_matrix->data.ptr;
+		// create a reader
+		ImageScanner scanner;
 
-	// create a reader
-	ImageScanner scanner;
+		// configure the reader
+		scanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1);
 
-	// configure the reader
-	scanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1);
+		myImage = new Image(width, height, "Y800", raw, width * height);
 
-	myImage = new Image(width, height, "Y800", raw, width * height);
+		// scan the image for barcodes
+		numLines = scanner.scan(*myImage);
+	}
 
-	// scan the image for barcodes
-	numLines = scanner.scan(*myImage);
-};
+}
 
 QRScanner::~QRScanner(){
 	myImage->set_data(NULL, 0);

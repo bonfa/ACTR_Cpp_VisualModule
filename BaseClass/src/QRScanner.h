@@ -18,6 +18,8 @@
 #include <opencv/cxcore.h>
 #include <string>
 
+#include <boost/filesystem.hpp>
+
 using namespace std;
 
 class QRScanner{

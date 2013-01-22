@@ -35,7 +35,6 @@ string Marker::getChunk(){
 	string chunk = "{";
 			chunk.append("\"object\"");
 			chunk.append(":");
-			chunk.append("\"type\": \"Marker\",");
 
 				chunk.append(Quadrilateral::getChunk());
 
@@ -48,17 +47,17 @@ string Marker::getChunk(){
 
 			chunk.append(",");
 
-			chunk.append(",");
-
 				chunk.append("\"id\": ");
 				chunk.append("\"");
 				chunk.append( buffer.str());
 				chunk.append("\"");
 
+			chunk.append(",\"type\": \"Marker\"");
+
+
 			if(this->QRStatus){
 				chunk.append(",");
-				//TODO
-
+				chunk.append(qr->getChunk());
 			}
 
 		chunk.append("}");

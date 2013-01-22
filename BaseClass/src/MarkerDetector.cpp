@@ -114,6 +114,14 @@ static void   keyEvent( unsigned char key, int x, int y)
 std::vector<Quadrilateral *> getMarkers(){
 	boost::mutex::scoped_lock lock(io_mutex);
 	cvSetImageData( image, dataPtr, size->width * channels );
+	if(markersList.size()>0){
+		Marker * m = dynamic_cast<Marker*>(markersList.at(0));
+
+		cv::Mat imageOut(image);
+		cv::Rect roi(m->getBbox().x, m->getBbox().y, m->getBbox().width , m->getBbox().height);
+		cv::Mat croppedImage = imageOut(roi);
+		cv::imwrite("croppato.jpg", croppedImage);
+	}
     //TODO: check if file is writeable
 	if ( ! boost::filesystem::is_regular_file( IMG_PATH ) )
 		{

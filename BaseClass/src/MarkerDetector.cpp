@@ -114,7 +114,7 @@ static void   keyEvent( unsigned char key, int x, int y)
 std::vector<Quadrilateral *> getMarkers(){
 	boost::mutex::scoped_lock lock(io_mutex);
 	cvSetImageData( image, dataPtr, size->width * channels );
-    cvSaveImage(IMG_NAME, image);
+    cvSaveImage(IMG_PATH, image);
 	return markersList;
 	}
 

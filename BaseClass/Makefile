@@ -7,7 +7,10 @@ OCV_LIBS := `pkg-config opencv --libs`
 OCV_PATH := `pkg-config opencv --cflags` -I/usr/include/opencv2
 MGK_PATH := `pkg-config --cflags Magick++`
 MGK_LIBS := `pkg-config --libs Magick++`
-ZBR_LIBS := /usr/local/lib/libzbar.dylib
+ZBR_LIBS := `pkg-config --libs zbar`
+## Verificare che vada bene anche in ufficio
+ZBR_PATH := -I/usr/lib/
+ZBR_LIBS := ##/usr/local/lib/libzbar.dylib 
 JSN_LIBS := `pkg-config --libs jsoncpp`
 JSN_PATH := `pkg-config --cflags jsoncpp`
 BST_LIBS := -lboost_system -lboost_system-mt -pthread -lboost_thread
@@ -23,7 +26,7 @@ BST_PATH := -L/usr/local/lib
 QR_SOURCE := qr/main.cpp
 QR_LIB := decodeqr
 MY_LIB := launcher
-LD_FLAGS := -L. $(BST_PATH) -l$(MY_LIB) $(JSN_PATH) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH) $(BST_LIBS) $(ART_FLAGS) $(ART_LIBS)
+LD_FLAGS := -L. $(BST_PATH) -l$(MY_LIB) $(JSN_PATH) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH) $(BST_LIBS) $(ART_FLAGS) $(ART_LIBS) $(MGK_LIBS) $(ZBR_LIBS)
 CC_FLAGS := -c -fPIC 
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
@@ -44,7 +47,7 @@ set_lib_path:
 	export LD_LIBRARY_PATH=./
 
 main:
-	$(CC) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)
+	$(CC) $(MGK_PATH)  $(ZBR_PATH) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)
 
 lib: $(OBJ_FILES)
 	ar $(AR_FLAGS) $(STATIC_LIB) $^
@@ -56,26 +59,26 @@ dyn_lib: $(OBJ_FILES)
 	$(CC) -shared $(OCV_LIBS) $(ZBR_LIBS) -o $(DYNAMIC_LIB) $^
 
 obj/QRScanner.o: src/QRScanner.cpp
-	$(CC) $(OCV_PATH) $(MGK_PATH) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(MGK_PATH) $(ZBR_PATH) $(CC_FLAGS) -o $@ $<
 	
 obj/Server.o: src/Server.cpp
-	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(JSN_PATH) $(MGK_PATH) $(ZBR_PATH) $(CC_FLAGS) -o $@ $<
 
 obj/Session.o: src/Session.cpp
 	echo "Compilo il Session"	
-	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(JSN_PATH) $(MGK_PATH) $(ZBR_PATH) $(CC_FLAGS) -o $@ $<
 	
 obj/MarkerDetector.o: src/MarkerDetector.cpp
 	$(CC) $(ART_CFLAG)  $(CC_FLAGS) -Wno-write-strings -o $@ $<
 
 obj/FeatureExtractor.o: src/FeatureExtractor.cpp
-	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(MGK_PATH) $(JSN_PATH)  $(ZBR_PATH) $(CC_FLAGS) -o $@ $<
 	
 obj/FeatureGetter.o: src/FeatureGetter.cpp
-	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(MGK_PATH) $(JSN_PATH)  $(ZBR_PATH) $(CC_FLAGS) -o $@ $<
 
 obj/proxy.o: src/proxy.cpp
-	$(CC) $(OCV_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(MGK_PATH) $(JSN_PATH) $(CC_FLAGS) -o $@ $<
 	
 obj/%.o: src/%.c
 	$(CC) $(ART_CFLAG) $(OCV_PATH)  $(CC_FLAGS) -o $@ $<

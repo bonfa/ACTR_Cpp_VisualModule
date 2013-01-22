@@ -14,6 +14,7 @@
 #include "PathConstants.h"
 #include "proxy.h"
 
+
 using boost::asio::ip::tcp;
 
 
@@ -140,6 +141,10 @@ private:
 	}
 
 	static std::string decodeJson(std::string json){
+
+		QRScanner * qrs;// = new QRScanner("./img.jpg");
+		qrs = new QRScanner("./qrtest.png");
+
 		std::stringstream stream;
 
 

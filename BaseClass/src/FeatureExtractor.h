@@ -35,6 +35,9 @@ using namespace std;
 #include "Object.h"
 #include "Blob.h"
 #include "MarkerDetector.h"
+#include <iostream>
+#include <string>
+#include "QRScanner.h"
 
 //Comment this variable to see every step of the shape detection
 #define NO_IMG_SHOW

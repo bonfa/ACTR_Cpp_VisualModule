@@ -1,12 +1,5 @@
-#ifdef ENRICO
-#include <iostream>
-#include <Magick++.h>
-#include <zbar.h>
 
-
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
-#include <opencv/cxcore.h>
+#include "author.h"
 
 #include "QRScanner.h"
 
@@ -15,19 +8,9 @@ using namespace zbar;
 using namespace cv;
 
 
-QRScanner::QRScanner(string path){
+QRScanner::QRScanner(std::string path){
+
 	CvMat *cv_matrix = cvLoadImageM(path.c_str(),CV_LOAD_IMAGE_GRAYSCALE); //"./debian.or.jp.qr.jpg"
-
-	Rect roi(10, 20, 100, 50);
-	//Point a cv::Mat header at it (no allocation is done)
-
-	/*
-	cv::Mat image(cv_matrix);
-	cv::Rect myROI(0, 0, (cv_matrix->width)/2, (cv_matrix->height)/2);
-	cv::Mat croppedImage = image(myROI);
-	CvMat cvmat = croppedImage;
-	CvMat *cvm = &cvmat;
-	cvSaveImage	*/
 
 	int width = cv_matrix->width;
 	int height= cv_matrix->height;
@@ -71,7 +54,3 @@ string QRScanner::getQRCode()
 
     return  out.str();
 }
-
-
-
-#endif

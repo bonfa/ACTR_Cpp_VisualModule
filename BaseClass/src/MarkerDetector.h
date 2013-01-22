@@ -12,7 +12,7 @@
 #ifndef MDETECT_H_
 #define MDETECT_H_
 
-#define IMG_NAME "img.jpg"
+#define IMG_PATH "img.jpg"
 
 	#ifdef _WIN32
 	#  include <windows.h>

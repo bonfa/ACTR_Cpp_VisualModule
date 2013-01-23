@@ -14,6 +14,9 @@
 
 #define IMG_PATH "img.jpg"
 
+#define CRP_IM1 "crop1.jpg"
+#define CRP_IM2 "crop2.jpg"
+
 	#ifdef _WIN32
 	#  include <windows.h>
 	#endif

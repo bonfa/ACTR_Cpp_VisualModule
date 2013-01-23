@@ -41,12 +41,9 @@ OBJECT_T   object[2] = {
 
 /* set up the video format globals */
 
-#ifdef _WIN32
-char			*vconf = "Data\\WDM_camera_flipV.xml";
-#else
 //Variabile d'ambiente per usare la webcam, buildare le librerie con gstreamer, cambiare device=/dev/video0 in device=/dev/video1 per usare la seconda webcam
-char			*vconf = "v4l2src device=/dev/video0 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=640,height=480 ! identity name=artoolkit ! fakesink";
-#endif
+char			*vconf = "v4l2src device=/dev/video1 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=640,height=480 ! identity name=artoolkit ! fakesink";
+
 
 int             xsize, ysize;
 int             thresh = 100;
@@ -62,28 +59,8 @@ static void   keyEvent( unsigned char key, int x, int y);
 static void   mainLoop(void);
 static void   draw( int object, double trans[3][4] );
 
-#ifdef STANDALONE
-int main(int argc, char *argv[])
-{
-	#ifndef NO_IMG
-	glutInit(&argc, argv);
-	#endif
-	startDetection();
-	printf("Exiting\n");
-	return (0);
-}
-#endif //STANDALONE
-
-
-
-#ifdef STANDALONE
-void startDetection(){
-#else
 void startDetection(){//boost::mutex& mutex){
-	 //boost::mutex& mutex_;
-	//mutex_= mutex;
-	 
-#endif //STANDALONE
+
 	printf("Init ARToolkit stuff\n");
 	int argc = 1;
 	char *argv[] = {"./fake"};
@@ -111,16 +88,33 @@ static void   keyEvent( unsigned char key, int x, int y)
     }
 }
 
+void cropImg(Quadrilateral * q, string path){
+
+			Marker * m = dynamic_cast<Marker*>(q);
+			int height =0;
+
+			/** If position of the image to crop exceed the border of the image, reduce it */
+			if (m->getBbox().y + m->getBbox().height *2 >  size->height)
+				height = size->height-(  m->getBbox().y + m->getBbox().height ) -1;
+
+			else
+				height = m->getBbox().height;
+
+			cv::Mat imageOut(image);
+			cv::Rect roi(m->getBbox().x, m->getBbox().y + m->getBbox().height , m->getBbox().width , height);
+			cv::Mat croppedImage = imageOut(roi);
+			cv::imwrite(path, croppedImage);
+}
+
+
 std::vector<Quadrilateral *> getMarkers(){
 	boost::mutex::scoped_lock lock(io_mutex);
 	cvSetImageData( image, dataPtr, size->width * channels );
-	if(markersList.size()>0){
-		Marker * m = dynamic_cast<Marker*>(markersList.at(0));
-
-		cv::Mat imageOut(image);
-		cv::Rect roi(m->getBbox().x, m->getBbox().y, m->getBbox().width , m->getBbox().height);
-		cv::Mat croppedImage = imageOut(roi);
-		cv::imwrite("croppato.jpg", croppedImage);
+	for(int i = 0 ; i < markersList.size();i++){
+		if(i == 0)
+			cropImg(markersList.at(i) ,CRP_IM1);
+		else if(i == 1)
+			cropImg(markersList.at(i) ,CRP_IM2);
 	}
     //TODO: check if file is writeable
 	if ( ! boost::filesystem::is_regular_file( IMG_PATH ) )
@@ -340,4 +334,4 @@ static void draw( int object, double trans[3][4] )
     glDisable( GL_LIGHTING );
     glDisable( GL_DEPTH_TEST );
 }
-#endif ENRICO
+#endif //ENRICO

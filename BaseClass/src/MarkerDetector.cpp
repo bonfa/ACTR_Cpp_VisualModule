@@ -19,6 +19,7 @@ IplImage *m_pEdge;  // result of canny edge detection
 IplImage *m_pGray;  // result of conversion to grayscale
 IplImage *img;		// tmp prescale gray
 IplImage *pyr;		// tmp afterscale gray
+cv::Mat *currentFrame;
 int canny_thres;
 CvPoint myCenter;
 ARUint8         *dataPtr;
@@ -88,40 +89,41 @@ static void   keyEvent( unsigned char key, int x, int y)
     }
 }
 
-void cropImg(Quadrilateral * q, string path){
 
-			Marker * m = dynamic_cast<Marker*>(q);
-			int height =0;
 
-			/** If position of the image to crop exceed the border of the image, reduce it */
-			if (m->getBbox().y + m->getBbox().height *2 >  size->height)
-				height = size->height-(  m->getBbox().y + m->getBbox().height ) -1;
+int initMarkersData(){
+	/** Use the lock to prevent race conditions */
+	boost::mutex::scoped_lock lock(io_mutex);
 
-			else
-				height = m->getBbox().height;
+	/** Copy the Quadrilateral list */
+	slowMarkerList = std::vector<Quadrilateral*>(markersList.begin(),markersList.end());//markersList.
 
-			cv::Mat imageOut(image);
-			cv::Rect roi(m->getBbox().x, m->getBbox().y + m->getBbox().height , m->getBbox().width , height);
-			cv::Mat croppedImage = imageOut(roi);
-			cv::imwrite(path, croppedImage);
+	/** Convert the current frame */
+	cvSetImageData( image, dataPtr, size->width * channels );
+
+	/** Copy current frame content in another variable */
+	currentFrame = new cv::Mat(image, true);
+
+	return 0;
 }
 
+cv::Mat * getFrame(){
+	return currentFrame;
+}
 
 std::vector<Quadrilateral *> getMarkers(){
-	boost::mutex::scoped_lock lock(io_mutex);
-	cvSetImageData( image, dataPtr, size->width * channels );
-	for(int i = 0 ; i < markersList.size();i++){
-		if(i == 0)
-			cropImg(markersList.at(i) ,CRP_IM1);
-		else if(i == 1)
-			cropImg(markersList.at(i) ,CRP_IM2);
+
+
+	/*for(int i = 0 ; i < markersList.size();i++){
+		cv::Mat crp = cropImg(markersList.at(i));
+		dynamic_cast<Marker*>(markersList.at(i))->setImage(crp);
 	}
     //TODO: check if file is writeable
 	if ( ! boost::filesystem::is_regular_file( IMG_PATH ) )
 		{
 			std::cerr << "QRScanner: Can't read file: " << IMG_PATH  << std::endl;
-		}
-	cvSaveImage(IMG_PATH, image);
+		}*/
+
 	return markersList;
 	}
 

@@ -13,6 +13,8 @@
  *  In a 2D space as the one defined by the opencv Mat it is the top left point of the rectangle.
  *  @ATTENTION: the coordinates must not be negative
  */
+#include "author.h"
+#ifdef ENRICO
 
 #ifndef MARKER_H_
 #define MARKER_H_
@@ -20,6 +22,11 @@
 #include "Quadrilateral.h"
 #include "QRObject.h"
 #include <sstream>
+#include <string>
+#include <cv.hpp>
+#include <cxcore.hpp>
+#include <cv.h>
+#include <highgui.h>
 
 class Marker: public Quadrilateral {
 public:
@@ -37,12 +44,15 @@ public:
 	QRObject* getQR(){return qr;};
 	int getId(){return id;};
 	bool getQRStatus(){return QRStatus;};
+	void setImage(cv::Mat * _image){image = _image;};
+	cv::Mat * getImage(){return image;};
 
 private:
-
+	cv::Mat * image;
 	QRObject *qr;
 	int id;
 	bool QRStatus; 
 };
 
 #endif /* MARKER_H_*/
+#endif /* ENRICO */

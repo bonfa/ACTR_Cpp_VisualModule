@@ -63,6 +63,10 @@ private:
 	void recognizeTriangles();
 	/** Analizes the image and looks for ellipses in it. The ellipses found are added in the ellipseList //TODO*/
 	void recognizeEllipses();
+#ifdef ENRICO
+	/** Crops the part of the frame realtive to a Marker and sets is as its attribute */
+	cv::Mat * setCroppedImg(cv::Mat img, Quadrilateral * q);
+#endif
 	/** Receives as input the opencvValue of hue and returns it normalized in a "GimpLike" way*/
 	double normHue(int hueVal);
 	/** Receives as input the opencvValue of saturation or value and returns it normalized in a "GimpLike" way*/
@@ -83,6 +87,7 @@ private:
 	std::vector<Object *> objectList;
 	/** Defines if there will be the extraction of Markers from ARToolkit */
 	bool findMarkers;
+
 };
 
 #endif /* FEATUREEXTRACTOR_H_ */

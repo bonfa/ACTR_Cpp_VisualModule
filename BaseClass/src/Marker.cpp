@@ -5,6 +5,10 @@
  *      Author: enrico
  */
 
+
+#include "author.h"
+#ifdef ENRICO
+
 #include "Marker.h"
 
 
@@ -24,7 +28,8 @@ Marker::~Marker() {
 Marker::Marker(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, int id_) :Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy){
 	id = id_;
 	QRStatus = false;
-	
+	//image = NULL;
+	//qr = NULL;
 }
 
 
@@ -56,10 +61,12 @@ string Marker::getChunk(){
 
 
 			if(this->QRStatus){
-				chunk.append(",");
+				chunk.append(",\"qrCode\": ");
 				chunk.append(qr->getChunk());
 			}
 
 		chunk.append("}");
 		return chunk;
 }
+
+#endif //ENRICO

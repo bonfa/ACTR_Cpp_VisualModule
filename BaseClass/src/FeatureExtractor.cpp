@@ -504,9 +504,26 @@ void FeatureExtractor::recognizeEllipses(){
 */
 }
 
+#ifdef ENRICO
+cv::Mat * getCroppedImg(cv::Mat img, Quadrilateral * q){
 
+	Marker * m = dynamic_cast<Marker*>(q);
+	int height =0;
 
+	/** If position of the image to crop exceed the border of the image, reduce it */
+	if (m->getBbox().y + m->getBbox().height *2 >  img.size().height)
+		height = img.size().height-(  m->getBbox().y + m->getBbox().height ) -1;
+	else
+		height = m->getBbox().height;
 
+	cv::Rect roi(m->getBbox().x, m->getBbox().y + m->getBbox().height , m->getBbox().width , height);
+	cv::Mat * croppedImage = new cv::Mat(img(roi).clone());
+	//m->setImage(croppedImage);
+
+	return croppedImage;
+	//cv::imwrite(path, croppedImage);
+}
+#endif
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 #ifdef ENRICO
@@ -546,17 +563,39 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 	}
 	else {
 		quadrilateralList.clear();
+
+		initMarkersData();
 		quadrilateralList = getMarkers();
+		cv::Mat * frame = getFrame();
+
+		cv::imwrite(IMG_PATH, *frame);
+
 
 
 		QRScanner * qrs;// = new QRScanner("./img.jpg");
-		qrs = new QRScanner(IMG_PATH);
 
-		if(qrs->QRDetected()){
-			QRObject * qro;
-			qro = new QRObject(qrs->getQRCode());
-			dynamic_cast<Marker*>(quadrilateralList.at(0))->setQr(qro);
+		for(int i = 0; i < quadrilateralList.size();i++){
+			Marker * m = dynamic_cast<Marker*>(quadrilateralList.at(i));
+
+			/** Sets part of the frame as attribute of the Marker */
+			m->setImage(getCroppedImg(*frame, m));
+
+			/** Saves part of the frame to disk */
+			string path = "temp.jpg";
+			cv::imwrite(path, *m->getImage());
+
+			/** Loads saved image and search for a QRCode */
+			qrs = new QRScanner(path);
+
+			/** If a QRCode is found creates a QRObjects and sets it as attribute of Marker */
+			if(qrs->QRDetected()){
+				QRObject * qro;
+				qro = new QRObject(qrs->getQRCode());
+				m->setQr(qro);
+			}
+
 		}
+
 
 		//qrs->QRDetected();
 		//qrs->getQRCode();

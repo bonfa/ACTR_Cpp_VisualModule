@@ -22,7 +22,7 @@ string QRObject::getChunk(){
 		chunk.append(":");
 			chunk.append("{");
 			
-			chunk.append("\"type\": \"QRCode\",");
+			chunk.append("\"type\": \"QRCode\"");
 		
 			chunk.append(",");
 			

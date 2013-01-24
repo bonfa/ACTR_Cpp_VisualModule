@@ -666,6 +666,10 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				qro = new QRObject(qrs->getQRCode());
 				m->setQr(qro);
 			}
+			if(m->getQRStatus()){
+					cv::imshow("image", *(m->getImage()));
+					cv::waitKey(2000);
+			}
 
 		}
 

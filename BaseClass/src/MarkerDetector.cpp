@@ -68,7 +68,7 @@ void startDetection(){//boost::mutex& mutex){
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
 	glutInitWindowSize(XSIZE, YSIZE);
-	glutCreateWindow(argv[0]);
+	//glutCreateWindow(argv[0]);
 	// Setup argl library for current context.
 		if ((gArglSettings = arglSetupForCurrentContext()) == NULL) {
 			fprintf(stderr, "main(): arglSetupForCurrentContext() returned error.\n");

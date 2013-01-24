@@ -17,6 +17,7 @@
 #include <opencv/highgui.h>
 #include <opencv/cxcore.h>
 #include <string>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include <boost/filesystem.hpp>
 
@@ -24,7 +25,9 @@ using namespace std;
 
 class QRScanner{
 public:
+	QRScanner(cv::Mat * img);
 	QRScanner(std::string path);
+	void init(char *raw, int width,int height);
 	~QRScanner();
 	string getQRCode();
 	bool QRDetected();

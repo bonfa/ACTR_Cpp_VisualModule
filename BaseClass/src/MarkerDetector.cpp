@@ -170,49 +170,58 @@ static void mainLoop(void)
 
     arVideoCapNext();
 
-	#ifndef NO_IMG
+#ifndef NO_IMG
     argDrawMode3D();
     argDraw3dCamera( 0, 0 );
     glClearDepth( 1.0 );
     glClear(GL_DEPTH_BUFFER_BIT);
-	#endif
-	
-	markersList.clear();
-	
-    /* check for object visibility */
-    for( i = 0; i < 2; i++ ) {
-        k = -1;
-        for( j = 0; j < marker_num; j++ ) {
-            if( object[i].patt_id == marker_info[j].id ) {
-                if( k == -1 ) k = j;
-                else if( marker_info[k].cf < marker_info[j].cf ) k = j;
-            }
-        }
-        object[i].visible = k;
+#endif
+    std::vector<Quadrilateral *> backupList;
+    try{
+    	for(int i=0; i <markersList.size(); i++)
+    		backupList.push_back(markersList.at(i));
+    	markersList.clear();
 
-        if( k >= 0 ) {
-			
-            arGetTransMat(&marker_info[k], object[i].center, object[i].width, object[i].trans);
+    	/* check for object visibility */
+    	for( i = 0; i < 2; i++ ) {
+    		k = -1;
+    		for( j = 0; j < marker_num; j++ ) {
+    			if( object[i].patt_id == marker_info[j].id ) {
+    				if( k == -1 ) k = j;
+    				else if( marker_info[k].cf < marker_info[j].cf ) k = j;
+    			}
+    		}
+    		object[i].visible = k;
 
-			markersList.push_back(dynamic_cast<Quadrilateral*>(new Marker((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1]), object[i].model_id, asin(object[i].trans[1][2]))));
+    		if( k >= 0 ) {
 
-	#ifndef NO_IMG
-            draw( object[i].model_id, object[i].trans );
-	#endif
-        }
+    			arGetTransMat(&marker_info[k], object[i].center, object[i].width, object[i].trans);
+
+    			markersList.push_back(dynamic_cast<Quadrilateral*>(new Marker((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1]), object[i].model_id, asin(object[i].trans[1][2]))));
+
+#ifndef NO_IMG
+
+    			draw( object[i].model_id, object[i].trans, marker_info[k].vertex );
+#endif
+    		}
+    	}}
+    catch(...){
+    	markersList.clear();
+    	for(int i=0; i <markersList.size(); i++)
+    		markersList.push_back(backupList.at(i));
     }
     lock.unlock();
-    
+
     argSwapBuffers();
 
     if( object[0].visible >= 0
-     && object[1].visible >= 0 ) {
-        double  wmat1[3][4], wmat2[3][4];
+    		&& object[1].visible >= 0 ) {
+    	double  wmat1[3][4], wmat2[3][4];
 
-        arUtilMatInv(object[0].trans, wmat1);
-        arUtilMatMul(wmat1, object[1].trans, wmat2);
+    	arUtilMatInv(object[0].trans, wmat1);
+    	arUtilMatMul(wmat1, object[1].trans, wmat2);
 
-        /*
+    	/*
         for( j = 0; j < 3; j++ ) {
             for( i = 0; i < 4; i++ ) printf("%8.4f ", wmat2[j][i]);
             printf("\n");
@@ -223,7 +232,7 @@ static void mainLoop(void)
 
 static void init( void )
 {
-    ARParam  wparam;
+	ARParam  wparam;
     int      i;
     // Setup argl library for current context.
     	if ((gArglSettings = arglSetupForCurrentContext()) == NULL) {
@@ -489,15 +498,30 @@ static void draw( int object, double trans[3][4], double vertexes[4][2])
     		glDisable(GL_LIGHTING);
     		glDisable(GL_TEXTURE_2D);
     		beginOrtho2D(XSIZE, YSIZE);
-            glLineWidth(2.0f);
+            glLineWidth(4.0f);
             glColor3d(0.0, 1.0, 0.0);
+            switch( object ) {
+               case 0:
+            	   glColor3d(0.0, 1.0, 0.0);
+                   break;
+                 case 1:
+                	glColor3d(1.0, 0.0, 0.0);
+                   break;
+                 case 2:
+                	glColor3d(0.0, 0.0, 1.0);
+                   break;
+                 default:
+                	glColor3d(0.5, 1.0, 0.2);
+                   break;
+               }
             lineSeg(vertexes[0][0], vertexes[0][1],
                        		vertexes[1][0], vertexes[1][1], gArglSettings, cparam, 1.0);
                        lineSeg(vertexes[3][0], vertexes[3][1],
                        		vertexes[0][0], vertexes[0][1], gArglSettings, cparam, 1.0);
-                       glColor3d(1.0, 0.0, 0.0);
+
                        lineSeg(vertexes[1][0], vertexes[1][1],
                        		vertexes[2][0], vertexes[2][1], gArglSettings, cparam, 1.0);
+
                        lineSeg(vertexes[2][0], vertexes[2][1],
                        		vertexes[3][0], vertexes[3][1], gArglSettings, cparam, 1.0);
     		endOrtho2D();
@@ -505,24 +529,7 @@ static void draw( int object, double trans[3][4], double vertexes[4][2])
 
     	glutSwapBuffers();
 
-    switch( object ) {
-    case 0:
-        glTranslatef( 0.0, 0.0, 25.0 );
-        glutSolidCube(50.0);
-        break;
-      case 1:
-        glTranslatef( 0.0, 0.0, 40.0 );
 
-        glutSolidSphere(40.0, 24, 24);
-        break;
-      case 2:
-        glutSolidCone(25.0, 100.0, 20, 24);
-        break;
-      default:
-        glTranslatef( 0.0, 0.0, 10.0 );
-        glutSolidTorus(10.0, 40.0, 24, 24);
-        break;
-    }
 
     glDisable( GL_LIGHTING );
     glDisable( GL_DEPTH_TEST );

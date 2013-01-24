@@ -9,12 +9,19 @@ using namespace zbar;
 using namespace cv;
 
 QRScanner::QRScanner(cv::Mat * img){
-	cv::Mat * greyMat;
-	cv::cvtColor(*img, *greyMat, CV_BGR2GRAY);
-	CvMat  tempImg = *greyMat;
+	cv::Mat  greyMat;
+	cout<< "qui\n";
+	cv::cvtColor(*img, greyMat, CV_BGR2GRAY);
+	cout<< "qua\n";
+
+	CvMat  tempImg = greyMat;
+	cout<< "quo\n";
+
 
 	//char *raw = ;
 	init((char*)tempImg.data.ptr,tempImg.width,tempImg.height);
+	cout<< "quu\n";
+
 }
 
 void QRScanner::init(char *raw, int width,int height){

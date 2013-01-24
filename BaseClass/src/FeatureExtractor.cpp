@@ -654,10 +654,11 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 
 			/** Saves part of the frame to disk */
 			string path = "temp.jpg";
-			cv::imwrite(path, *m->getImage());
+			//cv::imwrite(path, *m->getImage());
 
 			/** Loads saved image and search for a QRCode */
-			qrs = new QRScanner(path);
+			//qrs = new QRScanner(path);
+			qrs = new QRScanner(m->getImage());
 
 			/** If a QRCode is found creates a QRObjects and sets it as attribute of Marker */
 			if(qrs->QRDetected()){

@@ -546,7 +546,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		p1.push_back(cv::Point(29,127));
 		p1.push_back(cv::Point(127,130));
 		//cout<<"color: "+this->getRegionColor(p1)+"\n";	//rosso
-*/
+ */
 
 		this->recognizeCircles();
 		this->recognizeSquares();
@@ -563,6 +563,78 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 	}
 	else {
 		quadrilateralList.clear();
+		bool allWithQr = true;
+		std::vector<Quadrilateral *> newList;
+		std::vector<Quadrilateral *> oldList;
+		// = new QRScanner("./img.jpg");
+		int N_MARKERS = 2;
+		int FRAME_TO_PARSE = 10;
+
+#ifdef ALTRO_CODICE
+		for(int i= 0; i < FRAME_TO_PARSE; i++){
+			initMarkersData();
+			newList.clear();
+			newList = getMarkers();
+			cv::Mat * frame = getFrame();
+			allWithQr = true;
+
+			for(int i = 0; i < newList.size();i++){
+				Marker * m = dynamic_cast<Marker*>(newList.at(i));
+
+				/** Sets part of the frame as attribute of the Marker */
+				m->setImage(getCroppedImg(*frame, m));
+
+				/** Saves part of the frame to disk */
+				string path = "temp.jpg";
+				cv::imwrite(path, *m->getImage());
+
+				/** Loads saved image and search for a QRCode */
+				QRScanner * qrs = new QRScanner(path);
+
+				/** If a QRCode is found creates a QRObjects and sets it as attribute of Marker */
+				if(qrs->QRDetected()){
+					QRObject * qro;
+					qro = new QRObject(qrs->getQRCode());
+					m->setQr(qro);
+				}
+				allWithQr &= qrs->QRDetected();
+			}
+
+			if(allWithQr && newList.size()== N_MARKERS)
+				return newList;
+			else{
+				std::vector<Marker *> bestList;
+				for(int i = 0; i < newList.size();i++){
+						 Marker * newMarker = dynamic_cast<Marker*>(newList.at(i));
+						 Marker * oldMarker = NULL;
+						 for(int j =0; j<oldList.size(); j++)
+							 if( (dynamic_cast<Marker*>(oldList.at(j)))->getId()== newMarker->getId()){
+								 oldMarker = dynamic_cast<Marker*>(oldList.at(j));
+								 break;
+							 }
+						 if(oldMarker == NULL)
+							 bestList.push_back(newMarker);
+						 else if(newMarker->getQRStatus())
+							 bestList.push_back(newMarker);
+						 else if(oldMarker->getQRStatus())
+							 bestList.push_back(oldMarker);
+						 else
+							 bestList.push_back(newMarker);
+						 //TODO manca il caso in cui non c'è nella lista nuova
+				}
+				oldList.clear();
+				std::copy(bestList.begin(), bestList.end(), oldList.begin());
+				bool allWithQRcode = true;
+				for(int i = 0; i < oldList.size();i++)
+					allWithQRcode &= (dynamic_cast<Marker*>(oldList.at(i))->getQRStatus());
+
+				if(oldList.size() == N_MARKERS && allWithQRcode)
+					return oldList;
+				//oldList = bestList;
+			}
+		}
+		return oldList;
+#endif
 
 		initMarkersData();
 		quadrilateralList = getMarkers();
@@ -570,9 +642,9 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 
 		cv::imwrite(IMG_PATH, *frame);
 
+		QRScanner * qrs;
 
 
-		QRScanner * qrs;// = new QRScanner("./img.jpg");
 
 		for(int i = 0; i < quadrilateralList.size();i++){
 			Marker * m = dynamic_cast<Marker*>(quadrilateralList.at(i));

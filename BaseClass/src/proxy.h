@@ -11,18 +11,23 @@
 #define _PROXY_H
 #include "FeatureGetter.h"
 #include "Triangle.h"
+#include "author.h"
 
 class Proxy {
 public:
 	Proxy(string imgPath);
+#ifdef ENRICO
 	Proxy();
+#endif
 	//void demo();
 	int test();
 	double area();
 	/** Extract the chunk list from the input object list */
 	vector<string> getChunkList();
+#ifdef ENRICO
 	/** Extract the marker list from the input object list */
 	vector<string> getMarkerList();
+#endif
 private:
 	/** the path of the image to process*/
 	string imgPath;

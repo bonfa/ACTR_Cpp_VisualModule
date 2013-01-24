@@ -13,6 +13,7 @@
 
 #include "PathConstants.h"
 #include "proxy.h"
+#include "author.h"
 
 
 using boost::asio::ip::tcp;
@@ -27,7 +28,9 @@ public:
 	Session(boost::asio::io_service& io_service)
 : socket_(io_service)
 {
+#ifdef ENRICO
 		proxyMarker = new Proxy();
+#endif
 }
 
 	tcp::socket& socket()
@@ -103,6 +106,7 @@ private:
 				finalString.append(joinedString);
 				finalString.append("]");
 			}
+#ifdef ENRICO
 			else if(command.compare("getMarker") == 0){
 				chunks = proxyMarker->getMarkerList();
 				//setChunk(proxyMarker);
@@ -111,7 +115,7 @@ private:
 				finalString.append(joinedString);
 				finalString.append("]");
 			}
-
+#endif
 			boost::asio::async_write(socket_,
 					boost::asio::buffer(finalString.c_str(),finalString.length()),
 					boost::bind(&Session::handle_write, this,
@@ -179,8 +183,9 @@ private:
 	char data_[max_length];
 	vector<string> chunks;
 	Proxy *proxyFeature;
+#ifdef ENRICO
 	Proxy *proxyMarker;
-
+#endif
 };
 
 

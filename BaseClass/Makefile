@@ -28,11 +28,12 @@ QR_SOURCE := qr/main.cpp
 QR_LIB := decodeqr
 MY_LIB := launcher
 LD_FLAGS := -L. $(BST_PATH) -l$(MY_LIB) $(JSN_PATH) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH) $(BST_LIBS) $(ART_FLAGS) $(ART_LIBS) $(MGK_LIBS) $(ZBR_LIBS)
+LD_FLAGS_FRANCESCO := -L. $(BST_PATH) -l$(MY_LIB) $(JSN_PATH) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH) $(BST_LIBS) $(MGK_LIBS) $(ZBR_LIBS)
 CC_FLAGS := -c -fPIC 
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
 DYNAMIC_LIB := lib$(MY_LIB).so
-CC := g++ $(DEBUG)
+CC := g++
 EXEC := test
 SCAN := scan_image
 
@@ -49,6 +50,9 @@ set_lib_path:
 
 main:
 	$(CC) $(MGK_PATH)  $(ZBR_PATH) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)
+
+francesco: 
+	$(CC) $(MGK_PATH)  $(ZBR_PATH) $(MAIN_SRC) $(LD_FLAGS_FRANCESCO) -o $(EXEC)
 
 lib: $(OBJ_FILES)
 	ar $(AR_FLAGS) $(STATIC_LIB) $^
@@ -101,15 +105,17 @@ image:
 
 mk_proxy: proxy_lib swig swig_lib
 
-proxy.o:
+#proxy.o:
 
-proxy_lib:
-	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy.cpp -o libproxy.so
+#proxy_lib:
+#	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy.cpp -o libproxy.so
 
-swig:
-	swig -cffi -c++ proxy.i
-	nano proxy_wrap.cxx
+#swig:
+#	swig -cffi -c++ proxy.i
+#	nano proxy_wrap.cxx
 
-swig_lib:
-	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy_wrap.cxx -o libwrap.so
+#swig_lib:
+#	g++ -shared -fPIC -L. -llauncher $(OCV_LIBS) `pkg-config opencv --cflags` proxy_wrap.cxx -o libwrap.so
+
+
 

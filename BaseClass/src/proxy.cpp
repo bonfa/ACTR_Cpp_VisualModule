@@ -13,11 +13,12 @@ Proxy::Proxy(string imgPath){
 	this->imgPath = imgPath;
 }
 
+#ifdef ENRICO
 Proxy::Proxy(){
 	this->imgPath = "";
 	fg = new FeatureGetter(1);
 }
-
+#endif
 /*
 void Proxy::demo() {
 	FeatureGetter *fg = new FeatureGetter(imgPath);
@@ -48,6 +49,7 @@ void Proxy::demo() {
 }
 */
 
+#ifdef ENRICO
 vector<string>  Proxy::getMarkerList() {
 
 	fg->setFeatureList();
@@ -60,6 +62,7 @@ vector<string>  Proxy::getMarkerList() {
 		chunkList.push_back(objectList.at(i)->getChunk());
 	return chunkList;
 }
+#endif
 
 int Proxy::test() {
 

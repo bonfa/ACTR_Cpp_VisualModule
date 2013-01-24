@@ -1,9 +1,12 @@
 
-//#include "author.h"
+#include "author.h"
 
 #include "QRScanner.h"
-#ifdef ENRICO
 
+#ifdef ENRICO
+using namespace std;
+using namespace zbar;
+using namespace cv;
 
 
 QRScanner::QRScanner(std::string path){
@@ -58,5 +61,4 @@ string QRScanner::getQRCode()
 
     return  out.str();
 }
-
 #endif

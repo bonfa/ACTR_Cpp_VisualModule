@@ -17,7 +17,7 @@ JSN_PATH := `pkg-config --cflags jsoncpp`
 BST_LIBS := -lboost_system -lboost_system-mt -pthread -lboost_thread -lboost_filesystem
 
 ART_FLAGS := -pthread -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lxml2 -lglib-2.0 $(OCV_LIBS) -L/usr/X11R6/lib -L/usr/local/lib
-ART_LIBS= -lARgsub -lARvideo -lAR -lpthread -lglut -lGLU -lGL -lXi -lX11 -lm -pthread -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lxml2 -lglib-2.0
+ART_LIBS= -lARgsub -lARvideo -lAR -lARgsub_lite -lpthread -lglut -lGLU -lGL -lXi -lX11 -lm -pthread -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lxml2 -lglib-2.0
 
 ART_CFLAG = -O -pthread $(OCV_PATH) -I/usr/include/gstreamer-0.10 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/libxml2 -I/usr/X11R6/include -g -I/usr/local/include/AR
 

@@ -8,7 +8,7 @@
 #include "MarkerDetector.h"
 
 
-double 	vertex[4][2];
+//double 	vertex[4][2];
 //std::vector<Quadrilateral> marker_list;
 //Quadrilateral q1;
 
@@ -180,23 +180,11 @@ static void mainLoop(void)
         object[i].visible = k;
 
         if( k >= 0 ) {
-			//vertex = marker_info[k].vertex;
 			
-			//Lock to prevent race conditions while reading vertex from other threads
-			
-			memcpy(vertex, marker_info[k].vertex, sizeof (float) * 2 * 4); //2 colonne * 4 righe
+            arGetTransMat(&marker_info[k], object[i].center, object[i].width, object[i].trans);
 
-			markersList.push_back(dynamic_cast<Quadrilateral*>(new Marker((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1]), object[i].model_id)));
-			
-			
-			//vertex[0][0] = marker_info[k].vertex[0][0];
-			//printf("Flottiamo %f\n", vertex[0][0]);
-			//printf("Flottare %f\n", vertex[1][0]);
-            arGetTransMat(&marker_info[k],
-                          object[i].center, object[i].width,
-                          object[i].trans);
-			//printf("***(frame/sec)\n");
-			
+			markersList.push_back(dynamic_cast<Quadrilateral*>(new Marker((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1]), object[i].model_id, asin(object[i].trans[1][2]))));
+
 	#ifndef NO_IMG
             draw( object[i].model_id, object[i].trans );
 	#endif
@@ -226,6 +214,11 @@ static void init( void )
 {
     ARParam  wparam;
     int      i;
+    // Setup argl library for current context.
+    	if ((gArglSettings = arglSetupForCurrentContext()) == NULL) {
+    		fprintf(stderr, "main(): arglSetupForCurrentContext() returned error.\n");
+    		exit(-1);
+    	}
 
     /* open the video path */
     if( arVideoOpen( vconf ) < 0 ) exit(0);
@@ -284,6 +277,85 @@ static void cleanup(void)
     argCleanup();
 }
 
+/*
+static void endOrtho2D(void) {
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}
+
+
+static void beginOrtho2D(int xsize, int ysize) {
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluOrtho2D(0.0, xsize, 0.0, ysize);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+}
+
+void lineSeg(double x1, double y1, double x2, double y2, ARGL_CONTEXT_SETTINGS_REF contextSettings, ARParam cparam, double zoom)
+{
+	int enable;
+    float   ox, oy;
+    double  xx1, yy1, xx2, yy2;
+
+	if (!contextSettings) return;
+	arglDistortionCompensationGet(contextSettings, &enable);
+    if (arglDrawModeGet(contextSettings) == AR_DRAW_BY_TEXTURE_MAPPING && enable) {
+        xx1 = x1;  yy1 = y1;
+        xx2 = x2;  yy2 = y2;
+    } else {
+        arParamIdeal2Observ(cparam.dist_factor, x1, y1, &xx1, &yy1);
+        arParamIdeal2Observ(cparam.dist_factor, x2, y2, &xx2, &yy2);
+    }
+
+    xx1 *= zoom; yy1 *= zoom;
+    xx2 *= zoom; yy2 *= zoom;
+
+	ox = 0;
+	oy = cparam.ysize - 1;
+	glBegin(GL_LINES);
+	glVertex2f(ox + xx1, oy - yy1);
+	glVertex2f(ox + xx2, oy - yy2);
+	glEnd();
+    glFlush();
+}
+
+static void draw2(int object, double trans[3][4], double vertexes[4][2])
+{
+	// Select correct buffer for this context.
+	glDrawBuffer(GL_BACK);
+	glClear(GL_COLOR_BUFFER_BIT); // Clear the buffers for new frame.
+
+	//arglDispImage(gARTImage, &gARTCparam, 1.0, gArglSettings);	// zoom = 1.0.
+	arVideoCapNext();
+	//gARTImage = NULL; // Image data is no longer valid after calling arVideoCapNext().
+
+
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
+		glDisable(GL_TEXTURE_2D);
+		beginOrtho2D(10, 10);
+        glLineWidth(2.0f);
+        glColor3d(0.0, 1.0, 0.0);
+        lineSeg(vertexes[0][0], vertexes[0][1],
+           		vertexes[1][0], vertexes[1][1], gArglSettings, cparam, 1.0);
+           lineSeg(vertexes[3][0], vertexes[3][1],
+           		vertexes[0][0], vertexes[0][1], gArglSettings, cparam, 1.0);
+           glColor3d(1.0, 0.0, 0.0);
+           lineSeg(vertexes[1][0], vertexes[1][1],
+           		vertexes[2][0], vertexes[2][1], gArglSettings, cparam, 1.0);
+           lineSeg(vertexes[2][0], vertexes[2][1],
+           		vertexes[3][0], vertexes[3][1], gArglSettings, cparam, 1.0);
+		endOrtho2D();
+
+
+	glutSwapBuffers();
+}*/
+
 //disegna figure
 static void draw( int object, double trans[3][4] )
 {
@@ -315,8 +387,30 @@ static void draw( int object, double trans[3][4] )
     glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
     glMatrixMode(GL_MODELVIEW);
 
+/**
+    glDrawBuffer(GL_BACK);
+    glClear(GL_COLOR_BUFFER_BIT); // Clear the buffers for new frame.
+
+    beginOrtho2D(1, 1);
+    glLineWidth(2.0f);
+    glColor3d(0.0, 1.0, 0.0);
+    lineSeg(vertexes[0][0], vertexes[0][1],
+    		vertexes[1][0], vertexes[1][1], gArglSettings, cparam, 1.0);
+    lineSeg(vertexes[3][0], vertexes[3][1],
+    		vertexes[0][0], vertexes[0][1], gArglSettings, cparam, 1.0);
+    glColor3d(1.0, 0.0, 0.0);
+    lineSeg(vertexes[1][0], vertexes[1][1],
+    		vertexes[2][0], vertexes[2][1], gArglSettings, cparam, 1.0);
+    lineSeg(vertexes[2][0], vertexes[2][1],
+    		vertexes[3][0], vertexes[3][1], gArglSettings, cparam, 1.0);
+    endOrtho2D();
+
+    glutSwapBuffers();**/
+
+
+
     switch( object ) {
-      case 0:
+    case 0:
         glTranslatef( 0.0, 0.0, 25.0 );
         glutSolidCube(50.0);
         break;

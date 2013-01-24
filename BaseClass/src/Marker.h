@@ -32,7 +32,7 @@ class Marker: public Quadrilateral {
 public:
 	Marker();
 	~Marker();
-	Marker(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, int id_);
+	Marker(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, int id_, double _attitudeAngle);
 	/** Returns a string which contains the basic information about the button*/
 	string getChunk();
 	
@@ -48,6 +48,7 @@ public:
 	cv::Mat * getImage(){return image;};
 
 private:
+	double attitudeAngle;
 	cv::Mat * image;
 	QRObject *qr;
 	int id;

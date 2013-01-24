@@ -21,6 +21,9 @@
 #include <boost/filesystem.hpp>
 
 using namespace std;
+using namespace zbar;
+using namespace cv;
+//using namespace std;
 
 class QRScanner{
 public:

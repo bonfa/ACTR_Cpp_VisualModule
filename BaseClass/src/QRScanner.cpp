@@ -1,5 +1,5 @@
 
-//#include "author.h"
+#include "author.h"
 
 #include "QRScanner.h"
 
@@ -61,5 +61,4 @@ string QRScanner::getQRCode()
 
     return  out.str();
 }
-
 #endif

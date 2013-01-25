@@ -38,7 +38,7 @@ OBJECT_T   object[2] = {
 #define XSIZE 640
 #define YSIZE 480
 //Variabile d'ambiente per usare la webcam, buildare le librerie con gstreamer, cambiare device=/dev/video0 in device=/dev/video1 per usare la seconda webcam
-char			*vconf = "v4l2src device=/dev/video0 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=640,height=480 ! identity name=artoolkit ! fakesink";
+char			*vconf = "v4l2src device=/dev/video1 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=640,height=480 ! identity name=artoolkit ! fakesink";
 
 
 

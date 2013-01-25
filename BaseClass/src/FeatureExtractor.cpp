@@ -665,6 +665,11 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				QRObject * qro;
 				qro = new QRObject(qrs->getQRCode());
 				m->setQr(qro);
+				cv::Mat * withText = new cv::Mat(m->getImage()->clone());
+				cv::putText(*withText, m->getQR()->getContent(), cvPoint(10,20),
+				    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255,0,0), 1, CV_AA);
+				cv::imshow("Decoded QR",*(m->getImage()));
+				cv::waitKey();
 			}
 
 		}

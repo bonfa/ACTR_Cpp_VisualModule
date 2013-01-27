@@ -693,7 +693,8 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		std::vector<Quadrilateral *> newList;
 		std::vector<Quadrilateral *> oldList;
 
-		MarkerDetector ma = MarkerDetector();
+		MarkerDetector ma = * MarkerDetector::get_instance();
+		//MarkerDetector ma = MarkerDetector();
 		ma.initMarkersData();
 		quadrilateralList = ma.getMarkers();
 		cv::Mat * frame = ma.getFrame();
@@ -726,6 +727,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				//cv::waitKey();
 			}
 
+
 				int meanx = (int)((m->getA().x + m->getB().x +m->getC().x+ m->getD().x)/4.0);
 				int meany = (int)((m->getA().y + m->getB().y +m->getC().y+ m->getD().y)/4.0);
 
@@ -751,20 +753,10 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 
 				pointToPoint2f(sortedP,source , destination, maxSize);
 
-				/*
-				cv::Point2f sa(sortedP[0].x,sortedP[0].y);
-				cv::Point2f sb(sortedP[1].x,sortedP[1].y);
-				cv::Point2f sc(sortedP[2].x,sortedP[2].y);
-				cv::Point2f sd(sortedP[3].x,sortedP[3].y);
-
-				cv::Point2f da(sa.x,sa.y);
-				cv::Point2f db(sa.x + maxSize,sa.y);
-				cv::Point2f dc(sa.x +maxSize,sa.y + maxSize);
-				cv::Point2f dd(sa.x,sa.y +maxSize);*/
 
 				cv ::Mat matto = OpenWarpPerspective( *frame,source, destination, frame->size.p[1] + maxSize, frame->size.p[0] +maxSize  );
 				cv::imwrite("stretched.jpg", matto);
-				cv::waitKey();
+				//cv::waitKey();
 
 
 		}

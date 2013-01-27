@@ -65,15 +65,27 @@ static ARGL_CONTEXT_SETTINGS_REF gArglSettings = NULL;
 
 //public static boost::mutex mutex_;
 
-	static boost::mutex io_mutex;
-	void startDetection();//boost::mutex& mutex);
-	static std::vector<Quadrilateral *> markersList;
+static boost::mutex io_mutex;
+void startDetection();//boost::mutex& mutex);
+static std::vector<Quadrilateral *> markersList;
 class MarkerDetector{
 public:
+    ~MarkerDetector() {};
+
+	static MarkerDetector* get_instance() {
+		if (instance_ptr == 0) {
+			instance_ptr = new MarkerDetector;
+		}
+		return instance_ptr;
+	}
 	std::vector<Quadrilateral *> slowMarkerList;
 	std::vector<Quadrilateral *> getMarkers();
 	int initMarkersData();
 	cv::Mat * getFrame();
+private:
+	static MarkerDetector* instance_ptr;
+	MarkerDetector() { };
+
 };
 #endif /* MDETECT_H_ */
 

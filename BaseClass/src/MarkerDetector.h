@@ -65,8 +65,6 @@ static ARGL_CONTEXT_SETTINGS_REF gArglSettings = NULL;
 
 //public static boost::mutex mutex_;
 
-	int stub();
-
 	static boost::mutex io_mutex;
 	void startDetection();//boost::mutex& mutex);
 	static std::vector<Quadrilateral *> markersList;

@@ -66,23 +66,23 @@ void startDetection(){//boost::mutex& mutex){
 	char *argv[] = {"./fake"};
 	//char const*[]={"./fake"};
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	glutInitWindowSize(XSIZE, YSIZE);
-	glutCreateWindow(argv[0]);
+	//glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+	//glutInitWindowSize(XSIZE, YSIZE);
+	//glutCreateWindow(argv[0]);
 	// Setup argl library for current context.
-		if ((gArglSettings = arglSetupForCurrentContext()) == NULL) {
-			fprintf(stderr, "main(): arglSetupForCurrentContext() returned error.\n");
-			exit(-1);
-		}
+	if ((gArglSettings = arglSetupForCurrentContext()) == NULL) {
+		fprintf(stderr, "main(): arglSetupForCurrentContext() returned error.\n");
+		exit(-1);
+	}
 
-		arMalloc(gARTsaveImage, ARUint8, XSIZE* YSIZE * AR_PIX_SIZE_DEFAULT);
+	arMalloc(gARTsaveImage, ARUint8, XSIZE* YSIZE * AR_PIX_SIZE_DEFAULT);
 
 
 	init();
 	printf("Setup done\n");
-    arVideoCapStart();
-    printf("Capture started\n");
-    argMainLoop( NULL, keyEvent, mainLoop );
+	arVideoCapStart();
+	printf("Capture started\n");
+	argMainLoop( NULL, keyEvent, mainLoop );
 
 }
 
@@ -123,18 +123,6 @@ cv::Mat * getFrame(){
 }
 
 std::vector<Quadrilateral *> getMarkers(){
-
-
-	/*for(int i = 0 ; i < markersList.size();i++){
-		cv::Mat crp = cropImg(markersList.at(i));
-		dynamic_cast<Marker*>(markersList.at(i))->setImage(crp);
-	}
-    //TODO: check if file is writeable
-	if ( ! boost::filesystem::is_regular_file( IMG_PATH ) )
-		{
-			std::cerr << "QRScanner: Can't read file: " << IMG_PATH  << std::endl;
-		}*/
-
 	return markersList;
 	}
 
@@ -220,13 +208,6 @@ static void mainLoop(void)
 
     	arUtilMatInv(object[0].trans, wmat1);
     	arUtilMatMul(wmat1, object[1].trans, wmat2);
-
-    	/*
-        for( j = 0; j < 3; j++ ) {
-            for( i = 0; i < 4; i++ ) printf("%8.4f ", wmat2[j][i]);
-            printf("\n");
-        }
-        printf("\n\n");*/
     }
 }
 
@@ -301,66 +282,6 @@ static void beginOrtho2D(int xsize, int ysize) {
 	glPushMatrix();
 	glLoadIdentity();
 }
-/*
-void lineSeg(double x1, double y1, double x2, double y2, ARGL_CONTEXT_SETTINGS_REF contextSettings, ARParam cparam, double zoom)
-{
-	int enable;
-    float   ox, oy;
-    double  xx1, yy1, xx2, yy2;
-
-	if (!contextSettings) return;
-	arglDistortionCompensationGet(contextSettings, &enable);
-    if (arglDrawModeGet(contextSettings) == AR_DRAW_BY_TEXTURE_MAPPING && enable) {
-        xx1 = x1;  yy1 = y1;
-        xx2 = x2;  yy2 = y2;
-    } else {
-        arParamIdeal2Observ(cparam.dist_factor, x1, y1, &xx1, &yy1);
-        arParamIdeal2Observ(cparam.dist_factor, x2, y2, &xx2, &yy2);
-    }
-
-    xx1 *= zoom; yy1 *= zoom;
-    xx2 *= zoom; yy2 *= zoom;
-
-	ox = 0;
-	oy = cparam.ysize - 1;
-	glBegin(GL_LINES);
-	glVertex2f(ox + xx1, oy - yy1);
-	glVertex2f(ox + xx2, oy - yy2);
-	glEnd();
-    glFlush();
-}
-
-static void draw2(int object, double trans[3][4], double vertexes[4][2])
-{
-	// Select correct buffer for this context.
-	glDrawBuffer(GL_BACK);
-	glClear(GL_COLOR_BUFFER_BIT); // Clear the buffers for new frame.
-
-	//arglDispImage(gARTImage, &gARTCparam, 1.0, gArglSettings);	// zoom = 1.0.
-	arVideoCapNext();
-	//gARTImage = NULL; // Image data is no longer valid after calling arVideoCapNext().
-
-
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-		glDisable(GL_TEXTURE_2D);
-		beginOrtho2D(10, 10);
-        glLineWidth(2.0f);
-        glColor3d(0.0, 1.0, 0.0);
-        lineSeg(vertexes[0][0], vertexes[0][1],
-           		vertexes[1][0], vertexes[1][1], gArglSettings, cparam, 1.0);
-           lineSeg(vertexes[3][0], vertexes[3][1],
-           		vertexes[0][0], vertexes[0][1], gArglSettings, cparam, 1.0);
-           glColor3d(1.0, 0.0, 0.0);
-           lineSeg(vertexes[1][0], vertexes[1][1],
-           		vertexes[2][0], vertexes[2][1], gArglSettings, cparam, 1.0);
-           lineSeg(vertexes[2][0], vertexes[2][1],
-           		vertexes[3][0], vertexes[3][1], gArglSettings, cparam, 1.0);
-		endOrtho2D();
-
-
-	glutSwapBuffers();
-}*/
 
 void lineSeg(double x1, double y1, double x2, double y2, ARGL_CONTEXT_SETTINGS_REF contextSettings, ARParam cparam, double zoom)
 {
@@ -393,145 +314,74 @@ void lineSeg(double x1, double y1, double x2, double y2, ARGL_CONTEXT_SETTINGS_R
 //disegna figure
 static void draw( int object, double trans[3][4], double vertexes[4][2])
 {
-    double    gl_para[16];
-    GLfloat   mat_ambient[]     = {0.0, 0.0, 1.0, 1.0};
-    GLfloat   mat_flash[]       = {0.0, 0.0, 1.0, 1.0};
-    GLfloat   mat_flash_shiny[] = {50.0};
-    GLfloat   light_position[]  = {100.0,-200.0,200.0,0.0};
-    GLfloat   ambi[]            = {0.1, 0.1, 0.1, 0.1};
-    GLfloat   lightZeroColor[]  = {0.9, 0.9, 0.9, 0.1};
-    
-    argDrawMode3D();
-    argDraw3dCamera( 0, 0 );
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    
-    /* load the camera transformation matrix */
-    argConvGlpara(trans, gl_para);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixd( gl_para );
+	double    gl_para[16];
+	GLfloat   mat_ambient[]     = {0.0, 0.0, 1.0, 1.0};
+	GLfloat   mat_flash[]       = {0.0, 0.0, 1.0, 1.0};
+	GLfloat   mat_flash_shiny[] = {50.0};
+	GLfloat   light_position[]  = {100.0,-200.0,200.0,0.0};
+	GLfloat   ambi[]            = {0.1, 0.1, 0.1, 0.1};
+	GLfloat   lightZeroColor[]  = {0.9, 0.9, 0.9, 0.1};
 
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambi);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightZeroColor);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_flash);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_flash_shiny);	
-    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    glMatrixMode(GL_MODELVIEW);
+	argDrawMode3D();
+	argDraw3dCamera( 0, 0 );
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 
-/**
-    glDrawBuffer(GL_BACK);
-    glClear(GL_COLOR_BUFFER_BIT); // Clear the buffers for new frame.
+	/* load the camera transformation matrix */
+	argConvGlpara(trans, gl_para);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixd( gl_para );
 
-    beginOrtho2D(1, 1);
-    glLineWidth(2.0f);
-    glColor3d(0.0, 1.0, 0.0);
-    lineSeg(vertexes[0][0], vertexes[0][1],
-    		vertexes[1][0], vertexes[1][1], gArglSettings, cparam, 1.0);
-    lineSeg(vertexes[3][0], vertexes[3][1],
-    		vertexes[0][0], vertexes[0][1], gArglSettings, cparam, 1.0);
-    glColor3d(1.0, 0.0, 0.0);
-    lineSeg(vertexes[1][0], vertexes[1][1],
-    		vertexes[2][0], vertexes[2][1], gArglSettings, cparam, 1.0);
-    lineSeg(vertexes[2][0], vertexes[2][1],
-    		vertexes[3][0], vertexes[3][1], gArglSettings, cparam, 1.0);
-    endOrtho2D();
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambi);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightZeroColor);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_flash);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_flash_shiny);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+	glMatrixMode(GL_MODELVIEW);
+	glDrawBuffer(GL_BACK);
 
-    glutSwapBuffers();**/
-   /* glClearColor(0.0f, 0.0f, 0.0f, 0.0f);		// This Will Clear The Background Color To Black
-      glClearDepth(1.0);				// Enables Clearing Of The Depth Buffer
-      glDepthFunc(GL_LESS);				// The Type Of Depth Test To Do
-      glEnable(GL_DEPTH_TEST);			// Enables Depth Testing
-      glShadeModel(GL_SMOOTH);			// Enables Smooth Color Shading
+	arglDispImage(gARTImage, &cparam, 1.0, gArglSettings);	// zoom = 1.0.
 
-      glMatrixMode(GL_PROJECTION);
-      glLoadIdentity();				// Reset The Projection Matrix
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_2D);
+	beginOrtho2D(XSIZE, YSIZE);
+	glLineWidth(4.0f);
 
-      gluPerspective(45.0f,(GLfloat)320/(GLfloat)140,0.1f,100.0f);	// Calculate The Aspect Ratio Of The Window
+	glColor3d(0.0, 1.0, 0.0);
 
-      glMatrixMode(GL_MODELVIEW);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glBegin(GL_TRIANGLES);  //tells OpenGL that we're going to start drawing triangles
-      glColor3f(1,0,0);   	//sets the current colour to red
-      glVertex3f(50, 50,0);  //specifies the first vertex of our triangle
+	switch( object ) {
+	case 0:
+		glColor3d(0.0, 1.0, 0.0);
+		break;
+	case 1:
+		glColor3d(1.0, 0.0, 0.0);
+		break;
+	case 2:
+		glColor3d(0.0, 0.0, 1.0);
+		break;
+	default:
+		glColor3d(0.5, 1.0, 0.2);
+		break;
+	}
+	lineSeg(vertexes[0][0], vertexes[0][1],
+			vertexes[1][0], vertexes[1][1], gArglSettings, cparam, 1.0);
+	lineSeg(vertexes[3][0], vertexes[3][1],
+			vertexes[0][0], vertexes[0][1], gArglSettings, cparam, 1.0);
 
-      glVertex3f(30,14,0);   //specifies the second vertex of our triangle
+	lineSeg(vertexes[1][0], vertexes[1][1],
+			vertexes[2][0], vertexes[2][1], gArglSettings, cparam, 1.0);
 
-      glVertex3f(11,30,4);   //specifies the third vertex of our triangle
-      glEnd();
-      glutSwapBuffers();*/
-      //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear The Screen And The Depth Buffer
-        //glLoadIdentity();				// Reset The View
+	lineSeg(vertexes[2][0], vertexes[2][1],
+			vertexes[3][0], vertexes[3][1], gArglSettings, cparam, 1.0);
+	endOrtho2D();
 
-        /*glTranslatef(-1.5f,0.0f,-6.0f);		// Move Left 1.5 Units And Into The Screen 6.0
+	glutSwapBuffers();
 
-        // draw a triangle
-        glBegin(GL_POLYGON);				// start drawing a polygon
-        glVertex3f( 0.0f, 1.0f, 0.0f);		// Top
-        glVertex3f( 1.0f,-1.0f, 0.0f);		// Bottom Right
-        glVertex3f(-1.0f,-1.0f, 0.0f);		// Bottom Left
-        glEnd();					// we're done with the polygon
-
-        glTranslatef(3.0f,0.0f,0.0f);		        // Move Right 3 Units
-
-        // draw a square (quadrilateral)
-        glBegin(GL_QUADS);				// start drawing a polygon (4 sided)
-        glVertex3f(-1.0f, 1.0f, 0.0f);		// Top Left
-        glVertex3f( 1.0f, 1.0f, 0.0f);		// Top Right
-        glVertex3f( 1.0f,-1.0f, 0.0f);		// Bottom Right
-        glVertex3f(-1.0f,-1.0f, 0.0f);		// Bottom Left
-        glEnd();					// done with the polygon
-*/
-        // swap buffers to display, since we're double buffered.
-
-    glDrawBuffer(GL_BACK);
-    	//glClear(GL_COLOR_BUFFER_BIT); // Clear the buffers for new frame.
-
-    	arglDispImage(gARTImage, &cparam, 1.0, gArglSettings);	// zoom = 1.0.
-    	//arVideoCapNext();
-    	gARTImage = NULL; // Image data is no longer valid after calling arVideoCapNext().
-
-
-    		glDisable(GL_DEPTH_TEST);
-    		glDisable(GL_LIGHTING);
-    		glDisable(GL_TEXTURE_2D);
-    		beginOrtho2D(XSIZE, YSIZE);
-            glLineWidth(4.0f);
-            glColor3d(0.0, 1.0, 0.0);
-            switch( object ) {
-               case 0:
-            	   glColor3d(0.0, 1.0, 0.0);
-                   break;
-                 case 1:
-                	glColor3d(1.0, 0.0, 0.0);
-                   break;
-                 case 2:
-                	glColor3d(0.0, 0.0, 1.0);
-                   break;
-                 default:
-                	glColor3d(0.5, 1.0, 0.2);
-                   break;
-               }
-            lineSeg(vertexes[0][0], vertexes[0][1],
-                       		vertexes[1][0], vertexes[1][1], gArglSettings, cparam, 1.0);
-                       lineSeg(vertexes[3][0], vertexes[3][1],
-                       		vertexes[0][0], vertexes[0][1], gArglSettings, cparam, 1.0);
-
-                       lineSeg(vertexes[1][0], vertexes[1][1],
-                       		vertexes[2][0], vertexes[2][1], gArglSettings, cparam, 1.0);
-
-                       lineSeg(vertexes[2][0], vertexes[2][1],
-                       		vertexes[3][0], vertexes[3][1], gArglSettings, cparam, 1.0);
-    		endOrtho2D();
-
-
-    	glutSwapBuffers();
-
-
-
-    glDisable( GL_LIGHTING );
-    glDisable( GL_DEPTH_TEST );
+	glDisable( GL_LIGHTING );
+	glDisable( GL_DEPTH_TEST );
 }
 #endif //ENRICO

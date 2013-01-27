@@ -505,6 +505,42 @@ void FeatureExtractor::recognizeEllipses(){
 }
 
 #ifdef ENRICO
+
+cv::Mat OpenWarpPerspective(const cv::Mat& _image
+  , const cv::Point2f& _lu
+  , const cv::Point2f& _ru
+  , const cv::Point2f& _rd
+  , const cv::Point2f& _ld
+  , const cv::Point2f& _lu_result
+  , const cv::Point2f& _ru_result
+  , const cv::Point2f& _rd_result
+  , const cv::Point2f& _ld_result
+  , int _width
+  , int _height)
+{
+  // todo do some checks on input.
+
+  cv::Point2f source_points[4];
+  cv::Point2f dest_points[4];
+
+
+  source_points[0] = _lu;
+  source_points[1] = _ru;
+  source_points[2] = _rd;
+  source_points[3] = _ld;
+
+  dest_points[0] = _lu_result;
+  dest_points[1] = _ru_result;
+  dest_points[2] = _rd_result;
+  dest_points[3] = _ld_result;
+
+  cv::Mat dst;
+  cv::Mat _transform_matrix = cv::getPerspectiveTransform(source_points, dest_points);
+  cv::warpPerspective(_image, dst, _transform_matrix, cv::Size(_width, _height));
+
+  return dst;  
+}
+
 cv::Mat * getCroppedImg(cv::Mat img, Quadrilateral * q){
 
 	Marker * m = dynamic_cast<Marker*>(q);
@@ -570,72 +606,6 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		int N_MARKERS = 2;
 		int FRAME_TO_PARSE = 10;
 
-#ifdef ALTRO_CODICE
-		for(int i= 0; i < FRAME_TO_PARSE; i++){
-			initMarkersData();
-			newList.clear();
-			newList = getMarkers();
-			cv::Mat * frame = getFrame();
-			allWithQr = true;
-
-			for(int i = 0; i < newList.size();i++){
-				Marker * m = dynamic_cast<Marker*>(newList.at(i));
-
-				/** Sets part of the frame as attribute of the Marker */
-				m->setImage(getCroppedImg(*frame, m));
-
-				/** Saves part of the frame to disk */
-				string path = "temp.jpg";
-				cv::imwrite(path, *m->getImage());
-
-				/** Loads saved image and search for a QRCode */
-				QRScanner * qrs = new QRScanner(path);
-
-				/** If a QRCode is found creates a QRObjects and sets it as attribute of Marker */
-				if(qrs->QRDetected()){
-					QRObject * qro;
-					qro = new QRObject(qrs->getQRCode());
-					m->setQr(qro);
-				}
-				allWithQr &= qrs->QRDetected();
-			}
-
-			if(allWithQr && newList.size()== N_MARKERS)
-				return newList;
-			else{
-				std::vector<Marker *> bestList;
-				for(int i = 0; i < newList.size();i++){
-						 Marker * newMarker = dynamic_cast<Marker*>(newList.at(i));
-						 Marker * oldMarker = NULL;
-						 for(int j =0; j<oldList.size(); j++)
-							 if( (dynamic_cast<Marker*>(oldList.at(j)))->getId()== newMarker->getId()){
-								 oldMarker = dynamic_cast<Marker*>(oldList.at(j));
-								 break;
-							 }
-						 if(oldMarker == NULL)
-							 bestList.push_back(newMarker);
-						 else if(newMarker->getQRStatus())
-							 bestList.push_back(newMarker);
-						 else if(oldMarker->getQRStatus())
-							 bestList.push_back(oldMarker);
-						 else
-							 bestList.push_back(newMarker);
-						 //TODO manca il caso in cui non c'è nella lista nuova
-				}
-				oldList.clear();
-				std::copy(bestList.begin(), bestList.end(), oldList.begin());
-				bool allWithQRcode = true;
-				for(int i = 0; i < oldList.size();i++)
-					allWithQRcode &= (dynamic_cast<Marker*>(oldList.at(i))->getQRStatus());
-
-				if(oldList.size() == N_MARKERS && allWithQRcode)
-					return oldList;
-				//oldList = bestList;
-			}
-		}
-		return oldList;
-#endif
-
 		initMarkersData();
 		quadrilateralList = getMarkers();
 		cv::Mat * frame = getFrame();
@@ -668,9 +638,134 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				cv::Mat * withText = new cv::Mat(m->getImage()->clone());
 				cv::putText(*withText, m->getQR()->getContent(), cvPoint(10,20),
 				    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255,0,0), 1, CV_AA);
-				cv::imshow("Decoded QR",*(m->getImage()));
-				cv::waitKey();
+				//cv::imshow("Decoded QR",*(withText));
+				//cv::waitKey();
 			}
+				std::cout << "ax "<<m->getA().x<<"ay "<<m->getA().y <<"\nbx "<<m->getB().x <<"by "<<m->getB().y <<"\ncx "<<m->getC().x <<"cy "<<m->getC().y <<"\ndx"<<m->getD().x <<"dy "<<m->getD().y<<"\n";
+				int minx=m->getA().x;
+				minx=(m->getA().x<minx)?m->getA().x:minx;
+				minx=(m->getB().x<minx)?m->getB().x:minx;
+				minx=(m->getC().x<minx)?m->getC().x:minx;
+				minx=(m->getD().x<minx)?m->getD().x:minx;
+
+				int meanx = (int)((m->getA().x + m->getB().x +m->getC().x+ m->getD().x)/4.0);
+				int meany = (int)((m->getA().y + m->getB().y +m->getC().y+ m->getD().y)/4.0);
+
+				Point p[4];
+				p[0] = m->getA();
+				p[1] = m->getB();
+				p[2] = m->getC();
+				p[3] = m->getD();
+
+				Point infx[2];
+				int j = 0;
+				for (int i=0;i<4;i++){
+					//if(i==3)
+					//	infx[j] = p[i];
+					if((p[i].x)< meanx){
+						std::cout << "MINORE " << i<< "\n";
+						infx[j] = p[i];
+						j++;
+						if(j==2)
+							break;
+					}
+					else
+						std::cout << "MAGGIORE " << i<< "\n";
+				}
+
+				int slide = 0;
+
+				std::cout << "INFX0 " << infx[0].x<< "INFX1 "<<infx[1].x <<"\n";
+
+				Point infy = infx[0].y<infx[1].y ? infx[0]:infx[1];
+
+					std::cout << "INFX0 " << infx[1].x;
+
+					if(infy.x == m->getA().x && infy.y == m->getA().y){
+						slide = 3;
+						std::cout << "AAAAAA\n";
+					}
+					else if(infy.x == m->getB().x && infy.y == m->getB().y){
+						slide = 1;
+						std::cout << "BBBBB\n";
+					}
+					else if(infy.x == m->getC().x && infy.y == m->getC().y){
+						//slide = 1;
+						slide = 2;
+						std::cout << "CCCCC\n";
+					}
+					else if(infy.x == m->getD().x && infy.y == m->getD().y){
+						slide = 0;
+						std::cout << "DDDDDDA\n";
+					}
+					else
+						std::cout << "NIENTE0\n";
+
+					Point sortedP[4];
+					for(int j=0; j<4;j++){
+						int resto = ((j+slide)%4) ;
+						std::cout << "RESTO:" << ((j+slide)%4) << "\n";
+						sortedP[j]=p[resto];
+					}
+
+					for (int i=0; i<4; i++){
+						std::cout << "\n";
+						if(i==0)
+							std::cout <<"a ";
+						if(i==1)
+							std::cout <<"b ";
+						if(i==2)
+							std::cout <<"c ";
+						if(i==3)
+							std::cout <<"d ";
+						std::cout << sortedP[i].x <<" ";
+
+						if(i==0)
+							std::cout <<"a ";
+						if(i==1)
+							std::cout <<"b ";
+						if(i==2)
+							std::cout <<"c ";
+						if(i==3)
+							std::cout <<"d ";
+						std::cout << sortedP[i].y <<" \n";
+					}
+					int miny=m->getA().y;
+					miny=(m->getA().y<miny)?m->getA().y:miny;
+					miny=(m->getB().y<miny)?m->getB().y:miny;
+					miny=(m->getC().y<miny)?m->getC().y:miny;
+					miny=(m->getD().y<miny)?m->getD().y:miny;
+
+					/*
+				cv::Point2f sa(m->getA().x -minx,m->getA().y-miny);
+				cv::Point2f sb(m->getB().x -minx,m->getB().y-miny);
+				cv::Point2f sc(m->getC().x -minx,m->getC().y-miny);
+				cv::Point2f sd(m->getD().x -minx,m->getD().y-miny);*/
+
+
+
+					cv::Point2f sa(sortedP[0].x,sortedP[0].y);
+					cv::Point2f sb(sortedP[1].x,sortedP[1].y);
+					cv::Point2f sc(sortedP[2].x,sortedP[2].y);
+					cv::Point2f sd(sortedP[3].x,sortedP[3].y);
+
+					int maxSize = (m->getBbox().height > m->getBbox().width ? m->getBbox().height : m->getBbox().width);
+
+					/*				cv::Point2f sa(0,max/2);
+				cv::Point2f sb(max/2,max/2);
+				cv::Point2f sc(max/2,0);
+				cv::Point2f sd(0,0);*/
+
+					cv::Point2f da(sa.x,sa.y);
+					cv::Point2f db(sa.x + maxSize,sa.y);
+					cv::Point2f dc(sa.x +maxSize,sa.y + maxSize);
+					cv::Point2f dd(sa.x,sa.y +maxSize);
+
+					cv ::Mat matto = OpenWarpPerspective( *frame,sa, sb, sc, sd, da,db,dc,dd, frame->size.p[1] + maxSize, frame->size.p[0] +maxSize  );
+					cv::imwrite("stretched.jpg", matto);
+					cv::waitKey();
+
+			//}
 
 		}
 

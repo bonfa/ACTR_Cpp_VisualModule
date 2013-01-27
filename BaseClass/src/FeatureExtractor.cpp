@@ -506,6 +506,8 @@ void FeatureExtractor::recognizeEllipses(){
 
 #ifdef ENRICO
 
+
+
 cv::Mat OpenWarpPerspective(const cv::Mat& _image
   , const cv::Point2f& _lu
   , const cv::Point2f& _ru
@@ -541,6 +543,17 @@ cv::Mat OpenWarpPerspective(const cv::Mat& _image
   return dst;  
 }
 
+cv::Mat OpenWarpPerspective(
+		const cv::Mat& _image,
+		cv::Point2f source[4],
+		cv::Point2f des[4],
+		int _width,
+		int _height ){
+
+	return OpenWarpPerspective(_image, source[0], source[1], source[2], source[3], des[0], des[1], des[2], des[3], _width, _height);
+}
+
+
 cv::Mat * getCroppedImg(cv::Mat img, Quadrilateral * q){
 
 	Marker * m = dynamic_cast<Marker*>(q);
@@ -559,10 +572,87 @@ cv::Mat * getCroppedImg(cv::Mat img, Quadrilateral * q){
 	return croppedImage;
 	//cv::imwrite(path, croppedImage);
 }
+
+/*
+int getMin(Marker * m){
+		int minx=m->getA().x;
+		minx=(m->getA().x<minx)?m->getA().x:minx;
+		minx=(m->getB().x<minx)?m->getB().x:minx;
+		minx=(m->getC().x<minx)?m->getC().x:minx;
+		minx=(m->getD().x<minx)?m->getD().x:minx;
+		return minx;
+}*/
+
+void  getLeftPoints(Point p[4],Point infx[2]){
+	int meanx = 0;
+	for(int i=0; i<4; i++)
+		meanx += (int) (p[i].x);
+	meanx = meanx /4;
+
+	int j = 0;
+	for (int i=0;i<4;i++){
+		if((p[i].x)< meanx){
+			infx[j] = p[i];
+			j++;
+			if(j==2)
+				break;
+		}
+	}
+}
+
+int calculateShift(Point infy, Marker * m){
+	int shift = 0;
+
+	if(infy.x == m->getA().x && infy.y == m->getA().y){
+		shift = 0;
+		//std::cout << "AAAAAA\n";
+	}
+	else if(infy.x == m->getB().x && infy.y == m->getB().y){
+		shift = 1;
+		//std::cout << "BBBBB\n";
+	}
+	else if(infy.x == m->getC().x && infy.y == m->getC().y){
+		//slide = 1;
+		shift = 2;
+		//std::cout << "CCCCC\n";
+	}
+	else if(infy.x == m->getD().x && infy.y == m->getD().y){
+		shift = 3;
+		//std::cout << "DDDDDDA\n";
+	}
+	else
+		std::cerr << "Error in calculating shift \n";
+
+
+	return shift;
+}
+
+void shiftPoints(Point p[4], int shift, Point sortedP[4]){
+	for(int j=0; j<4;j++){
+		int resto = ((j+shift)%4) ;
+		//std::cout << "RESTO:" << ((j+shift)%4) << "\n";
+		sortedP[j]=p[resto];
+	}
+}
+
+void pointToPoint2f(Point sortedP[4], cv::Point2f source[4], cv::Point2f destination[4],int maxSize){
+	source[0] = cv::Point2f(sortedP[0].x,sortedP[0].y);
+	source[1] = cv::Point2f(sortedP[1].x,sortedP[1].y);
+	source[2] = cv::Point2f(sortedP[2].x,sortedP[2].y);
+	source[3] = cv::Point2f(sortedP[3].x,sortedP[3].y);
+
+	destination[0] = cv::Point2f(source[0].x,source[0].y);
+	destination[1] = cv::Point2f(source[0].x + maxSize,source[0].y);
+	destination[2] = cv::Point2f(source[0].x +maxSize,source[0].y + maxSize);
+	destination[3] = cv::Point2f(source[0].x,source[0].y +maxSize);
+}
+
 #endif
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 #ifdef ENRICO
+
+
 
 	//Modifica il comportamento: separa le parti che usano ARToolkit da quelle che non lo usano
 	if(!findMarkers){
@@ -602,9 +692,6 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		bool allWithQr = true;
 		std::vector<Quadrilateral *> newList;
 		std::vector<Quadrilateral *> oldList;
-		// = new QRScanner("./img.jpg");
-		int N_MARKERS = 2;
-		int FRAME_TO_PARSE = 10;
 
 		initMarkersData();
 		quadrilateralList = getMarkers();
@@ -614,8 +701,6 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 
 		QRScanner * qrs;
 
-
-
 		for(int i = 0; i < quadrilateralList.size();i++){
 			Marker * m = dynamic_cast<Marker*>(quadrilateralList.at(i));
 
@@ -624,10 +709,8 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 
 			/** Saves part of the frame to disk */
 			string path = "temp.jpg";
-			//cv::imwrite(path, *m->getImage());
 
 			/** Loads saved image and search for a QRCode */
-			//qrs = new QRScanner(path);
 			qrs = new QRScanner(m->getImage());
 
 			/** If a QRCode is found creates a QRObjects and sets it as attribute of Marker */
@@ -641,12 +724,6 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				//cv::imshow("Decoded QR",*(withText));
 				//cv::waitKey();
 			}
-				std::cout << "ax "<<m->getA().x<<"ay "<<m->getA().y <<"\nbx "<<m->getB().x <<"by "<<m->getB().y <<"\ncx "<<m->getC().x <<"cy "<<m->getC().y <<"\ndx"<<m->getD().x <<"dy "<<m->getD().y<<"\n";
-				int minx=m->getA().x;
-				minx=(m->getA().x<minx)?m->getA().x:minx;
-				minx=(m->getB().x<minx)?m->getB().x:minx;
-				minx=(m->getC().x<minx)?m->getC().x:minx;
-				minx=(m->getD().x<minx)?m->getD().x:minx;
 
 				int meanx = (int)((m->getA().x + m->getB().x +m->getC().x+ m->getD().x)/4.0);
 				int meany = (int)((m->getA().y + m->getB().y +m->getC().y+ m->getD().y)/4.0);
@@ -658,120 +735,38 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				p[3] = m->getD();
 
 				Point infx[2];
-				int j = 0;
-				for (int i=0;i<4;i++){
-					//if(i==3)
-					//	infx[j] = p[i];
-					if((p[i].x)< meanx){
-						std::cout << "MINORE " << i<< "\n";
-						infx[j] = p[i];
-						j++;
-						if(j==2)
-							break;
-					}
-					else
-						std::cout << "MAGGIORE " << i<< "\n";
-				}
-
-				int slide = 0;
-
-				std::cout << "INFX0 " << infx[0].x<< "INFX1 "<<infx[1].x <<"\n";
+				getLeftPoints(p, infx);
 
 				Point infy = infx[0].y<infx[1].y ? infx[0]:infx[1];
 
-					std::cout << "INFX0 " << infx[1].x;
+				int shift = calculateShift(infy, m);
 
-					if(infy.x == m->getA().x && infy.y == m->getA().y){
-						slide = 3;
-						std::cout << "AAAAAA\n";
-					}
-					else if(infy.x == m->getB().x && infy.y == m->getB().y){
-						slide = 1;
-						std::cout << "BBBBB\n";
-					}
-					else if(infy.x == m->getC().x && infy.y == m->getC().y){
-						//slide = 1;
-						slide = 2;
-						std::cout << "CCCCC\n";
-					}
-					else if(infy.x == m->getD().x && infy.y == m->getD().y){
-						slide = 0;
-						std::cout << "DDDDDDA\n";
-					}
-					else
-						std::cout << "NIENTE0\n";
+				Point sortedP[4] ;
+				shiftPoints(p, shift, sortedP);
 
-					Point sortedP[4];
-					for(int j=0; j<4;j++){
-						int resto = ((j+slide)%4) ;
-						std::cout << "RESTO:" << ((j+slide)%4) << "\n";
-						sortedP[j]=p[resto];
-					}
+				int maxSize = (m->getBbox().height > m->getBbox().width ? m->getBbox().height : m->getBbox().width);
+				cv::Point2f source[4];
+				cv::Point2f destination[4];
 
-					for (int i=0; i<4; i++){
-						std::cout << "\n";
-						if(i==0)
-							std::cout <<"a ";
-						if(i==1)
-							std::cout <<"b ";
-						if(i==2)
-							std::cout <<"c ";
-						if(i==3)
-							std::cout <<"d ";
-						std::cout << sortedP[i].x <<" ";
+				pointToPoint2f(sortedP,source , destination, maxSize);
 
-						if(i==0)
-							std::cout <<"a ";
-						if(i==1)
-							std::cout <<"b ";
-						if(i==2)
-							std::cout <<"c ";
-						if(i==3)
-							std::cout <<"d ";
-						std::cout << sortedP[i].y <<" \n";
-					}
-					int miny=m->getA().y;
-					miny=(m->getA().y<miny)?m->getA().y:miny;
-					miny=(m->getB().y<miny)?m->getB().y:miny;
-					miny=(m->getC().y<miny)?m->getC().y:miny;
-					miny=(m->getD().y<miny)?m->getD().y:miny;
+				/*
+				cv::Point2f sa(sortedP[0].x,sortedP[0].y);
+				cv::Point2f sb(sortedP[1].x,sortedP[1].y);
+				cv::Point2f sc(sortedP[2].x,sortedP[2].y);
+				cv::Point2f sd(sortedP[3].x,sortedP[3].y);
 
-					/*
-				cv::Point2f sa(m->getA().x -minx,m->getA().y-miny);
-				cv::Point2f sb(m->getB().x -minx,m->getB().y-miny);
-				cv::Point2f sc(m->getC().x -minx,m->getC().y-miny);
-				cv::Point2f sd(m->getD().x -minx,m->getD().y-miny);*/
+				cv::Point2f da(sa.x,sa.y);
+				cv::Point2f db(sa.x + maxSize,sa.y);
+				cv::Point2f dc(sa.x +maxSize,sa.y + maxSize);
+				cv::Point2f dd(sa.x,sa.y +maxSize);*/
 
+				cv ::Mat matto = OpenWarpPerspective( *frame,source, destination, frame->size.p[1] + maxSize, frame->size.p[0] +maxSize  );
+				cv::imwrite("stretched.jpg", matto);
+				cv::waitKey();
 
-
-					cv::Point2f sa(sortedP[0].x,sortedP[0].y);
-					cv::Point2f sb(sortedP[1].x,sortedP[1].y);
-					cv::Point2f sc(sortedP[2].x,sortedP[2].y);
-					cv::Point2f sd(sortedP[3].x,sortedP[3].y);
-
-					int maxSize = (m->getBbox().height > m->getBbox().width ? m->getBbox().height : m->getBbox().width);
-
-					/*				cv::Point2f sa(0,max/2);
-				cv::Point2f sb(max/2,max/2);
-				cv::Point2f sc(max/2,0);
-				cv::Point2f sd(0,0);*/
-
-					cv::Point2f da(sa.x,sa.y);
-					cv::Point2f db(sa.x + maxSize,sa.y);
-					cv::Point2f dc(sa.x +maxSize,sa.y + maxSize);
-					cv::Point2f dd(sa.x,sa.y +maxSize);
-
-					cv ::Mat matto = OpenWarpPerspective( *frame,sa, sb, sc, sd, da,db,dc,dd, frame->size.p[1] + maxSize, frame->size.p[0] +maxSize  );
-					cv::imwrite("stretched.jpg", matto);
-					cv::waitKey();
-
-			//}
 
 		}
-
-
-		//qrs->QRDetected();
-		//qrs->getQRCode();
 
 		this->objectList.clear();
 		this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());

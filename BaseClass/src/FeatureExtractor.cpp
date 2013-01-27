@@ -693,9 +693,10 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		std::vector<Quadrilateral *> newList;
 		std::vector<Quadrilateral *> oldList;
 
-		initMarkersData();
-		quadrilateralList = getMarkers();
-		cv::Mat * frame = getFrame();
+		MarkerDetector ma = MarkerDetector();
+		ma.initMarkersData();
+		quadrilateralList = ma.getMarkers();
+		cv::Mat * frame = ma.getFrame();
 
 		cv::imwrite(IMG_PATH, *frame);
 

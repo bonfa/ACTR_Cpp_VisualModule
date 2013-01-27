@@ -68,11 +68,13 @@ static ARGL_CONTEXT_SETTINGS_REF gArglSettings = NULL;
 	static boost::mutex io_mutex;
 	void startDetection();//boost::mutex& mutex);
 	static std::vector<Quadrilateral *> markersList;
-	static std::vector<Quadrilateral *> slowMarkerList;
+class MarkerDetector{
+public:
+	std::vector<Quadrilateral *> slowMarkerList;
 	std::vector<Quadrilateral *> getMarkers();
 	int initMarkersData();
 	cv::Mat * getFrame();
-
+};
 #endif /* MDETECT_H_ */
 
 #endif /* ENRICO */

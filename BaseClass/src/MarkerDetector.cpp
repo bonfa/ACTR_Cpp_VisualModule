@@ -102,7 +102,7 @@ static void   keyEvent( unsigned char key, int x, int y)
 
 
 
-int initMarkersData(){
+int MarkerDetector::initMarkersData(){
 	/** Use the lock to prevent race conditions */
 	boost::mutex::scoped_lock lock(io_mutex);
 
@@ -118,11 +118,11 @@ int initMarkersData(){
 	return 0;
 }
 
-cv::Mat * getFrame(){
+cv::Mat * MarkerDetector::getFrame(){
 	return currentFrame;
 }
 
-std::vector<Quadrilateral *> getMarkers(){
+std::vector<Quadrilateral *> MarkerDetector::getMarkers(){
 	return markersList;
 	}
 

@@ -106,14 +106,12 @@ static void   keyEvent( unsigned char key, int x, int y)
 int MarkerDetector::initMarkersData(){
 	/** Use the lock to prevent race conditions */
 	boost::mutex::scoped_lock lock(io_mutex);
-	std::cout<< "CIAO1\n";
 
 	/** Copy the Quadrilateral list */
 	slowMarkerList = std::vector<Quadrilateral*>(markersList.begin(),markersList.end());//markersList.
 
 	/** Convert the current frame */
 	cvSetImageData( image, dataPtr, size->width * channels );
-	std::cout<< "CIAO2\n";
 
 	/** Copy current frame content in another variable */
 	currentFrame = new cv::Mat(image, true);

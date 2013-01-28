@@ -573,6 +573,25 @@ cv::Mat * getCroppedImg(cv::Mat img, Quadrilateral * q){
 	//cv::imwrite(path, croppedImage);
 }
 
+cv::Mat * getCroppedFlatImg(cv::Mat img, Quadrilateral * q){
+
+	Marker * m = dynamic_cast<Marker*>(q);
+	int height =0;
+	int max = m->getBbox().height>  m->getBbox().width ?  m->getBbox().height: m->getBbox().width;
+	/** If position of the image to crop exceed the border of the image, reduce it */
+	if (m->getBbox().y + max *2 >  max)
+		height = img.size().height-(  m->getBbox().y + max ) -1;
+	else
+		height = max;
+
+	cv::Rect roi(m->getBbox().x, m->getBbox().y + max , (int)(max * 1.4) , height);
+	cv::Mat * croppedImage = new cv::Mat(img(roi).clone());
+	//m->setImage(croppedImage);
+
+	return croppedImage;
+	//cv::imwrite(path, croppedImage);
+}
+
 /*
 int getMin(Marker * m){
 		int minx=m->getA().x;
@@ -699,7 +718,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		quadrilateralList = ma.getMarkers();
 		cv::Mat * frame = ma.getFrame();
 
-		cv::imwrite(IMG_PATH, *frame);
+		cv::imwrite("01OriginalFrame.jpg", *frame);
 
 		QRScanner * qrs;
 
@@ -708,9 +727,6 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 
 			/** Sets part of the frame as attribute of the Marker */
 			m->setImage(getCroppedImg(*frame, m));
-
-			/** Saves part of the frame to disk */
-			string path = "temp.jpg";
 
 			/** Loads saved image and search for a QRCode */
 			qrs = new QRScanner(m->getImage());
@@ -721,9 +737,9 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				qro = new QRObject(qrs->getQRCode());
 				m->setQr(qro);
 				cv::Mat * withText = new cv::Mat(m->getImage()->clone());
-				cv::putText(*withText, m->getQR()->getContent(), cvPoint(10,20),
-				    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255,0,0), 1, CV_AA);
-				//cv::imshow("Decoded QR",*(withText));
+				//cv::putText(*withText, m->getQR()->getContent(), cvPoint(10,20),
+				    //cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255,0,0), 1, CV_AA);
+				cv::imwrite("02qrCode.jpg",*(withText));
 				//cv::waitKey();
 			}
 
@@ -755,7 +771,15 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 
 
 				cv ::Mat matto = OpenWarpPerspective( *frame,source, destination, frame->size.p[1] + maxSize, frame->size.p[0] +maxSize  );
-				cv::imwrite("stretched.jpg", matto);
+
+				cv::imwrite("03flat.jpg", matto);
+
+				cv::Mat *flatCrop = getCroppedFlatImg(matto, m);
+				if(m->getQRStatus()){
+					cv::putText(*flatCrop, m->getQR()->getContent(), cvPoint(35,20),
+								    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255,0,0), 1, CV_AA);
+				cv::imwrite("04withText.jpg", *flatCrop);
+				}
 				//cv::waitKey();
 
 

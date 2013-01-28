@@ -584,7 +584,7 @@ cv::Mat * getCroppedFlatImg(cv::Mat img, Quadrilateral * q){
 	else
 		height = max;
 
-	cv::Rect roi(m->getBbox().x, m->getBbox().y + max , (int)(max * 1.4) , height);
+	cv::Rect roi(m->getBbox().x, m->getBbox().y + max , (int)(max * 1.4) , max);
 	cv::Mat * croppedImage = new cv::Mat(img(roi).clone());
 	//m->setImage(croppedImage);
 

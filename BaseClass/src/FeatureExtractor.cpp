@@ -742,6 +742,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				cv::imwrite("02qrCode.jpg",*(withText));
 				//cv::waitKey();
 			}
+			
 
 
 				int meanx = (int)((m->getA().x + m->getB().x +m->getC().x+ m->getD().x)/4.0);

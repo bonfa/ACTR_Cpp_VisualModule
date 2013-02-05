@@ -36,10 +36,10 @@ OBJECT_T   object[2] = {
            };
 
 /* set up the video format globals */
-#define XSIZE 640
-#define YSIZE 480
+#define XSIZE 1280
+#define YSIZE 720
 //Variabile d'ambiente per usare la webcam, buildare le librerie con gstreamer, cambiare device=/dev/video0 in device=/dev/video1 per usare la seconda webcam
-char			*vconf = "v4l2src device=/dev/video1 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=640,height=480 ! identity name=artoolkit ! fakesink";
+char			*vconf = "v4l2src device=/dev/video0 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=1280,height=720 ! identity name=artoolkit ! fakesink";
 
 
 
@@ -67,8 +67,10 @@ void startDetection(){//boost::mutex& mutex){
 	char *argv[] = {"./fake"};
 	//char const*[]={"./fake"};
 	glutInit(&argc, argv);
-	//glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	//glutInitWindowSize(XSIZE, YSIZE);
+
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+	glutInitWindowSize(XSIZE, YSIZE);
+
 	//glutCreateWindow(argv[0]);
 	// Setup argl library for current context.
 	if ((gArglSettings = arglSetupForCurrentContext()) == NULL) {

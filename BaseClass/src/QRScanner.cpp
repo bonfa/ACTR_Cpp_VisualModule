@@ -12,7 +12,8 @@ QRScanner::QRScanner(cv::Mat * img){
 	cv::Mat  greyMat;
 	cv::cvtColor(*img, greyMat, CV_BGR2GRAY);
 
-	CvMat  tempImg = greyMat;
+
+	CvMat tempImg = greyMat;
 
 	init((char*)tempImg.data.ptr,tempImg.width,tempImg.height);
 

@@ -18,6 +18,7 @@
 #include <opencv/cxcore.h>
 #include <string>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 #include <boost/filesystem.hpp>
 

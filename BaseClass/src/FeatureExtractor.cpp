@@ -505,6 +505,55 @@ void FeatureExtractor::recognizeEllipses(){
 }
 
 #ifdef ENRICO
+
+
+
+cv::Mat OpenWarpPerspective(const cv::Mat& _image
+  , const cv::Point2f& _lu
+  , const cv::Point2f& _ru
+  , const cv::Point2f& _rd
+  , const cv::Point2f& _ld
+  , const cv::Point2f& _lu_result
+  , const cv::Point2f& _ru_result
+  , const cv::Point2f& _rd_result
+  , const cv::Point2f& _ld_result
+  , int _width
+  , int _height)
+{
+  // todo do some checks on input.
+
+  cv::Point2f source_points[4];
+  cv::Point2f dest_points[4];
+
+
+  source_points[0] = _lu;
+  source_points[1] = _ru;
+  source_points[2] = _rd;
+  source_points[3] = _ld;
+
+  dest_points[0] = _lu_result;
+  dest_points[1] = _ru_result;
+  dest_points[2] = _rd_result;
+  dest_points[3] = _ld_result;
+
+  cv::Mat dst;
+  cv::Mat _transform_matrix = cv::getPerspectiveTransform(source_points, dest_points);
+  cv::warpPerspective(_image, dst, _transform_matrix, cv::Size(_width, _height));
+
+  return dst;  
+}
+
+cv::Mat OpenWarpPerspective(
+		const cv::Mat& _image,
+		cv::Point2f source[4],
+		cv::Point2f des[4],
+		int _width,
+		int _height ){
+
+	return OpenWarpPerspective(_image, source[0], source[1], source[2], source[3], des[0], des[1], des[2], des[3], _width, _height);
+}
+
+
 cv::Mat * getCroppedImg(cv::Mat img, Quadrilateral * q){
 
 	Marker * m = dynamic_cast<Marker*>(q);
@@ -523,10 +572,106 @@ cv::Mat * getCroppedImg(cv::Mat img, Quadrilateral * q){
 	return croppedImage;
 	//cv::imwrite(path, croppedImage);
 }
+
+cv::Mat * getCroppedFlatImg(cv::Mat img, Quadrilateral * q){
+
+	Marker * m = dynamic_cast<Marker*>(q);
+	int height =0;
+	int max = m->getBbox().height>  m->getBbox().width ?  m->getBbox().height: m->getBbox().width;
+	/** If position of the image to crop exceed the border of the image, reduce it */
+	if (m->getBbox().y + max *2 >  max)
+		height = img.size().height-(  m->getBbox().y + max ) -1;
+	else
+		height = max;
+
+	cv::Rect roi(m->getBbox().x, m->getBbox().y + max , (int)(max * 1.4) , max);
+	cv::Mat * croppedImage = new cv::Mat(img(roi).clone());
+	//m->setImage(croppedImage);
+
+	return croppedImage;
+	//cv::imwrite(path, croppedImage);
+}
+
+/*
+int getMin(Marker * m){
+		int minx=m->getA().x;
+		minx=(m->getA().x<minx)?m->getA().x:minx;
+		minx=(m->getB().x<minx)?m->getB().x:minx;
+		minx=(m->getC().x<minx)?m->getC().x:minx;
+		minx=(m->getD().x<minx)?m->getD().x:minx;
+		return minx;
+}*/
+
+void  getLeftPoints(Point p[4],Point infx[2]){
+	int meanx = 0;
+	for(int i=0; i<4; i++)
+		meanx += (int) (p[i].x);
+	meanx = meanx /4;
+
+	int j = 0;
+	for (int i=0;i<4;i++){
+		if((p[i].x)< meanx){
+			infx[j] = p[i];
+			j++;
+			if(j==2)
+				break;
+		}
+	}
+}
+
+int calculateShift(Point infy, Marker * m){
+	int shift = 0;
+
+	if(infy.x == m->getA().x && infy.y == m->getA().y){
+		shift = 0;
+		//std::cout << "AAAAAA\n";
+	}
+	else if(infy.x == m->getB().x && infy.y == m->getB().y){
+		shift = 1;
+		//std::cout << "BBBBB\n";
+	}
+	else if(infy.x == m->getC().x && infy.y == m->getC().y){
+		//slide = 1;
+		shift = 2;
+		//std::cout << "CCCCC\n";
+	}
+	else if(infy.x == m->getD().x && infy.y == m->getD().y){
+		shift = 3;
+		//std::cout << "DDDDDDA\n";
+	}
+	else
+		std::cerr << "Error in calculating shift \n";
+
+
+	return shift;
+}
+
+void shiftPoints(Point p[4], int shift, Point sortedP[4]){
+	for(int j=0; j<4;j++){
+		int resto = ((j+shift)%4) ;
+		//std::cout << "RESTO:" << ((j+shift)%4) << "\n";
+		sortedP[j]=p[resto];
+	}
+}
+
+void pointToPoint2f(Point sortedP[4], cv::Point2f source[4], cv::Point2f destination[4],int maxSize){
+	source[0] = cv::Point2f(sortedP[0].x,sortedP[0].y);
+	source[1] = cv::Point2f(sortedP[1].x,sortedP[1].y);
+	source[2] = cv::Point2f(sortedP[2].x,sortedP[2].y);
+	source[3] = cv::Point2f(sortedP[3].x,sortedP[3].y);
+
+	destination[0] = cv::Point2f(source[0].x,source[0].y);
+	destination[1] = cv::Point2f(source[0].x + maxSize,source[0].y);
+	destination[2] = cv::Point2f(source[0].x +maxSize,source[0].y + maxSize);
+	destination[3] = cv::Point2f(source[0].x,source[0].y +maxSize);
+}
+
 #endif
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 #ifdef ENRICO
+
+
 
 	//Modifica il comportamento: separa le parti che usano ARToolkit da quelle che non lo usano
 	if(!findMarkers){
@@ -566,85 +711,16 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		bool allWithQr = true;
 		std::vector<Quadrilateral *> newList;
 		std::vector<Quadrilateral *> oldList;
-		// = new QRScanner("./img.jpg");
-		int N_MARKERS = 2;
-		int FRAME_TO_PARSE = 10;
 
-#ifdef ALTRO_CODICE
-		for(int i= 0; i < FRAME_TO_PARSE; i++){
-			initMarkersData();
-			newList.clear();
-			newList = getMarkers();
-			cv::Mat * frame = getFrame();
-			allWithQr = true;
+		MarkerDetector ma = * MarkerDetector::get_instance();
+		//MarkerDetector ma = MarkerDetector();
+		ma.initMarkersData();
+		quadrilateralList = ma.getMarkers();
+		cv::Mat * frame = ma.getFrame();
 
-			for(int i = 0; i < newList.size();i++){
-				Marker * m = dynamic_cast<Marker*>(newList.at(i));
-
-				/** Sets part of the frame as attribute of the Marker */
-				m->setImage(getCroppedImg(*frame, m));
-
-				/** Saves part of the frame to disk */
-				string path = "temp.jpg";
-				cv::imwrite(path, *m->getImage());
-
-				/** Loads saved image and search for a QRCode */
-				QRScanner * qrs = new QRScanner(path);
-
-				/** If a QRCode is found creates a QRObjects and sets it as attribute of Marker */
-				if(qrs->QRDetected()){
-					QRObject * qro;
-					qro = new QRObject(qrs->getQRCode());
-					m->setQr(qro);
-				}
-				allWithQr &= qrs->QRDetected();
-			}
-
-			if(allWithQr && newList.size()== N_MARKERS)
-				return newList;
-			else{
-				std::vector<Marker *> bestList;
-				for(int i = 0; i < newList.size();i++){
-						 Marker * newMarker = dynamic_cast<Marker*>(newList.at(i));
-						 Marker * oldMarker = NULL;
-						 for(int j =0; j<oldList.size(); j++)
-							 if( (dynamic_cast<Marker*>(oldList.at(j)))->getId()== newMarker->getId()){
-								 oldMarker = dynamic_cast<Marker*>(oldList.at(j));
-								 break;
-							 }
-						 if(oldMarker == NULL)
-							 bestList.push_back(newMarker);
-						 else if(newMarker->getQRStatus())
-							 bestList.push_back(newMarker);
-						 else if(oldMarker->getQRStatus())
-							 bestList.push_back(oldMarker);
-						 else
-							 bestList.push_back(newMarker);
-						 //TODO manca il caso in cui non c'è nella lista nuova
-				}
-				oldList.clear();
-				std::copy(bestList.begin(), bestList.end(), oldList.begin());
-				bool allWithQRcode = true;
-				for(int i = 0; i < oldList.size();i++)
-					allWithQRcode &= (dynamic_cast<Marker*>(oldList.at(i))->getQRStatus());
-
-				if(oldList.size() == N_MARKERS && allWithQRcode)
-					return oldList;
-				//oldList = bestList;
-			}
-		}
-		return oldList;
-#endif
-
-		initMarkersData();
-		quadrilateralList = getMarkers();
-		cv::Mat * frame = getFrame();
-
-		cv::imwrite(IMG_PATH, *frame);
+		cv::imwrite("01OriginalFrame.jpg", *frame);
 
 		QRScanner * qrs;
-
-
 
 		for(int i = 0; i < quadrilateralList.size();i++){
 			Marker * m = dynamic_cast<Marker*>(quadrilateralList.at(i));
@@ -652,12 +728,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 			/** Sets part of the frame as attribute of the Marker */
 			m->setImage(getCroppedImg(*frame, m));
 
-			/** Saves part of the frame to disk */
-			string path = "temp.jpg";
-			//cv::imwrite(path, *m->getImage());
-
 			/** Loads saved image and search for a QRCode */
-			//qrs = new QRScanner(path);
 			qrs = new QRScanner(m->getImage());
 
 			/** If a QRCode is found creates a QRObjects and sets it as attribute of Marker */
@@ -665,17 +736,55 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				QRObject * qro;
 				qro = new QRObject(qrs->getQRCode());
 				m->setQr(qro);
+				cv::Mat * withText = new cv::Mat(m->getImage()->clone());
+				//cv::putText(*withText, m->getQR()->getContent(), cvPoint(10,20),
+				    //cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255,0,0), 1, CV_AA);
+				cv::imwrite("02qrCode.jpg",*(withText));
+				//cv::waitKey();
 			}
-			if(m->getQRStatus()){
-					cv::imshow("image", *(m->getImage()));
-					cv::waitKey(2000);
-			}
+			
+
+
+				int meanx = (int)((m->getA().x + m->getB().x +m->getC().x+ m->getD().x)/4.0);
+				int meany = (int)((m->getA().y + m->getB().y +m->getC().y+ m->getD().y)/4.0);
+
+				Point p[4];
+				p[0] = m->getA();
+				p[1] = m->getB();
+				p[2] = m->getC();
+				p[3] = m->getD();
+
+				Point infx[2];
+				getLeftPoints(p, infx);
+
+				Point infy = infx[0].y<infx[1].y ? infx[0]:infx[1];
+
+				int shift = calculateShift(infy, m);
+
+				Point sortedP[4] ;
+				shiftPoints(p, shift, sortedP);
+
+				int maxSize = (m->getBbox().height > m->getBbox().width ? m->getBbox().height : m->getBbox().width);
+				cv::Point2f source[4];
+				cv::Point2f destination[4];
+
+				pointToPoint2f(sortedP,source , destination, maxSize);
+
+
+				cv ::Mat matto = OpenWarpPerspective( *frame,source, destination, frame->size.p[1] + maxSize, frame->size.p[0] +maxSize  );
+
+				cv::imwrite("03flat.jpg", matto);
+
+				cv::Mat *flatCrop = getCroppedFlatImg(matto, m);
+				if(m->getQRStatus()){
+					cv::putText(*flatCrop, m->getQR()->getContent(), cvPoint(35,20),
+								    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255,0,0), 1, CV_AA);
+				cv::imwrite("04withText.jpg", *flatCrop);
+				}
+				//cv::waitKey();
+
 
 		}
-
-
-		//qrs->QRDetected();
-		//qrs->getQRCode();
 
 		this->objectList.clear();
 		this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());

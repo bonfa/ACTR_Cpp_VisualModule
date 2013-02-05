@@ -12,9 +12,11 @@ QRScanner::QRScanner(cv::Mat * img){
 	cv::Mat  greyMat;
 	cv::cvtColor(*img, greyMat, CV_BGR2GRAY);
 
+
 	CvMat tempImg = greyMat;
 
 	init((char*)tempImg.data.ptr,tempImg.width,tempImg.height);
+
 }
 
 void QRScanner::init(char *raw, int width,int height){

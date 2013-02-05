@@ -50,7 +50,7 @@ void Triangle::setBoundingBox() {
 }
 
 
-string Triangle::getChunk(){
+string Triangle::getChunk(){ //TODO copy from quadrilateral
 	return "cianc, traingle\n";
 }
 

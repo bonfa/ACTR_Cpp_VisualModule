@@ -16,7 +16,7 @@ Marker::~Marker() {
 
 }
 
-/**
+/** //TODO correct?
  * Constructor
  * 1) check that the coordinates of the point are not negative
  * 2) check that the width and the height are positive

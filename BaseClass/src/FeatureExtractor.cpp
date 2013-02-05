@@ -307,7 +307,7 @@ void FeatureExtractor::recognizeSquares(){
 
 
 
-void FeatureExtractor::recognizeTriangles(){
+void FeatureExtractor::recognizeTriangles(){ //TODO merge with recognizesquare
 	// create the structure that contains the triangles
 	cv::vector<cv::vector<cv::Point> > triangles;
 
@@ -506,7 +506,7 @@ void FeatureExtractor::recognizeEllipses(){
 
 #ifdef ENRICO
 
-
+//TODO add definitions in header
 
 cv::Mat OpenWarpPerspective(const cv::Mat& _image
   , const cv::Point2f& _lu

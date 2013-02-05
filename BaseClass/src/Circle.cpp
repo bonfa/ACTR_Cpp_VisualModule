@@ -29,7 +29,7 @@ Circle::Circle(int rad, int x, int y) {
 	this->setRotation();
 }
 
-string Circle::getChunk(){
+string Circle::getChunk(){ //TODO copy from quadrilateral
 	return "cianc, Circle\n";
 }
 

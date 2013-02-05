@@ -39,7 +39,7 @@ Button::Button(int x,int y, int height, int width, string txt) :text(""){
 }
 
 
-string Button::getChunk(){
+string Button::getChunk(){ //TODO copy from quadrilateral
 	return "cianc, bottone\n";
 }
 

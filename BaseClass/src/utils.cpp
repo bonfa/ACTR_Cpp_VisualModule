@@ -106,7 +106,7 @@ bool inLinePoints(int ax, int ay, int bx, int by, int cx, int cy ){
 
 /***/
 double myDistance(Point a, Point b){
-	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+	return sqrt(pow((float)(a.x - b.x), 2) + pow((float)(a.y - b.y), 2));
 }
 
 

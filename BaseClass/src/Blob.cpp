@@ -15,7 +15,7 @@ Blob::~Blob() {
 	// TODO Auto-generated destructor stub
 }
 
-string Blob::getChunk(){
+string Blob::getChunk(){ //TODO copy from quadrilateral
 	return "cianc\n";
 }
 

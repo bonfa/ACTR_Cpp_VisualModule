@@ -29,8 +29,18 @@ Circle::Circle(int rad, int x, int y) {
 	this->setRotation();
 }
 
-string Circle::getChunk(){ //TODO copy from quadrilateral
-	return "cianc, Circle\n";
+Json::Value Circle::getJson(){
+	Json::Value obj;
+	//put all together in the hierarchy
+	obj["bbox"]=Object::getJson();
+	obj["Type"]="Circle";
+	obj["color"]=this->color;
+	return obj;
+}
+
+string Circle::getChunk(){
+	Json::FastWriter writer;
+	return writer.write(this->getJson());
 }
 
 

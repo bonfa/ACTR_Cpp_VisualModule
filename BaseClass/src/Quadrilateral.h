@@ -43,6 +43,8 @@ public:
 	/** Return a vector containing the four segment of the quadrilateral*/
 	std::vector<Segment> getEdgesLine();
 protected:
+	/** Creates a Json object that contains the basic information about the quadrilateral*/
+	virtual Json::Value getJson();
 	/** The first vertex*/
 	Point a;
 	/** The second vertex*/

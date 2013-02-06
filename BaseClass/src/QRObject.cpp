@@ -15,9 +15,18 @@ QRObject::~QRObject() {
 	// TODO Auto-generated destructor stub
 }
 
-//TODO: escaping stringhe
+
+Json::Value QRObject::getJson(){
+	Json::Value obj;// = Object::getJson();
+	obj["content"]=this->content;
+	return obj;
+	
+}
+
 string QRObject::getChunk(){
-	string chunk = "{";
+	Json::FastWriter writer;
+	return writer.write(this->getJson());
+	/*string chunk = "{";
 		chunk.append("\"object\"");
 		chunk.append(":");
 			chunk.append("{");
@@ -33,7 +42,7 @@ string QRObject::getChunk(){
 		
 		chunk.append("}");
 	chunk.append("}");
-	return chunk;
+	return chunk;*/
 }
 
 	

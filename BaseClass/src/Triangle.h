@@ -31,6 +31,9 @@ public:
 	Point getB();
 	/** Returns the third vertex of the triangle*/
 	Point getC();
+protected:
+	/** Creates a Json object that contains the basic information about the quadrilateral*/
+	virtual Json::Value getJson();
 private:
 	/** The first vertex*/
 	Point a;

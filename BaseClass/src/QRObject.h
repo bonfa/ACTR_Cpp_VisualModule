@@ -25,6 +25,9 @@ public:
 	/** Return a string which contains the basic information about the shape*/
 	string getChunk();
 	std::string getContent();
+protected:
+	/** Creates a Json object that contains the basic information about the quadrilateral*/
+	virtual Json::Value getJson();
 private:
 	string content;
 	//TODO: colore

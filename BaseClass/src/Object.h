@@ -14,6 +14,7 @@
 #include "utils.h"
 #include "MyPoint.h"
 #include "Rect.h"
+#include "json/json.h"
 
 using namespace std;
 
@@ -38,6 +39,8 @@ public:
 	/** Set the color of the object //TODO testing*/
 	virtual void setColor(string color);
 protected:
+	/** Creates a Json object that contains the basic information about the quadrilateral*/
+	virtual Json::Value getJson();
 	/** Set the bounding box around the object*/
 	void setBbox(int x, int y, int height, int width);
 	/** set  the center of the object*/

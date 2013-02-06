@@ -62,3 +62,42 @@ double Object::getRotation(){
 	return rotation;
 }
 
+Json::Value Object::getJson(){
+	//creating the bounding box
+	Json::Value bbox;
+	bbox["x1"] = this->bbox.x;
+	bbox["y1"] = this->bbox.y;
+	bbox["x2"] = this->bbox.x+this->bbox.width;
+	bbox["y2"] = this->bbox.y+this->bbox.height;
+	return bbox;
+	
+}
+
+string Object::getChunk(){
+	Json::FastWriter writer;
+	return writer.write(this->getJson());
+	/*string chunk = "{";
+	chunk.append("\"type\": \"BoundingBox\",");
+	chunk.append("\"x1\":");
+	chunk.append("\"");
+	chunk.append(intToString(this->bbox.x));
+	chunk.append("\",");
+	
+	chunk.append("\"y1\":");
+	chunk.append("\"");
+	chunk.append(intToString(this->bbox.y));
+	chunk.append("\",");
+	
+	chunk.append("\"x2\":");
+	chunk.append("\"");
+	chunk.append(intToString(this->bbox.x+this->bbox.width));
+	chunk.append("\",");
+	
+	chunk.append("\"y2\":");
+	chunk.append("\"");
+	chunk.append(intToString(this->bbox.y+this->bbox.height));
+	chunk.append("\"");
+	chunk.append("}");*/
+	
+}
+

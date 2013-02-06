@@ -22,42 +22,20 @@
 
 using boost::asio::ip::tcp;
 
-extern "C" int *init (int i);
-
 class Server
 {
 public:
 	Server(boost::asio::io_service& io_service, short port)
-: io_service_(io_service),
-  acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
+: io_service_(io_service), acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
 {
 		start_accept();
 }
 
 
 private:
-	void start_accept()
-	{
-		Session* new_session = new Session(io_service_);
-		acceptor_.async_accept(new_session->socket(),
-				boost::bind(&Server::handle_accept, this, new_session,
-						boost::asio::placeholders::error));
-	}
+	void start_accept();
 
-	void handle_accept(Session* new_session,
-			const boost::system::error_code& error)
-	{
-		if (!error)
-		{
-			new_session->start();
-		}
-		else
-		{
-			delete new_session;
-		}
-
-		start_accept();
-	}
+	void handle_accept(Session* new_session,const boost::system::error_code& error);
 
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;

@@ -26,6 +26,8 @@ public:
 	/** Return the area of the shape */
 	double getArea();
 protected:
+	/** Creates a Json object that contains the basic information about the quadrilateral*/
+	virtual Json::Value getJson();
 	/** The area of the object */
 	double area;
 	virtual void setRotation()=0;

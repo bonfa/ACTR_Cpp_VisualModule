@@ -31,15 +31,15 @@ JSN_PATH := `pkg-config --cflags jsoncpp`
 endif
 ifeq ($(UNAME), Darwin)
 JSN_LIBS := /opt/local/lib/libjson_linux-gcc-4.2.1_libmt.dylib
-JSN_PATH := /opt/local/include/json
+JSN_PATH := -I/opt/local/include/json
 endif
 ifeq ($(UNAME), Linux)
-BST_LIBS := -lboost_system -lboost_system-mt -pthread -lboost_thread -lboost_filesystem
-BST_PATH := -L/usr/local/lib 
+BST_LIBS := -L/usr/local/lib -lboost_system -lboost_system-mt -pthread -lboost_thread -lboost_filesystem
+BST_PATH := -I/usr/local/include/boost
 endif
 ifeq ($(UNAME), Darwin)
-BST_LIBS := -lboost_system-mt -pthread -lboost_thread-mt -lboost_filesystem-mt
-BST_PATH := -L/opt/local/lib 
+BST_LIBS := -L/opt/local/lib -lboost_system-mt -pthread -lboost_thread-mt -lboost_filesystem-mt
+BST_PATH := -I/opt/local/include/boost 
 endif
 
 ifeq ($(UNAME), Linux)

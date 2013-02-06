@@ -30,6 +30,9 @@ public:
 	/** Returns the center of the circle*/
 	Point getCenter();
 	virtual ~Circle();
+protected:
+	/** Creates a Json object that contains the basic information about the quadrilateral*/
+	virtual Json::Value getJson();
 private:
 	/** The area of the circle*/
 	double area;

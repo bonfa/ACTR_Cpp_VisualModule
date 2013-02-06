@@ -49,9 +49,65 @@ void Triangle::setBoundingBox() {
 	setBbox(minX, minY, maxY - minY, maxX - minX);
 }
 
+Json::Value Triangle::getJson(){
+	Json::Value obj;
+	//creating the vertices
+	Json::Value p1;
+	p1["x"] = this->a.x;
+	p1["y"] = this->a.y;
+	Json::Value p2;
+	p2["x"] = this->b.x;
+	p2["y"] = this->b.y;
+	Json::Value p3;
+	p3["x"] = this->c.x;
+	p3["y"] = this->c.y;
+	//creating the vertices' array
+	Json::Value vertices(Json::arrayValue);
+	vertices.append(p1);
+	vertices.append(p2);
+	vertices.append(p3);
+	//put all together in the hierarchy
+	obj["bbox"]=Object::getJson();
+	obj["vertices"]=vertices;
+	obj["Type"]="Triangle";
+	obj["color"]=this->color;
+	return obj;
+}
 
-string Triangle::getChunk(){ //TODO copy from quadrilateral
-	return "cianc, traingle\n";
+string Triangle::getChunk(){
+	Json::FastWriter writer;
+	return writer.write(this->getJson());
+	
+	/*string chunk = "{";
+	chunk.append("\"type\": \"Triangle\",");
+		chunk.append("\"bbox\": {");
+		chunk.append("\"x1\":");
+		chunk.append("\"");
+		chunk.append(intToString(this->bbox.x));
+		chunk.append("\",");
+	
+		chunk.append("\"y1\":");
+		chunk.append("\"");
+		chunk.append(intToString(this->bbox.y));
+		chunk.append("\",");
+	
+		chunk.append("\"x2\":");
+		chunk.append("\"");
+		chunk.append(intToString(this->bbox.x+this->bbox.width));
+		chunk.append("\",");
+	
+		chunk.append("\"y2\":");
+		chunk.append("\"");
+		chunk.append(intToString(this->bbox.y+this->bbox.height));
+		chunk.append("\"");
+		chunk.append("}");
+	chunk.append(",");
+	chunk.append("\"color\": ");
+	chunk.append("\"");
+	chunk.append(this->color);
+	chunk.append("\"");
+	chunk.append("}");
+	return 	chunk;*/
 }
 
 

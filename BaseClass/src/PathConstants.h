@@ -9,7 +9,7 @@
 #define PATHCONSTANTS_H_
 
 # define IMG_PATH_01 "./images/01_02_1030797656577.bmp"
-# define IMG_PATH_02 "./images/02_08_447099175936.bmp"
+/*# define IMG_PATH_02 "./images/02_08_447099175936.bmp"
 # define IMG_PATH_03 "./images/03_32_9007255098753112.bmp"
 # define IMG_PATH_04 "./images/04_36_1478332047688192.bmp"
 # define IMG_PATH_05 "./images/05_50_1548318539776144.bmp"
@@ -31,7 +31,7 @@
 # define IMG_PATH_21 "./images/21_NA_584350852048749056.bmp"
 # define IMG_PATH_22 "./images/22_NA_865966563026534912.bmp"
 # define IMG_PATH_23 "./images/23_NA_867083665762158848.bmp"
-# define IMG_PATH_24 "./images/24_M01_216770917518016516.bmp"
+# define IMG_PATH_24 "./images/24_M01_216770917518016516.bmp"*/
 
 
 #endif /* PATHCONSTANTS_H_ */

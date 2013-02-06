@@ -38,9 +38,15 @@ Button::Button(int x,int y, int height, int width, string txt) :text(""){
 	this->setCenter();
 }
 
+Json::Value Button::getJson(){
+	Json::Value obj = Quadrilateral::getJson();
+	obj["text"]=this->text;
+	return obj;
+}
 
-string Button::getChunk(){ //TODO copy from quadrilateral
-	return "cianc, bottone\n";
+string Button::getChunk(){
+	Json::FastWriter writer;
+	return writer.write(this->getJson());
 }
 
 string Button::getText(){

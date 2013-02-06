@@ -46,7 +46,10 @@ public:
 	bool getQRStatus(){return QRStatus;};
 	void setImage(cv::Mat * _image){image = _image;};
 	cv::Mat * getImage(){return image;};
-
+	
+protected:
+	/** Creates a Json object that contains the basic information about the quadrilateral*/
+	virtual Json::Value getJson();
 private:
 	double attitudeAngle;
 	cv::Mat * image;

@@ -64,11 +64,20 @@ double Object::getRotation(){
 
 Json::Value Object::getJson(){
 	//creating the bounding box
-	Json::Value bbox;
-	bbox["x1"] = this->bbox.x;
-	bbox["y1"] = this->bbox.y;
-	bbox["x2"] = this->bbox.x+this->bbox.width;
-	bbox["y2"] = this->bbox.y+this->bbox.height;
+	Json::Value p1;
+	p1["x"] = this->bbox.x;
+	p1["y"] = this->bbox.y;
+	Json::Value p2;
+	p2["x"] = this->bbox.x+this->bbox.width;
+	p2["y"] = this->bbox.y+this->bbox.height;
+	//creating the vertices' array
+	Json::Value bbox(Json::arrayValue);
+	bbox.append(p1);
+	bbox.append(p2);
+	//bbox["x1"] = this->bbox.x;
+	//bbox["y1"] = this->bbox.y;
+	//bbox["x2"] = this->bbox.x+this->bbox.width;
+	//bbox["y2"] = this->bbox.y+this->bbox.height;
 	return bbox;
 	
 }

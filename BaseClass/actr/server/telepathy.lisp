@@ -1,49 +1,16 @@
 (require :sb-bsd-sockets)
-(sb-alien:load-shared-object "libserver.so")
+(ql:quickload "cl-json")
+#+sbcl (defun shell (x) (run-program "/bin/sh" (list "-c" x) :output t))
+(setq def-host "127.0.0.1")
+(setq def-port 4114)
+(setq def-comm "{\"cmd\":\"getFeature\"}")
+(setq socket nil)
+
+
 
 (defvar s ())
-(defvar stack ()) ;a list of lists '(name (messages))
-(defvar proc nil)
-
-
-(defun server (port)
-(sb-alien:load-shared-object "libserver.so")
- 
-;(cl:defpackage "TEST-C-CALL" (:use "CL" "SB-ALIEN" "SB-C-CALL"))
-;(cl:in-package "TEST-C-CALL")
- 
- ;;; Define the record C-STRUCT in Lisp.
- (define-alien-type nil
-	 (struct c-struct
-			 (x int)
-			 (s c-string)))
- 
- ;;; Define the Lisp function interface to the C routine.  It returns a
- ;;; pointer to a record of type C-STRUCT.  It accepts four parameters:
- ;;; I, an int; S, a pointer to a string; R, a pointer to a C-STRUCT
- ;;; record; and A, a pointer to the array of 10 ints.
- ;;;
- ;;; The INLINE declaration eliminates some efficiency notes about heap
- ;;; allocation of alien values.
- (declaim (inline server))
- (define-alien-routine server
-	 (* (struct c-struct))
-   (i int))
- 
- ;;; a function which sets up the parameters to the C function and
- ;;; actually calls it
- (defun call-cfun ()
- 
-	 (with-alien ((res (* (struct c-struct))
-					   (server 5 )))
-	   (format t "~&amp;back from C function~%") ; (slot res 'x))
- 
-		 ;; Deallocate result. (after we are done referring to it:
-		 ;; "Pillage, *then* burn.")
-		 (free-alien res)))
-		 
-(call-cfun)
-)
+(defvar stack ()) ;a list of lists (name (messages))
+;(defvar proc nil)
        
 (defun connect (server port &optional)
 ;"Returns a socket connected to SERVER:PORT.  If an error occurs, or the attempt times out after TIMOUT (default 5) secons, nil is returned."
@@ -52,28 +19,31 @@
              (sb-bsd-sockets::socket-connect socket server port)
              socket)))
 
-(defun send (client-name str &optional (host "127.0.0.1") (port 5556))
+(defun send (client-name str &optional (host def-host) (port def-port))
 ;"Print LINE to SOCKET.  CRLF is added.  Returns the number of bytes written."
 	(let* ((addr (sb-bsd-sockets:make-inet-address host)) (socket (connect addr port)) (result nil))
    	(when (and socket str)
      	(sb-bsd-sockets::socket-send socket str nil)) ;(concatenate 'string str (list #\return #\newline)) nil))
-    (setq result (sb-bsd-sockets::socket-receive socket nil 1048576))
-    (format t "received ~s" result)))
+    ;(setq result (sb-bsd-sockets::socket-receive socket nil 1048576))
+    ;(format t "received ~s" result)
+    ))
 
-(defun receive (client-name &optional (host "127.0.0.1") (port 5556) (maxsize 65536))
+(defun receive (client-name &optional (command def-comm) (host def-host) (port def-port) (maxsize 65536))
 ;"Reads one line from SOCKET, removes CRLF, and returns it.  The buffer size is 65536 bytes, unless MAXSIZE is specified.  If no result is received within TIMEOUT seconds (defaults to 5), nil is returned."
    (let* ((addr (sb-bsd-sockets:make-inet-address host)) (socket (connect addr port)))
    (when socket
-       (values (sb-bsd-sockets::socket-receive socket nil maxsize)))))
+   		(progn (sb-bsd-sockets::socket-send socket command nil)
+   		;(sleep 2)
+       	(values (sb-bsd-sockets::socket-receive socket nil maxsize))))))
 
-(defun tcp-print (client-name object &optional (host "localhost") (port 5556))
+(defun tcp-print (client-name object &optional (host def-host) (port def-port))
 ;"Writes OBJECT to SOCKET so that it can be received using tcp-read."
      (send client-name
                     (let ((ostream (make-string-output-stream)))
                       (print object ostream)
                       (get-output-stream-string ostream)) host port))
 
-(defun tcp-read (client-name &optional (host "localhost") (port 5556) (maxsize 1048576))
+(defun tcp-read (client-name &optional (host def-host) (port def-port) (maxsize 1048576))
 ;"Reads and returns a lisp object from the connection SOCKET."
      (let ((s (receive client-name host port maxsize)))
        (when s
@@ -82,18 +52,91 @@
 (defstruct telepathy host port id)
 
 (defun telepathy-create (model-name)
-(declare (ignore model-name))
-(make-telepathy))
+	(declare (ignore model-name))
+	(make-telepathy))
 
 (defun telepathy-reset (instance)
-(declare (ignore instance))
-(chunk-type listener turn)
-(chunk-type receive)
+	(declare (ignore instance))
+	(chunk-type listener turn)
+	(chunk-type receive)
 )
 
 (defun telepathy-delete (instance)
-(declare (ignore instance))
+	(declare (ignore instance))
 )
+
+;;;;;;;JSON decoding
+
+(chunk-type bbox x1 y1 x2 y2)
+(chunk-type vertices x1 y1 x2 y2 x3 y3 x4 y4)
+(chunk-type object type bbox color vertices)
+
+(defun parse-bbox (bbox)
+	(setf chunk nil)
+	(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa bbox x1 ~S y1 ~S x2 ~S y2 ~S)))"
+		(cdar (first bbox))
+		(cdadr (first bbox))
+		(cdar (second bbox))
+		(cdadr (second bbox))))))
+	chunk
+)
+
+(defun parse-vertices (vert num)
+	(setf chunk nil)
+	(cond
+	((eql num 3)
+		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices x1 ~S y1 ~S x2 ~S y2 ~S x3 ~S y3 ~S)))"
+				(cdar (first vert))
+				(cdadr (first vert))
+				(cdar (second vert))
+				(cdadr (second vert))
+				(cdar (third vert))
+				(cdadr (third vert))))))
+	)
+	((eql num 4)
+		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices x1 ~S y1 ~S x2 ~S y2 ~S x3 ~S y3 ~S x4 ~S y4 ~S)))"
+				(cdar (first vert))
+				(cdadr (first vert))
+				(cdar (second vert))
+				(cdadr (second vert))
+				(cdar (third vert))
+				(cdadr (third vert))
+				(cdar (fourth vert))
+				(cdadr (fourth vert))))))
+	))
+	;(format t "chunk: ~s" chunk)
+	chunk
+)
+
+(defun parse-json (string)
+;;;;json-bind needs to escape all the uppercase letters with * (Type => *type)
+	(setf chunk nil)
+		(json:json-bind (*type) string
+			(cond 
+				((equal "Quadrilateral" *type)
+				(json:json-bind (*type *color *bbox *vertices) string
+					(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa object type ~S color ~S bbox ~S vertices ~S)))"
+					 *type *color (parse-bbox *bbox) (parse-vertices *vertices 4))))))
+				) ;Quadrilateral
+				((equal "Triangle" *type) (format t "Triangle!")
+				) ;Triangle
+				((equal "Circle" *type) (format t "Circle!")
+				) ;Circle
+				((equal "Marker" *type) (format t "Marker!")
+				) ;Marker
+				((equal "QRCode" *type) (format t "QRCode!")
+				) ;QRCode
+				(t (format t "error while parsing json: chunk type ~s ~s not recognized" (type-of *type) *type))
+			);cond
+		);json-bind type
+	(format t "chunk: ~s" chunk)
+	chunk
+)
+
+	;(setf list (json:decode-json-from-string string))
+		;(EVAL (READ-FROM-STRING (format nil "(car (define-chunks-fct (list (chunk-spec-to-chunk-def 
+			;(define-chunk-spec isa object type ~S color ~S bbox ~S vertices ~S)))))" type color bbox vertices)))
+;;;;;;;JSON
 
 (defun telepathy-requests (instance buffer-name chunk-spec)
 	(case buffer-name
@@ -101,26 +144,25 @@
 			(case (chunk-spec-chunk-type chunk-spec)
 				 (listener ;used to turn on and off the server
  					(case (third (car (chunk-spec-slot-spec chunk-spec 'turn)))
- 						(on (setq proc (sb-thread:make-thread (lambda () (server (telepathy-port instance))))))
- 						(off (sb-thread:terminate-thread proc))
- 						;(on (setq server-event (schedule-event-relative 0 'server :maintenance t :time-in-ms t :params (list (telepathy-port instance)))))
- 						;(off (delete-event server-event)) ;stop server
+ 						(on (shell "./test")) ;run the server
+ 						(off (shell "killall test"))
  						(t (print-warning "Wrong parameter for the \"listener\" request"))
  					);case
  				);listener
-				;(receive ;creates a new chunk from a chunk-spec and stuffs the buffer with it
-				;	(let ((str (cadr (receive (telepathy-id instance) (telepathy-host instance) (telepathy-port instance)))))
-				;	(if (eql str nil) nil		
-				;		(EVAL (READ-FROM-STRING (format nil "(schedule-set-buffer-chunk 'comm
-				;			(car (define-chunks-fct (list (chunk-spec-to-chunk-def ~S)))) 0 :module 'comm)"
-				;			(read-from-string str)))) ;the chunk-spec received from the server
-				;	));if
-				;);receive
+				(receive ;creates a new chunk from a chunk-spec and stuffs the buffer with it
+					(let ((str (receive (telepathy-id instance) def-comm (telepathy-host instance) (telepathy-port instance))))
+					;(format t "ricevuto: ~S" str)
+					(if (eql str nil) nil	
+						(EVAL (READ-FROM-STRING (format nil "(schedule-set-buffer-chunk 'comm '~S 0 :module 'comm)"
+						(parse-json str))))
+						;(schedule-set-buffer-chunk 'comm (car (define-chunks-fct (list (chunk-spec-to-chunk-def (json:decode-json str))))) 0 :module 'comm)
+					));if
+				);receive
 				(t ;as default send the chunk to the server
 					; (print " \\ ")(print chunk-spec)(print " //")
 					(if (send (telepathy-id instance)
-							(format nil "~s" chunk-spec) ;encapsulate the structure in a string
-								; (EVAL (READ-FROM-STRING (format nil "(define-chunk-spec ~s)" (buffer-read 'retrieval)))))
+							def-comm
+							;(json:encode-json (EVAL (READ-FROM-STRING (format nil "(define-chunk-spec ~s)" (buffer-read 'retrieval)))))
 							(telepathy-host instance)
 							(telepathy-port instance)) ;read from the buffer and convert into a chunk-spec
 						(print-warning "Communication failed: register the client and try again")
@@ -182,14 +224,14 @@
 (list 
 	(define-parameter :server-port
 		:documentation "port to which the server accepts connections"
-		:default-value 5556
+		:default-value def-port
 		:valid-test (lambda (x)
 			(and (integerp x) (> x 1024) (< x 65535)))
 		:warning "invalid port number"
 		:owner t)
 	(define-parameter :server-host
 			:documentation "host where the server listens"
-			:default-value "127.0.0.1"
+			:default-value def-host
 			:owner t)
 	(define-parameter :client-id
 			:documentation "this client's unique ID"

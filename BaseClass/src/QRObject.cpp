@@ -18,7 +18,8 @@ QRObject::~QRObject() {
 
 Json::Value QRObject::getJson(){
 	Json::Value obj;// = Object::getJson();
-	obj["content"]=this->content;
+	obj["Type"]="QRCode";
+	obj["Content"]=this->content;
 	return obj;
 	
 }

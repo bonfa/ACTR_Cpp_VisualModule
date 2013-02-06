@@ -156,10 +156,10 @@ Json::Value Quadrilateral::getJson(){
 	vertices.append(p3);
 	vertices.append(p4);
 	//put all together in the hierarchy
-	obj["bbox"]=Object::getJson();
-	obj["vertices"]=vertices;
+	obj["Bbox"]=Object::getJson();
+	obj["Vertices"]=vertices;
 	obj["Type"]="Quadrilateral";
-	obj["color"]=this->color;
+	obj["Color"]=this->color;
 	return obj;
 }
 

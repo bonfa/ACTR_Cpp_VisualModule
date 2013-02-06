@@ -2,6 +2,10 @@
 (define-model test-nxt-motor
     
 (chunk-type goal state)
+(chunk-type bbox x1 y1 x2 y2)
+(chunk-type vertices x1 y1 x2 y2 x3 y3 x4 y4)
+(chunk-type object type bbox color vertices)
+
 (add-dm (goal ISA goal))
 
 (p start
@@ -10,23 +14,24 @@
    		state nil
    	==>
    	=goal>
-   		state back
-   	+comm>
-		isa		listener
-		turn	on)
+   		state start-reading
+;   	+comm>
+;		isa		listener
+;		turn	on
+)
 
-(p wait
-	=goal>
-	isa goal
-	state back
-	?comm>
-		state	free
-	==>
-	+comm>
-		isa goal
-		state	nil
-	=goal>
-		state	fine)
+;(p wait
+;	=goal>
+;	isa goal
+;	state back
+;	?comm>
+;		state	free
+;	==>
+;	+comm>
+;		isa goal
+;		state	nil
+;	=goal>
+;		state	fine)
 
 (p start-reading
 	=goal>
@@ -56,7 +61,7 @@
 		isa 	goal
 		state 	receive-chunk
 	=comm>
-		isa			goal
+		isa		object
 	==>
 	=goal>
 		state 	fine

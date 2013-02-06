@@ -31,10 +31,20 @@ Circle::Circle(int rad, int x, int y) {
 
 Json::Value Circle::getJson(){
 	Json::Value obj;
+	Json::Value c;
+	c["x"] = this->center.x;
+	c["y"] = this->center.y;
+	Json::Value rad;
+	rad["rad"] = this->radius;
+	//creating the vertices' array
+	Json::Value vertices(Json::arrayValue);
+	vertices.append(c);
+	vertices.append(rad);
 	//put all together in the hierarchy
-	obj["bbox"]=Object::getJson();
+	obj["Bbox"]=Object::getJson();
+	obj["Vertices"]=vertices;
 	obj["Type"]="Circle";
-	obj["color"]=this->color;
+	obj["Color"]=this->color;
 	return obj;
 }
 

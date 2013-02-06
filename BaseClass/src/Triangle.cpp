@@ -67,10 +67,10 @@ Json::Value Triangle::getJson(){
 	vertices.append(p2);
 	vertices.append(p3);
 	//put all together in the hierarchy
-	obj["bbox"]=Object::getJson();
-	obj["vertices"]=vertices;
+	obj["Bbox"]=Object::getJson();
+	obj["Vertices"]=vertices;
 	obj["Type"]="Triangle";
-	obj["color"]=this->color;
+	obj["Color"]=this->color;
 	return obj;
 }
 

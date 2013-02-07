@@ -1,7 +1,7 @@
 (require :sb-bsd-sockets)
 (ql:quickload "cl-json")
 #+sbcl (defun shell (x) (run-program "/bin/sh" (list "-c" x) :output t))
-(setq def-host "127.0.0.1")
+(setq def-host "132.230.17.10") ;"127.0.0.1"
 (setq def-port 4114)
 (setq def-comm "{\"cmd\":\"getFeature\"}")
 (setq socket nil)
@@ -68,8 +68,12 @@
 ;;;;;;;JSON decoding
 
 (chunk-type bbox x1 y1 x2 y2)
-(chunk-type vertices x1 y1 x2 y2 x3 y3 x4 y4)
+(chunk-type vertices1p x1 y1 rad)
+(chunk-type vertices3p x1 y1 x2 y2 x3 y3)
+(chunk-type vertices4p x1 y1 x2 y2 x3 y3 x4 y4)
 (chunk-type object type bbox color vertices)
+(chunk-type qrcode type content)
+(chunk-type marker type id attitude_angle quadrilateral qrstatus qrcode)
 
 (defun parse-bbox (bbox)
 	(setf chunk nil)
@@ -81,20 +85,24 @@
 	chunk
 )
 
-(defun parse-vertices (vert num)
+(defun parse-vertices (vert type)
 	(setf chunk nil)
 	(cond
-	((eql num 3)
-		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices x1 ~S y1 ~S x2 ~S y2 ~S x3 ~S y3 ~S)))"
+	((equal "Circle" type) (format t "Circle!")
+		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices1p x1 ~S y1 ~S rad ~S)))"
+				(cdar (first vert))
+				(cdadr (first vert))
+				(cdar (second vert)))))))
+	((equal "Triangle" type) (format t "Triangle!")
+		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices3p x1 ~S y1 ~S x2 ~S y2 ~S x3 ~S y3 ~S)))"
 				(cdar (first vert))
 				(cdadr (first vert))
 				(cdar (second vert))
 				(cdadr (second vert))
 				(cdar (third vert))
-				(cdadr (third vert))))))
-	)
-	((eql num 4)
-		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices x1 ~S y1 ~S x2 ~S y2 ~S x3 ~S y3 ~S x4 ~S y4 ~S)))"
+				(cdadr (third vert)))))))
+	((equal "Quadrilateral" type) (format t "Quadrilateral!")
+		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices4p x1 ~S y1 ~S x2 ~S y2 ~S x3 ~S y3 ~S x4 ~S y4 ~S)))"
 				(cdar (first vert))
 				(cdadr (first vert))
 				(cdar (second vert))
@@ -102,34 +110,41 @@
 				(cdar (third vert))
 				(cdadr (third vert))
 				(cdar (fourth vert))
-				(cdadr (fourth vert))))))
-	))
+				(cdadr (fourth vert)))))))
+	(t (format t "error while parsing json: chunk type ~s ~s not recognized" (type-of type) type)))
 	;(format t "chunk: ~s" chunk)
 	chunk
 )
 
 (defun parse-json (string)
 ;;;;json-bind needs to escape all the uppercase letters with * (Type => *type)
+	(format t "parsing json: ~S~%" string)
 	(setf chunk nil)
 		(json:json-bind (*type) string
 			(cond 
-				((equal "Quadrilateral" *type)
-				(json:json-bind (*type *color *bbox *vertices) string
-					(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa object type ~S color ~S bbox ~S vertices ~S)))"
-					 *type *color (parse-bbox *bbox) (parse-vertices *vertices 4))))))
-				) ;Quadrilateral
-				((equal "Triangle" *type) (format t "Triangle!")
-				) ;Triangle
-				((equal "Circle" *type) (format t "Circle!")
-				) ;Circle
 				((equal "Marker" *type) (format t "Marker!")
+					(json:json-bind (*type *id *attitudeangle *quadrilateral *qrstatus *qrcode) string
+						(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa marker type ~S id ~S attitude_angle ~S quadrilateral ~S qrstatus ~S qrcode ~S)))"
+					 	*type *id *attitudeangle
+					 	(parse-json (json:encode-json-to-string *quadrilateral))  ;need to convert back to string to pass it as parameter to the same function
+					 	*qrstatus
+					 	(if *qrstatus ;if qrstatus is false, no qrcode is retrieved
+					 		(parse-json (json:encode-json-to-string *qrcode))
+					 		"NA")
+					 	)))))
 				) ;Marker
 				((equal "QRCode" *type) (format t "QRCode!")
+					(json:json-bind (*type *content) string
+						(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa qrcode type ~S content ~S)))"
+					 	*type *content)))))
 				) ;QRCode
-				(t (format t "error while parsing json: chunk type ~s ~s not recognized" (type-of *type) *type))
+				(t (json:json-bind (*type *color *bbox *vertices) string
+					(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa object type ~S color ~S bbox ~S vertices ~S)))"
+					 *type *color (parse-bbox *bbox) (parse-vertices *vertices *type))))))
+				) ;t
 			);cond
 		);json-bind type
-	(format t "chunk: ~s" chunk)
+	;(format t "chunk: ~s" chunk)
 	chunk
 )
 

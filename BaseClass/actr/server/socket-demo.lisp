@@ -3,8 +3,12 @@
     
 (chunk-type goal state)
 (chunk-type bbox x1 y1 x2 y2)
-(chunk-type vertices x1 y1 x2 y2 x3 y3 x4 y4)
+(chunk-type vertices1p x1 y1 rad)
+(chunk-type vertices3p x1 y1 x2 y2 x3 y3)
+(chunk-type vertices4p x1 y1 x2 y2 x3 y3 x4 y4)
 (chunk-type object type bbox color vertices)
+(chunk-type qrcode type content)
+(chunk-type marker type id attitude_angle quadrilateral qrstatus qrcode)
 
 (add-dm (goal ISA goal))
 
@@ -56,7 +60,7 @@
 )
 ; (spp nothing-to-read :u -10) ;grants the production "receive-chunk" to be run all the time it's needed
 
-(p receive-chunk
+(p receive-object
 	=goal>
 		isa 	goal
 		state 	receive-chunk
@@ -67,6 +71,32 @@
 		state 	fine
 	-comm> ;store in dm
 )
+
+(p receive-marker
+	=goal>
+		isa 	goal
+		state 	receive-chunk
+	=comm>
+		isa		marker
+	==>
+	=goal>
+		state 	fine
+	-comm> ;store in dm
+)
+
+(p receive-qr
+	=goal>
+		isa 	goal
+		state 	receive-chunk
+	=comm>
+		isa		qrcode
+	==>
+	=goal>
+		state 	fine
+	-comm> ;store in dm
+)
+
+
 
 ;(p kill-server
 ;	=goal>

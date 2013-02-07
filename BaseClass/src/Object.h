@@ -14,7 +14,11 @@
 #include "utils.h"
 #include "MyPoint.h"
 #include "Rect.h"
+#ifdef __APPLE__
 #include "json/json.h"
+#else
+#include <json/json.h>
+#endif
 
 using namespace std;
 

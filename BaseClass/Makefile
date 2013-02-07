@@ -57,7 +57,7 @@ endif
 QR_SOURCE := qr/main.cpp
 QR_LIB := decodeqr
 MY_LIB := launcher
-LD_FLAGS := -L. $(BST_PATH) -l$(MY_LIB) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH) $(BST_LIBS) $(MGK_LIBS) $(ZBR_LIBS) #$(ART_FLAGS) $(ART_LIBS) $(ART_CFLAG)
+LD_FLAGS := -L. $(BST_PATH) -l$(MY_LIB) $(JSN_LIBS) $(OCV_LIBS) $(OCV_PATH) $(BST_LIBS) $(MGK_LIBS) $(ZBR_LIBS) $(ART_FLAGS) $(ART_LIBS) $(ART_CFLAG)
 CC_FLAGS := -c -fPIC
 AR_FLAGS := rcs
 STATIC_LIB := lib$(MY_LIB).a
@@ -78,7 +78,7 @@ set_lib_path:
 	export LD_LIBRARY_PATH=./
 
 main:
-	$(CC) $(MGK_PATH)  $(ZBR_PATH) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)
+	$(CC) $(MGK_PATH) $(JSN_PATH)  $(ZBR_PATH) $(MAIN_SRC) $(LD_FLAGS) -o $(EXEC)
 
 lib: $(OBJ_FILES)
 	ar $(AR_FLAGS) $(STATIC_LIB) $^
@@ -100,7 +100,7 @@ obj/Session.o: src/Session.cpp
 	$(CC) $(OCV_PATH) $(JSN_PATH) $(MGK_PATH) $(ZBR_PATH) $(CC_FLAGS) $(ART_CFLAG) -o $@ $<
 	
 obj/MarkerDetector.o: src/MarkerDetector.cpp
-	$(CC)  $(CC_FLAGS) $(OCV_PATH) $(ART_CFLAG) -Wno-write-strings -o $@ $<
+	$(CC)  $(CC_FLAGS) $(JSN_PATH) $(OCV_PATH) $(ART_CFLAG) -Wno-write-strings -o $@ $<
 
 obj/FeatureExtractor.o: src/FeatureExtractor.cpp
 	$(CC) $(OCV_PATH) $(MGK_PATH) $(JSN_PATH)  $(ZBR_PATH) $(CC_FLAGS) $(ART_CFLAG) -o $@ $<
@@ -115,7 +115,7 @@ obj/%.o: src/%.c
 	$(CC) $(ART_CFLAG) $(OCV_PATH)  $(CC_FLAGS) -o $@ $<
 	
 obj/%.o: src/%.cpp
-	$(CC) $(OCV_PATH)  $(CC_FLAGS) -o $@ $<
+	$(CC) $(OCV_PATH) $(JSN_PATH)  $(CC_FLAGS) -o $@ $<
 
 del_lib:
 	rm -f $(STATIC_LIB) $(DYNAMIC_LIB)

@@ -36,15 +36,18 @@ Marker::Marker(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, int id_,
 
 Json::Value Marker::getJson(){
 	Json::Value obj;
-	obj["QRStatus"]= this->QRStatus;
+	obj["Qrstatus"]= this->QRStatus;
 	obj["Id"]= this->id;
-	std::ostringstream strs;
-	strs << attitudeAngle;
-	std::string attitudeStr = strs.str();
-	obj["AttitudeAngle"]= strs.str();
+	
+	std::ostringstream attitudeTemp;
+	attitudeTemp << attitudeAngle;
+	std::string attitudeStr = attitudeTemp.str();
+	
+	obj["Attitudeangle"]= attitudeStr;
 	obj["Type"]="Marker";
 	obj["Quadrilateral"] = Quadrilateral::getJson();
-	obj["QRCode"]= qr->getPJson();
+	if(this->QRStatus)
+		obj["Qrcode"]= qr->getPJson();
 	return obj;
 }
 

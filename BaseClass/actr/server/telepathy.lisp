@@ -1,7 +1,7 @@
 (require :sb-bsd-sockets)
 (ql:quickload "cl-json")
 #+sbcl (defun shell (x) (run-program "/bin/sh" (list "-c" x) :output t))
-(setq def-host "132.230.17.10") ;"127.0.0.1"
+(setq def-host "132.230.17.10") ;"127.0.0.1")
 (setq def-port 4114)
 (setq def-comm "{\"cmd\":\"getFeature\"}")
 (setq socket nil)
@@ -25,7 +25,7 @@
    	(when (and socket str)
      	(sb-bsd-sockets::socket-send socket str nil)) ;(concatenate 'string str (list #\return #\newline)) nil))
     ;(setq result (sb-bsd-sockets::socket-receive socket nil 1048576))
-    ;(format t "received ~s" result)
+    ;(format t "received ~s~%" result)
     ))
 
 (defun receive (client-name &optional (command def-comm) (host def-host) (port def-port) (maxsize 65536))
@@ -58,7 +58,13 @@
 (defun telepathy-reset (instance)
 	(declare (ignore instance))
 	(chunk-type listener turn)
-	(chunk-type receive)
+	(chunk-type bbox x1 y1 x2 y2)
+	(chunk-type vertices1p x1 y1 rad)
+	(chunk-type vertices3p x1 y1 x2 y2 x3 y3)
+	(chunk-type vertices4p x1 y1 x2 y2 x3 y3 x4 y4)
+	(chunk-type object type bbox color vertices)
+	(chunk-type qrcode type content)
+	(chunk-type marker type id attitude_angle quadrilateral qrstatus qrcode)
 )
 
 (defun telepathy-delete (instance)
@@ -66,14 +72,6 @@
 )
 
 ;;;;;;;JSON decoding
-
-(chunk-type bbox x1 y1 x2 y2)
-(chunk-type vertices1p x1 y1 rad)
-(chunk-type vertices3p x1 y1 x2 y2 x3 y3)
-(chunk-type vertices4p x1 y1 x2 y2 x3 y3 x4 y4)
-(chunk-type object type bbox color vertices)
-(chunk-type qrcode type content)
-(chunk-type marker type id attitude_angle quadrilateral qrstatus qrcode)
 
 (defun parse-bbox (bbox)
 	(setf chunk nil)
@@ -88,12 +86,12 @@
 (defun parse-vertices (vert type)
 	(setf chunk nil)
 	(cond
-	((equal "Circle" type) (format t "Circle!")
+	((equal "Circle" type) (format t "Circle!~%")
 		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices1p x1 ~S y1 ~S rad ~S)))"
 				(cdar (first vert))
 				(cdadr (first vert))
 				(cdar (second vert)))))))
-	((equal "Triangle" type) (format t "Triangle!")
+	((equal "Triangle" type) (format t "Triangle!~%")
 		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices3p x1 ~S y1 ~S x2 ~S y2 ~S x3 ~S y3 ~S)))"
 				(cdar (first vert))
 				(cdadr (first vert))
@@ -101,7 +99,7 @@
 				(cdadr (second vert))
 				(cdar (third vert))
 				(cdadr (third vert)))))))
-	((equal "Quadrilateral" type) (format t "Quadrilateral!")
+	((equal "Quadrilateral" type) (format t "Quadrilateral!~%")
 		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices4p x1 ~S y1 ~S x2 ~S y2 ~S x3 ~S y3 ~S x4 ~S y4 ~S)))"
 				(cdar (first vert))
 				(cdadr (first vert))
@@ -111,40 +109,43 @@
 				(cdadr (third vert))
 				(cdar (fourth vert))
 				(cdadr (fourth vert)))))))
-	(t (format t "error while parsing json: chunk type ~s ~s not recognized" (type-of type) type)))
-	;(format t "chunk: ~s" chunk)
+	(t (format t "error while parsing json: chunk type ~s ~s not recognized~%" (type-of type) type)))
+	;(format t "chunk: ~s~%" chunk)
 	chunk
 )
 
-(defun parse-json (string)
+(defun parse-json (list)
 ;;;;json-bind needs to escape all the uppercase letters with * (Type => *type)
-	(format t "parsing json: ~S~%" string)
 	(setf chunk nil)
-		(json:json-bind (*type) string
+	(setf type (cdr (assoc ':*type list)))
+	;(format t "parsing json: ~S~%" list)
 			(cond 
-				((equal "Marker" *type) (format t "Marker!")
-					(json:json-bind (*type *id *attitudeangle *quadrilateral *qrstatus *qrcode) string
-						(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa marker type ~S id ~S attitude_angle ~S quadrilateral ~S qrstatus ~S qrcode ~S)))"
-					 	*type *id *attitudeangle
-					 	(parse-json (json:encode-json-to-string *quadrilateral))  ;need to convert back to string to pass it as parameter to the same function
-					 	*qrstatus
-					 	(if *qrstatus ;if qrstatus is false, no qrcode is retrieved
-					 		(parse-json (json:encode-json-to-string *qrcode))
-					 		"NA")
-					 	)))))
+				((equal "Marker" type) (format t "Marker!~%")
+					(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa marker type ~S id ~S attitude_angle ~S quadrilateral ~S qrstatus ~S qrcode ~S)))"
+					 type
+					 (cdr (assoc ':*id list))
+					 (cdr (assoc ':*attitudeangle list))
+					 (parse-json (cdr (assoc ':*quadrilateral list)))
+					 (cdr (assoc ':*qrstatus list))
+					 (if (cdr (assoc ':*qrstatus list)) ;if qrstatus is false, no qrcode is retrieved
+					 	(parse-json (cdr (assoc ':*qrcode list)))
+					 	nil)
+					 ))))
 				) ;Marker
-				((equal "QRCode" *type) (format t "QRCode!")
-					(json:json-bind (*type *content) string
-						(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa qrcode type ~S content ~S)))"
-					 	*type *content)))))
+				((equal "QRCode" type) (format t "QRCode!~%")
+					(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa qrcode type ~S content ~S)))"
+					type
+					(cdr (assoc ':*content list))))))
 				) ;QRCode
-				(t (json:json-bind (*type *color *bbox *vertices) string
+				(t ;(format t "~S!~%" type)
 					(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa object type ~S color ~S bbox ~S vertices ~S)))"
-					 *type *color (parse-bbox *bbox) (parse-vertices *vertices *type))))))
+					 type
+					 (cdr (assoc ':*color list))
+					 (parse-bbox (cdr (assoc ':*bbox list)))
+					 (parse-vertices (cdr (assoc ':*vertices list)) type)))))
 				) ;t
 			);cond
-		);json-bind type
-	;(format t "chunk: ~s" chunk)
+	;(format t "chunk: ~s~%" chunk)
 	chunk
 )
 
@@ -165,13 +166,32 @@
  					);case
  				);listener
 				(receive ;creates a new chunk from a chunk-spec and stuffs the buffer with it
-					(let ((str (receive (telepathy-id instance) def-comm (telepathy-host instance) (telepathy-port instance))))
-					;(format t "ricevuto: ~S" str)
-					(if (eql str nil) nil	
-						(EVAL (READ-FROM-STRING (format nil "(schedule-set-buffer-chunk 'comm '~S 0 :module 'comm)"
-						(parse-json str))))
-						;(schedule-set-buffer-chunk 'comm (car (define-chunks-fct (list (chunk-spec-to-chunk-def (json:decode-json str))))) 0 :module 'comm)
-					));if
+					(setf command (third (car (chunk-spec-slot-spec chunk-spec 'command))))
+					;(format t "command=~S~%" command)
+					(cond 
+						((equal command "getFeature")
+							(let ((str (receive (telepathy-id instance) "{\"cmd\":\"getFeature\"}" (telepathy-host instance) (telepathy-port instance))))
+							(if (eql str nil) nil
+								(loop for elem in (with-input-from-string (s str) (json:decode-json s)) do; (print elem)
+									(EVAL (READ-FROM-STRING (format nil "(schedule-set-buffer-chunk 'comm '~S 0 :module 'comm)"	(parse-json elem))))
+								);loop
+							));if
+						)((equal command "getMarker")
+							(let ((str (receive (telepathy-id instance) "{\"cmd\":\"getMarker\"}" (telepathy-host instance) (telepathy-port instance))))
+							(if (eql str nil) nil	
+								(loop for elem in (with-input-from-string (s str) (json:decode-json s)) do; (print elem)
+									(EVAL (READ-FROM-STRING (format nil "(schedule-set-buffer-chunk 'comm '~S 0 :module 'comm)" (parse-json elem))))
+								);loop
+							));if
+						)(t (format t "command not recognized~%") ;safe default
+							(let ((str (receive (telepathy-id instance) def-comm (telepathy-host instance) (telepathy-port instance))))
+							(if (eql str nil) nil	
+								(loop for elem in (with-input-from-string (s str) (json:decode-json s)) do ;(print elem)
+									(EVAL (READ-FROM-STRING (format nil "(schedule-set-buffer-chunk 'comm '~S 0 :module 'comm)" (parse-json elem))))
+								);loop
+							));if
+						);t
+					);case
 				);receive
 				(t ;as default send the chunk to the server
 					; (print " \\ ")(print chunk-spec)(print " //")
@@ -191,6 +211,8 @@
 	);case
 )
 
+;(schedule-set-buffer-chunk 'comm (car (define-chunks-fct (list (chunk-spec-to-chunk-def (json:decode-json str))))) 0 :module 'comm)
+								
 (defun telepathy-queries (instance buffer query value) ;handles the queries to the buffers
 (declare (ignore buffer))
 (case query ;type of the query

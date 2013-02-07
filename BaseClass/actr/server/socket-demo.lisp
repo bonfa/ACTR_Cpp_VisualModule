@@ -2,6 +2,7 @@
 (define-model test-nxt-motor
     
 (chunk-type goal state)
+(chunk-type receive command)
 (chunk-type bbox x1 y1 x2 y2)
 (chunk-type vertices1p x1 y1 rad)
 (chunk-type vertices3p x1 y1 x2 y2 x3 y3)
@@ -46,6 +47,7 @@
 		state 	receive-chunk
 	+comm>
 		isa receive
+		command "getMarker"
 )
 
 (p nothing-to-read

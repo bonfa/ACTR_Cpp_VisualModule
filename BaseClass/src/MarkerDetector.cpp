@@ -39,7 +39,7 @@ OBJECT_T   object[2] = {
 #define XSIZE 1280
 #define YSIZE 720
 //Variabile d'ambiente per usare la webcam, buildare le librerie con gstreamer, cambiare device=/dev/video0 in device=/dev/video1 per usare la seconda webcam
-string			vconf = "v4l2src device=/dev/video0 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=" + XSIZE + ",height=" + YSIZE + "! identity name=artoolkit ! fakesink";
+char			*vconf = "v4l2src device=/dev/video0 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=1280,height=720 ! identity name=artoolkit ! fakesink";
 
 
 
@@ -188,7 +188,12 @@ static void mainLoop(void)
 
     			arGetTransMatCont(&marker_info[k], object[i].trans, object[i].center, object[i].width, object[i].trans);
 
-    			markersList.push_back(dynamic_cast<Quadrilateral*>(new Marker((int)(marker_info[k].vertex[0][0]*100/XSIZE),(int)(marker_info[k].vertex[0][1]*100/YSIZE), (int)(marker_info[k].vertex[1][0]*100/XSIZE),(int)(marker_info[k].vertex[1][1]*100/YSIZE), (int)(marker_info[k].vertex[2][0]*100/XSIZE),(int)(marker_info[k].vertex[2][1]*100/YSIZE), (int)(marker_info[k].vertex[3][0]*100/XSIZE),(int)(marker_info[k].vertex[3][1]*100/YSIZE), object[i].model_id, asin(object[i].trans[1][2]))));
+    			markersList.push_back(dynamic_cast<Quadrilateral*>(new Marker(
+    			(int)(marker_info[k].vertex[0][0]*100/XSIZE), (int)(marker_info[k].vertex[0][1]*100/YSIZE), 
+    			(int)(marker_info[k].vertex[1][0]*100/XSIZE), (int)(marker_info[k].vertex[1][1]*100/YSIZE), 
+    			(int)(marker_info[k].vertex[2][0]*100/XSIZE), (int)(marker_info[k].vertex[2][1]*100/YSIZE), 
+    			(int)(marker_info[k].vertex[3][0]*100/XSIZE), (int)(marker_info[k].vertex[3][1]*100/YSIZE), 
+    			object[i].model_id, asin(object[i].trans[1][2]))));
 
 #ifndef NO_IMG
 
@@ -225,7 +230,7 @@ static void init( void )
     	}
 
     /* open the video path */
-    if( arVideoOpen( vconf.c_str() ) < 0 ) exit(0);
+    if( arVideoOpen( vconf ) < 0 ) exit(0);
     /* find the size of the window */
     if( arVideoInqSize(&xsize, &ysize) < 0 ) exit(0);
     printf("Image size (x,y) = (%d,%d)\n", xsize, ysize);

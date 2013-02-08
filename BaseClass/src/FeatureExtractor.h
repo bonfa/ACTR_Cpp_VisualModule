@@ -40,7 +40,7 @@ using namespace std;
 #include "QRScanner.h"
 
 //Comment this variable to see every step of the shape detection
-#define NO_IMG_SHOW
+//#define NO_IMG_SHOW
 
 
 class FeatureExtractor {
@@ -57,10 +57,11 @@ public:
 private:
 	/**Analizes the image and looks for circles in it. The circles found are added in the circleList*/
 	void recognizeCircles();
+	void recognizePoligon(int sides_number);
 	/** Analizes the image and looks for quadrilateral in it. The circles found are added in the quadrilateralList*/
-	void recognizeSquares();
+	//void recognizeSquares();
 	/** Analizes the image and looks for triangles in it. The circles found are added in the triangleList*/
-	void recognizeTriangles();
+	//void recognizeTriangles();
 	/** Analizes the image and looks for ellipses in it. The ellipses found are added in the ellipseList //TODO*/
 	void recognizeEllipses();
 #ifdef ENRICO

@@ -21,7 +21,7 @@ using namespace std;
 
 class Triangle: public Blob {
 public:
-	Triangle(int ax,int ay,int bx,int by,int cx,int cy);
+	Triangle(int ax,int ay,int bx,int by,int cx,int cy, string color);
 	virtual ~Triangle();
 	/** Returns a string which contains the basic information about the triangle*/
 	string getChunk();

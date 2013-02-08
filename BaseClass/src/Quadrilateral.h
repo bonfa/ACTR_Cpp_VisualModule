@@ -28,7 +28,7 @@
 class Quadrilateral: public Blob {
 public:
 	Quadrilateral();
-	Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy);
+	Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, string color);
 	virtual ~Quadrilateral();
 	/** Returns a string which contains the basic information about the quadrilateral*/
 	string getChunk();

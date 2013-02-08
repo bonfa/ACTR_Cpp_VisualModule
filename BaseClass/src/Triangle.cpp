@@ -16,7 +16,7 @@
  * 5) set the bounding box
  * 6) set the center of the bounding box
  * */
-Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy){
+Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy,string color){
 	if(ax<0 || ay<0 || bx<0 || by<0 || cx<0 || cy<0)
 		throw InputException(("Negative values in the points coordinates"));
 
@@ -33,6 +33,7 @@ Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy){
 	this->setBoundingBox();
 	this->setCenter();
 	this->setRotation();
+	this->setColor(color);
 }
 
 

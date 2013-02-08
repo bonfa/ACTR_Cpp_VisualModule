@@ -67,7 +67,7 @@ int Proxy::test() {
 }
 
 double Proxy::area(){
-	Triangle * tri = new Triangle(0,0,2,0,0,2);
+	Triangle * tri = new Triangle(0,0,2,0,0,2,"red");
 	return tri->getArea();
 }
 
@@ -84,7 +84,7 @@ vector<string> Proxy::getChunkList(){
 
 std::vector<Object *> Proxy::filterObjectList(std::vector<Object *> objectList){
 	for (unsigned int i=0; i<objectList.size();i++){
-		if (objectList.at(i)->getBbox().x < 95 || objectList.at(i)->getBbox().y < 95)
+		if (objectList.at(i)->getBbox().x < BBOX_THRESH_X || objectList.at(i)->getBbox().y < BBOX_THRESH_Y)
 			objectList.erase(objectList.begin()+i);
 	}
 	return objectList;
@@ -93,7 +93,9 @@ std::vector<Object *> Proxy::filterObjectList(std::vector<Object *> objectList){
 void Proxy::processImage(){
 	FeatureGetter *fg = new FeatureGetter(imgPath);
 	fg->updateImage();
+	#ifndef NO_IMG_SHOW
 	fg->showImage();
+	#endif
 	fg->setFeatureList();
 	std::vector<Object *> temporaryObjectList = fg->getObjectList();
 	std::vector<Object *> cleanedObjectList = this->filterObjectList(temporaryObjectList);

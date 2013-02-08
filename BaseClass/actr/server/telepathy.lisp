@@ -1,7 +1,7 @@
 (require :sb-bsd-sockets)
 (ql:quickload "cl-json")
 #+sbcl (defun shell (x) (run-program "/bin/sh" (list "-c" x) :output t))
-(setq def-host "132.230.17.10") ;"127.0.0.1")
+(setq def-host "127.0.0.1");"132.230.17.10")
 (setq def-port 4114)
 (setq def-comm "{\"cmd\":\"getFeature\"}")
 (setq socket nil)
@@ -172,7 +172,7 @@
 						((equal command "getFeature")
 							(let ((str (receive (telepathy-id instance) "{\"cmd\":\"getFeature\"}" (telepathy-host instance) (telepathy-port instance))))
 							(if (eql str nil) nil
-								(loop for elem in (with-input-from-string (s str) (json:decode-json s)) do; (print elem)
+								(loop for elem in (with-input-from-string (s str) (json:decode-json s)) do ;(print str)
 									(EVAL (READ-FROM-STRING (format nil "(schedule-set-buffer-chunk 'comm '~S 0 :module 'comm)"	(parse-json elem))))
 								);loop
 							));if

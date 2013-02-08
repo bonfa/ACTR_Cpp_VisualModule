@@ -8,6 +8,7 @@
 #ifndef PATHCONSTANTS_H_
 #define PATHCONSTANTS_H_
 
+# define IMG_SHAPES "./shapes.png"
 # define IMG_PATH_01 "./images/01_02_1030797656577.bmp"
 /*# define IMG_PATH_02 "./images/02_08_447099175936.bmp"
 # define IMG_PATH_03 "./images/03_32_9007255098753112.bmp"

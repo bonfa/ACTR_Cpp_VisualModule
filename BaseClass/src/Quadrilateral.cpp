@@ -26,7 +26,7 @@ Quadrilateral::~Quadrilateral() {
  * 6) set the bounding box
  * 7) set the center of the bounding box
  * */
-Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy){
+Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, string color){
 	//TODO sistemare questo controllo!!!
 	if(ax<0 || ay<0 || bx<0 || by<0 || cx<0 || cy<0 || dx<0 || dy<0)
 		throw InputException("Negative coordinate");
@@ -64,6 +64,7 @@ Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,in
 	setBbox(minX, minY, maxY - minY, maxX-minX);
 	this->setCenter();
 	this->setRotation();
+	this->setColor(color);
 }
 
 

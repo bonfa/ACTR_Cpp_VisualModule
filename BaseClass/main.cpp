@@ -77,8 +77,8 @@ int main(){
 
 	#else 	  //Run Francesco's code
 	std::cout << "Running Francesco's stuff \n";
-	Proxy *p2 = new Proxy(IMG_PATH_01);
-	vector<string> chunkList = p2->getChunkList();
+	//Proxy *p2 = new Proxy(IMG_SHAPES);
+	//vector<string> chunkList = p2->getChunkList();
 	//printChunkList(chunkList);
 	std::string str;
 	std::cout<<"Ctrl + c to terminate!\n";

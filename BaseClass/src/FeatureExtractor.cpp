@@ -173,8 +173,9 @@ void FeatureExtractor::recognizeCircles(){
 	for( size_t i = 0; i < circles.size(); i++ ) {
 		cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
 		int radius = cvRound(circles[i][2]);
-
-		circleList.push_back(new Circle(radius, center.x,center.y));
+		
+		string color = this->getPointColor(center.x,center.y);
+		circleList.push_back(new Circle(radius, center.x,center.y,color));
 
 		/// Draw the circles detected
 		// circle center
@@ -193,20 +194,133 @@ void FeatureExtractor::recognizeCircles(){
 }
 
 
-
-void FeatureExtractor::recognizeSquares(){
+void FeatureExtractor::recognizePoligon(int sides_number){
 	// create the structure that contains the squares
-	cv::vector<cv::vector<cv::Point> > squares;
-
+	cv::vector<cv::vector<cv::Point> > polys;
+	
 	// blur will enhance edge detection
 	cv::Mat blurred(image);
 	cv::medianBlur(image, blurred, 9);
-
+	
 	// create two gray images
 	cv::Mat gray0(blurred.size(), CV_8U), gray;
 	// create the structure that contains contours
 	cv::vector<cv::vector<cv::Point> > contours;
+	
+	// find polygons in every color plane of the image (only gray plane)
+	for (int c = 0; c < 3; c++) {
+		int ch[] = {c, 0};
+		// extract the single colour level in gray0
+		cv::mixChannels(&blurred, 1, &gray0, 1, ch, 1);
+		
+		// try several threshold levels (0,1 and 2)
+		const int threshold_level = 2;
+		for (int l = 0; l < threshold_level; l++) {
+			// Use Canny instead of zero threshold level!
+			// Canny helps to catch squares with gradient shading
+			if (l == 0) {
+				Canny(gray0, gray, 10, 20, 3); //
+				
+				// Dilate helps to remove potential holes between edge segments
+				cv::dilate(gray, gray, cv::Mat(), cv::Point(-1,-1));
+			}
+			else {
+				gray = gray0 >= (l+1) * 255 / threshold_level;
+			}
+			
+			// Find contours and store them in a list
+			cv::findContours(gray, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+			
+			// Test contours
+			cv::vector<cv::Point> approx;
+			//cout << contours.size();
+			for (size_t i = 0; i < contours.size(); i++) {
+				// approximate contour with accuracy proportional to the contour perimeter
+				cv::approxPolyDP(cv::Mat(contours[i]), approx, arcLength(cv::Mat(contours[i]), true)*0.02, true);
+				
+				// Note: absolute value of an area is used because area may be positive or negative - in accordance with the
+				// contour orientation
+				if (approx.size() == sides_number && cv::isContourConvex(cv::Mat(approx))) {
+					polys.push_back(approx);
+				}
+			}
+		}
+	}
+	
+	//draw polygons
+	cv::Mat polyImg;
+	polyImg = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
+	
+	
+	//sort clockwise the points of each square
+	for ( unsigned int i = 0; i< polys.size(); i++ ) {
+		polys.at(i) = sort4PointsClockwise(polys.at(i));
+	}
+	
+	
+	//delete squares with two points too close one to each other
+	if (sides_number == 3)
+		polys = deleteFalseTriangles(polys);
+	else
+		polys = deleteFalseSquares(polys);
+	
+	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
+	polys = squaresSort(polys);
+	
+	//delete overlapped squares
+	polys = deleteOverlapped(polys);
+	
+	
+	//draw each square with its bounding box on the image
+	if (polys.size() > 0) {
+		for (unsigned int i = 0; i< polys.size(); i++ ) {
+			// draw square
+			cv::drawContours(polyImg, polys, i, cv::Scalar(255,0,0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point()); //blue
+			
+			// draw bounding rect
+			cv::Rect rect = boundingRect(cv::Mat(polys[i]));
+			cv::rectangle(polyImg, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
+			
+			/*
+			 //prints the coordinates of the square
+			 printf("F %d: ",i+1);
+			 for (unsigned int j=0;j<squares.at(i).size();j++){
+			 printf("(%d,%d)  ",squares.at(i).at(j).x,squares.at(i).at(j).y);
+			 }
+			 printf("\n\n");
+			 */
+			//create the quadrilateral
+			string color = this->getPointColor(rect.x+rect.width/2,rect.y+rect.height/2);
+			
+			//calculate the color of the quadrilateral
+			//add the color to the quadrilateral
+			//q->setColor(color);
+			
+			//add each square to the quadrilaterl list
+			if (sides_number == 3)
+				this->triangleList.push_back(new Triangle(polys.at(i).at(0).x,polys.at(i).at(0).y,polys.at(i).at(1).x,polys.at(i).at(1).y,polys.at(i).at(2).x,polys.at(i).at(2).y,color));
+			else
+				this->quadrilateralList.push_back(new Quadrilateral(polys.at(i).at(0).x,polys.at(i).at(0).y,polys.at(i).at(1).x,polys.at(i).at(1).y,polys.at(i).at(2).x,polys.at(i).at(2).y,polys.at(i).at(3).x,polys.at(i).at(3).y,color));
+		}
+	}
+	
+#ifndef NO_IMG_SHOW
+	cv::imshow("polygons",polyImg);
+	cv::waitKey(0);
+#endif
+}
 
+
+/*void FeatureExtractor::recognizeSquares(){
+	// create the structure that contains the squares
+	cv::vector<cv::vector<cv::Point> > squares;
+	// blur will enhance edge detection
+	cv::Mat blurred(image);
+	cv::medianBlur(image, blurred, 9);
+	// create two gray images
+	cv::Mat gray0(blurred.size(), CV_8U), gray;
+	// create the structure that contains contours
+	cv::vector<cv::vector<cv::Point> > contours;
 	// find squares in every color plane of the image (only gray plane)
 	for (int c = 0; c < 3; c++) {
 		int ch[] = {c, 0};
@@ -246,28 +360,19 @@ void FeatureExtractor::recognizeSquares(){
 			}
 		}
 	}
-
 	//draw squares
 	cv::Mat rects;
 	rects = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
-
-
 	//sort clockwise the points of each square
 	for ( unsigned int i = 0; i< squares.size(); i++ ) {
 		squares.at(i) = sort4PointsClockwise(squares.at(i));
 	}
-
-
 	//delete squares with two points too close one to each other
 	squares = deleteFalseSquares(squares);
-
 	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
 	squares = squaresSort(squares);
-
 	//delete overlapped squares
 	squares = deleteOverlapped(squares);
-
-
 	//draw each square with its bounding box on the image
 	if (squares.size() > 0) {
 		for (unsigned int i = 0; i< squares.size(); i++ ) {
@@ -277,22 +382,13 @@ void FeatureExtractor::recognizeSquares(){
 			// draw bounding rect
 			cv::Rect rect = boundingRect(cv::Mat(squares[i]));
 			cv::rectangle(rects, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
-
-/*
-			//prints the coordinates of the square
-			printf("F %d: ",i+1);
-			for (unsigned int j=0;j<squares.at(i).size();j++){
-				printf("(%d,%d)  ",squares.at(i).at(j).x,squares.at(i).at(j).y);
-			}
-			printf("\n\n");
-*/
 			//create the quadrilateral
-			Quadrilateral *q = new Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y);
+			string color = this->getPointColor(rect.x+rect.width/2,rect.y+rect.height/2);
+			Quadrilateral *q = new Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y,color);
 
 			//calculate the color of the quadrilateral
-			string color = this->getPointColor(q->getCenter().x,q->getCenter().y);
 			//add the color to the quadrilateral
-			q->setColor(color);
+			//q->setColor(color);
 
 			//add each square to the quadrilaterl list
 			this->quadrilateralList.push_back(q);
@@ -307,26 +403,22 @@ void FeatureExtractor::recognizeSquares(){
 
 
 
-void FeatureExtractor::recognizeTriangles(){ //TODO merge with recognizesquare
+void FeatureExtractor::recognizeTriangles(){
 	// create the structure that contains the triangles
 	cv::vector<cv::vector<cv::Point> > triangles;
-
 	// blur will enhance edge detection
 	cv::Mat blurred(image);
 	cv::medianBlur(image, blurred, 9);
-
 	// create two gray images
 	cv::Mat gray0(blurred.size(), CV_8U), gray;
 	// create the structure that contains contours
 	cv::vector<cv::vector<cv::Point> > contours;
-
 	// find triangles in every color plane of the image
 	for (int c = 0; c < 3; c++)
 	{
 		int ch[] = {c, 0};
 		// extract the single colour level in gray0
 		cv::mixChannels(&blurred, 1, &gray0, 1, ch, 1);
-
 		// try several threshold levels (0,1 and 2)
 		const int threshold_level = 2;
 		for (int l = 0; l < threshold_level; l++)
@@ -335,23 +427,19 @@ void FeatureExtractor::recognizeTriangles(){ //TODO merge with recognizesquare
 			// Canny helps to catch squares with gradient shading
 			if (l == 0) {
 				Canny(gray0, gray, 10, 20, 3); //
-
 				// Dilate helps to remove potential holes between edge segments
 				cv::dilate(gray, gray, cv::Mat(), cv::Point(-1,-1));
 			}
 			else {
 				gray = gray0 >= (l+1) * 255 / threshold_level;
 			}
-
 			// Find contours and store them in a list
 			cv::findContours(gray, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-
 			// Test contours
 			cv::vector<cv::Point> approx;
 			for (size_t i = 0; i < contours.size(); i++) {
 					// approximate contour with accuracy proportional to the contour perimeter
 					cv::approxPolyDP(cv::Mat(contours[i]), approx, arcLength(cv::Mat(contours[i]), true)*0.02, true);
-
 					// Note: absolute value of an area is used because area may be positive or negative - in accordance with the
 					// contour orientation
 					if (approx.size() == 3 && cv::isContourConvex(cv::Mat(approx)))  {
@@ -360,53 +448,37 @@ void FeatureExtractor::recognizeTriangles(){ //TODO merge with recognizesquare
 			}
 		}
 	}
-
 	//draw triangles
 	cv::Mat triangleImg;
 	triangleImg = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
-
-
 	//sort clockwise the points of each triangle
 	for ( unsigned int i = 0; i< triangles.size(); i++ ) {
 		triangles.at(i) = sort4PointsClockwise(triangles.at(i));
 	}
-
-
 	//delete triangles with two points too close one to each other
 	triangles = deleteFalseTriangles(triangles);
-
 	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
 	triangles = squaresSort(triangles);
-
 	//delete overlapped triangles
 	triangles = deleteOverlapped(triangles);
-
 	//draw each triangle with its bounding box on the image
 	if (triangles.size() > 0) {
 		for (unsigned int i = 0; i< triangles.size(); i++ ) {
-
 			// draw contour
 			cv::drawContours(triangleImg, triangles, i, cv::Scalar(255,0,0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point()); //blue
-
 			// draw bounding rect
 			cv::Rect rect = boundingRect(cv::Mat(triangles[i]));
 			cv::rectangle(triangleImg, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
-			/*
-			printf("F %d: ",i+1);
-			for (unsigned int j=0;j<triangles.at(i).size();j++){
-				printf("(%d,%d)  ",triangles.at(i).at(j).x,triangles.at(i).at(j).y);
-			}
-			printf("\n\n");
-			*/
 			//add each square to the quadrilaterl list
-			this->triangleList.push_back(new Triangle(triangles.at(i).at(0).x,triangles.at(i).at(0).y,triangles.at(i).at(1).x,triangles.at(i).at(1).y,triangles.at(i).at(2).x,triangles.at(i).at(2).y));
+			string color = this->getPointColor(rect.x+rect.width/2,rect.y+rect.height/2);
+			this->triangleList.push_back(new Triangle(triangles.at(i).at(0).x,triangles.at(i).at(0).y,triangles.at(i).at(1).x,triangles.at(i).at(1).y,triangles.at(i).at(2).x,triangles.at(i).at(2).y,color));
 		}
 	}
 #ifndef NO_IMG_SHOW
 	cv::imshow("triangles",triangleImg);
 	cv::waitKey(0);
 #endif
-}
+}*/
 
 /*
  *  One way to tell if an object is an ellipse is to look at the relationship
@@ -694,14 +766,21 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
  */
 
 		this->recognizeCircles();
-		this->recognizeSquares();
-		this->recognizeTriangles();
+		this->recognizePoligon(3);
+		this->recognizePoligon(4);
+		//this->recognizeSquares();
+		//this->recognizeTriangles();
 		this->recognizeEllipses();
 
 		//concatenate everything in a vector of objects
 		this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());
 		this->objectList.insert(objectList.end(),this->triangleList.begin(),this->triangleList.end());
 		this->objectList.insert(objectList.end(),this->circleList.begin(),this->circleList.end());
+		//debug
+		/*cout << "circle-list:" + circleList.at(0)->getChunk() + "\n";
+		for (int i=0; i<objectList.size(); i++) {
+			cout << objectList.at(i)->getChunk() + "\n";
+		}*/
 
 		return objectList;
 #ifdef ENRICO

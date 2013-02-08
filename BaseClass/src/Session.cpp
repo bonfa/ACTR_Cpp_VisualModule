@@ -37,12 +37,13 @@ void Session::handle_read(const boost::system::error_code& error, size_t bytes_t
 
 			//If the command is getChunks
 			if(command.compare("getFeature") == 0){
-				proxyFeature = new Proxy(IMG_PATH_01);
+				proxyFeature = new Proxy(IMG_SHAPES);
 				setChunk(proxyFeature);
 				finalString = "[";
 				std::string joinedString = boost::algorithm::join(chunks, ",");
 				finalString.append(joinedString);
 				finalString.append("]");
+				//cout << finalString;
 			}
 			else if(command.compare("getMarker") == 0){
 				chunks = proxyMarker->getMarkerList();

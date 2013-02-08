@@ -18,7 +18,7 @@
 
 class Circle: public Blob {
 public:
-	Circle(int rad, int x, int y);
+	Circle(int rad, int x, int y, string color);
 	/** Returns a string which contains the basic information about the circle*/
 	string getChunk();
 	/** Returns the x coordinate of the center*/

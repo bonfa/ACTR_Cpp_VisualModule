@@ -47,7 +47,7 @@
 		state 	receive-chunk
 	+comm>
 		isa receive
-		command "getMarker"
+		command "getFeature"
 )
 
 (p nothing-to-read

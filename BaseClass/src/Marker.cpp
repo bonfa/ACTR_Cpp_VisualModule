@@ -25,7 +25,7 @@ Marker::~Marker() {
  * 5) set the bounding box
  * 6) set the center of the bounding box
  * */
-Marker::Marker(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, int id_, double _attitudeAngle) :Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy){
+Marker::Marker(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, int id_, double _attitudeAngle) :Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy, "Black"){
 	id = id_;
 	QRStatus = false;
 	attitudeAngle = _attitudeAngle;

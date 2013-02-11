@@ -189,10 +189,10 @@ static void mainLoop(void)
     			arGetTransMatCont(&marker_info[k], object[i].trans, object[i].center, object[i].width, object[i].trans);
 
     			markersList.push_back(dynamic_cast<Quadrilateral*>(new Marker(
-    			(int)(marker_info[k].vertex[0][0]*100/XSIZE), (int)(marker_info[k].vertex[0][1]*100/YSIZE), 
-    			(int)(marker_info[k].vertex[1][0]*100/XSIZE), (int)(marker_info[k].vertex[1][1]*100/YSIZE), 
-    			(int)(marker_info[k].vertex[2][0]*100/XSIZE), (int)(marker_info[k].vertex[2][1]*100/YSIZE), 
-    			(int)(marker_info[k].vertex[3][0]*100/XSIZE), (int)(marker_info[k].vertex[3][1]*100/YSIZE), 
+    			(int)(marker_info[k].vertex[0][0]), (int)(marker_info[k].vertex[0][1]), 
+    			(int)(marker_info[k].vertex[1][0]), (int)(marker_info[k].vertex[1][1]), 
+    			(int)(marker_info[k].vertex[2][0]), (int)(marker_info[k].vertex[2][1]), 
+    			(int)(marker_info[k].vertex[3][0]), (int)(marker_info[k].vertex[3][1]), 
     			object[i].model_id, asin(object[i].trans[1][2]))));
 
 #ifndef NO_IMG

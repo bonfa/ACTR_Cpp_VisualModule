@@ -1,3 +1,6 @@
+;(load "/Users/stefano/quicklisp/setup.lisp")
+;(load "/Users/stefano/actr-sbcl/telepathy.lisp")
+
 (clear-all)
 (define-model test-nxt-motor
     
@@ -24,19 +27,6 @@
 ;		isa		listener
 ;		turn	on
 )
-
-;(p wait
-;	=goal>
-;	isa goal
-;	state back
-;	?comm>
-;		state	free
-;	==>
-;	+comm>
-;		isa goal
-;		state	nil
-;	=goal>
-;		state	fine)
 
 (p start-reading
 	=goal>
@@ -69,17 +59,38 @@
 	=comm>
 		isa		object
 	==>
+	+visual-location>
+		ISA       		visual-location
+		kind			oval
+		color			red
+	=goal>
+		state 	read-visloc
+	-comm> ;store in dm
+)
+
+(p read-visloc
+	=goal>
+		isa 	goal
+		state 	read-visloc
+	?visual-location>
+		state	free
+	=visual-location>
+		isa		visual-location
+	==>
+	!eval! (buffer-chunk 'visual-location)
 	=goal>
 		state 	fine
 	-comm> ;store in dm
 )
 
-(p receive-marker
+(p no-visloc
 	=goal>
 		isa 	goal
-		state 	receive-chunk
-	=comm>
-		isa		marker
+		state 	read-visloc
+	?visual-location>
+		state	free
+	?visual-location>
+		buffer	empty
 	==>
 	=goal>
 		state 	fine
@@ -98,19 +109,134 @@
 	-comm> ;store in dm
 )
 
+(p receive-marker-with-qr
+	=goal>
+		isa 	goal
+		state 	receive-chunk
+	=comm>
+		isa		marker
+		qrstatus	t
+		qrcode		=qr
+	==>
+	!eval! (format t "qr!")
+	=goal>
+		state 	read-qr
+	+retrieval> =qr
+)
 
+(p read-qr
+	=goal>
+		isa 	goal
+		state 	read-qr
+	=comm>
+		isa		qrcode
+		content	=s
+	==>
+	!eval! (format t "qr says: ~S" =s)
+	=goal>
+		state 	end
+)
 
-;(p kill-server
-;	=goal>
-;		isa 	goal
-;		state 	fine
-;	==>
-;	=goal>
-;		state 	stop
-;	+comm>
-;		isa		listener
-;		turn	off
-;)
-	
+(p receive-marker-without-qr
+	=goal>
+		isa 	goal
+		state 	receive-chunk
+	=comm>
+		isa		marker
+		quadrilateral =q
+		qrstatus	nil
+	==>
+	!eval! (format t "NO qr!")
+	=goal>
+		state 	read-quad
+	+retrieval> =q
+)
+
+(p read-quad
+	=goal>
+		isa 	goal
+		state 	read-quad
+	=retrieval>
+		isa		object
+		type	"Quadrilateral"
+		bbox	=bb
+	==>
+	=goal>
+		state 	read-bbox
+	+retrieval> =bb
+)
+
+(p no-quad
+	=goal>
+		isa 	goal
+		state 	read-quad
+	?retrieval>
+		buffer	empty
+		state	free
+	==>
+	=goal>
+		state 	stop
+)
+
+(p turn-right
+	=goal>
+		isa 	goal
+		state 	read-bbox
+	=retrieval>
+		isa		bbox
+	>	x1		50
+		x1		=x1
+	>	x2		50
+		x2		=x2
+	==>
+	!eval! (format t "right! ~S ~S" =x1 =x2)
+	=goal>
+		state 	start-reading
+)
+
+(p turn-left
+	=goal>
+		isa 	goal
+		state 	read-bbox
+	=retrieval>
+		isa		bbox
+	<	x1		50
+		x1		=x1
+	<	x2		50
+		x2		=x2
+	==>
+	!eval! (format t "left! ~S ~S" =x1 =x2)
+	=goal>
+		state 	start-reading
+)
+
+(p go-straight
+	=goal>
+		isa 	goal
+		state 	read-bbox
+	=retrieval>
+		isa		bbox
+	<	x1		50
+		x1		=x1
+	>	x2		50
+		x2		=x2
+	==>
+	!eval! (format t "straight! ~S ~S" =x1 =x2)
+	=goal>
+		state 	start-reading
+)
+
+(p no-bbox
+	=goal>
+		isa 	goal
+		state 	read-bbox
+	?retrieval>
+		buffer	empty
+		state	free
+	==>
+	=goal>
+		state 	stop
+)
+
 (goal-focus goal)
 )

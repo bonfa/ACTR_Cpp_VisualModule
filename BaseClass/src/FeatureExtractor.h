@@ -40,7 +40,7 @@ using namespace std;
 #include "QRScanner.h"
 
 //Comment this variable to see every step of the shape detection
-//#define NO_IMG_SHOW
+#define NO_IMG_SHOW
 
 
 class FeatureExtractor {

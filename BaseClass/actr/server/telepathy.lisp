@@ -1,13 +1,68 @@
 (require :sb-bsd-sockets)
 (ql:quickload "cl-json")
 #+sbcl (defun shell (x) (run-program "/bin/sh" (list "-c" x) :output t))
-(setq def-host "127.0.0.1");"132.230.17.10")
+(setq def-host "127.0.0.1");"132.230.17.10");
 (setq def-port 4114)
 (setq def-comm "{\"cmd\":\"getFeature\"}")
 (setq socket nil)
+;screen resolution
+(setf XSCREEN 1280.0)
+(setf YSCREEN 720.0)
+(setf XVIEWPORT 200)
+(setf YVIEWPORT 200)
+(setf buttons ())
+
+;;;;;;;;;;;;;;;;;MODEL INIT
+(setf *actr-enabled-p* t)
+(setq *cellwidth* 100)
+(setq *margin* 100)
+(setq *offset* 0)
+(setq *cellcount* 6)
+(setq *boardsize* (* *cellcount* *cellwidth*))
+
+(defun s ()
+	(reset)
+	(reload)
+	(init-window)	; initializes the window
+	(if *actr-enabled-p*
+		(do-experiment-model)
+		(do-experiment-person)
+	)
+)
+
+(defun do-experiment-model ()
+	(proc-display :clear t)
+	(run 100 :real-time t)
+ )
+
+(defun do-experiment-person ()
+	(proc-display :clear t)
+	(sleep 1)
+)
+
+(defun init-window () 
+	;(let* 	((size (+ (* 2 *margin*) *boardsize*)))
+	  (setf *screen* 	
+				(open-exp-window "RushHour"
+				:visible nil
+				:width XVIEWPORT
+				:height YVIEWPORT))
+	;)
+	(install-device *screen*)
+)
 
 
+(defun draw-bbox (bbox color)
+	(let* (	(x (round (/ (* (cdar (first bbox)) XVIEWPORT) XSCREEN)))
+			(y (round (/ (* (cdadr (first bbox)) YVIEWPORT) YSCREEN)))
+			(width (- (round (/ (* (cdar (second bbox)) XVIEWPORT) XSCREEN)) x))
+			(height (- (round (/ (* (cdadr (second bbox)) YVIEWPORT) YSCREEN)) y)))
+	(add-button-to-exp-window :x x :y y	:height height :width width	:text "" :color	(intern (string-upcase color)))
+	);let
+)
+;;;;;;;;;;;;;;;;;END MODEL INIT
 
+;;;;;;;;;;;;;;;;;;SOCKET
 (defvar s ())
 (defvar stack ()) ;a list of lists (name (messages))
 ;(defvar proc nil)
@@ -48,38 +103,17 @@
      (let ((s (receive client-name host port maxsize)))
        (when s
          (with-input-from-string (istream s) (read istream nil nil)))))
+;;;;;;;;;;;;;;;;;;END SOCKET
 
-(defstruct telepathy host port id)
-
-(defun telepathy-create (model-name)
-	(declare (ignore model-name))
-	(make-telepathy))
-
-(defun telepathy-reset (instance)
-	(declare (ignore instance))
-	(chunk-type listener turn)
-	(chunk-type bbox x1 y1 x2 y2)
-	(chunk-type vertices1p x1 y1 rad)
-	(chunk-type vertices3p x1 y1 x2 y2 x3 y3)
-	(chunk-type vertices4p x1 y1 x2 y2 x3 y3 x4 y4)
-	(chunk-type object type bbox color vertices)
-	(chunk-type qrcode type content)
-	(chunk-type marker type id attitude_angle quadrilateral qrstatus qrcode)
-)
-
-(defun telepathy-delete (instance)
-	(declare (ignore instance))
-)
-
-;;;;;;;JSON decoding
+;;;;;;;;;;;;;;;;;;JSON decoding
 
 (defun parse-bbox (bbox)
 	(setf chunk nil)
 	(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa bbox x1 ~S y1 ~S x2 ~S y2 ~S)))"
-		(cdar (first bbox))
-		(cdadr (first bbox))
-		(cdar (second bbox))
-		(cdadr (second bbox))))))
+		(round (/ (* (cdar (first bbox)) XVIEWPORT) XSCREEN))
+		(round (/ (* (cdadr (first bbox)) YVIEWPORT) YSCREEN))
+		(round (/ (* (cdar (second bbox)) XVIEWPORT) XSCREEN))
+		(round (/ (* (cdadr (second bbox)) YVIEWPORT) YSCREEN))))))
 	chunk
 )
 
@@ -88,27 +122,27 @@
 	(cond
 	((equal "Circle" type) (format t "Circle!~%")
 		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices1p x1 ~S y1 ~S rad ~S)))"
-				(cdar (first vert))
-				(cdadr (first vert))
+				(round (/ (* (cdar (first vert)) XVIEWPORT) XSCREEN))
+				(round (/ (* (cdadr (first vert)) YVIEWPORT) YSCREEN))
 				(cdar (second vert)))))))
 	((equal "Triangle" type) (format t "Triangle!~%")
 		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices3p x1 ~S y1 ~S x2 ~S y2 ~S x3 ~S y3 ~S)))"
-				(cdar (first vert))
-				(cdadr (first vert))
-				(cdar (second vert))
-				(cdadr (second vert))
-				(cdar (third vert))
-				(cdadr (third vert)))))))
+				(round (/ (* (cdar (first vert)) XVIEWPORT) XSCREEN))
+				(round (/ (* (cdadr (first vert)) YVIEWPORT) YSCREEN))
+				(round (/ (* (cdar (second vert)) XVIEWPORT) XSCREEN))
+				(round (/ (* (cdadr (second vert)) YVIEWPORT) YSCREEN))
+				(round (/ (* (cdar (third vert)) XVIEWPORT) XSCREEN))
+				(round (/ (* (cdadr (third vert)) YVIEWPORT) YSCREEN)))))))
 	((equal "Quadrilateral" type) (format t "Quadrilateral!~%")
 		(setf chunk (EVAL (READ-FROM-STRING (format nil "(car (add-dm (isa vertices4p x1 ~S y1 ~S x2 ~S y2 ~S x3 ~S y3 ~S x4 ~S y4 ~S)))"
-				(cdar (first vert))
-				(cdadr (first vert))
-				(cdar (second vert))
-				(cdadr (second vert))
-				(cdar (third vert))
-				(cdadr (third vert))
-				(cdar (fourth vert))
-				(cdadr (fourth vert)))))))
+				(round (/ (* (cdar (first vert)) XVIEWPORT) XSCREEN))
+				(round (/ (* (cdadr (first vert)) YVIEWPORT) YSCREEN))
+				(round (/ (* (cdar (second vert)) XVIEWPORT) XSCREEN))
+				(round (/ (* (cdadr (second vert)) YVIEWPORT) YSCREEN))
+				(round (/ (* (cdar (third vert)) XVIEWPORT) XSCREEN))
+				(round (/ (* (cdadr (third vert)) YVIEWPORT) YSCREEN))
+				(round (/ (* (cdar (fourth vert)) XVIEWPORT) XSCREEN))
+				(round (/ (* (cdadr (fourth vert)) YVIEWPORT) YSCREEN)))))))
 	(t (format t "error while parsing json: chunk type ~s ~s not recognized~%" (type-of type) type)))
 	;(format t "chunk: ~s~%" chunk)
 	chunk
@@ -143,6 +177,8 @@
 					 (cdr (assoc ':*color list))
 					 (parse-bbox (cdr (assoc ':*bbox list)))
 					 (parse-vertices (cdr (assoc ':*vertices list)) type)))))
+					 ;draw the button on the visicon
+					 (draw-bbox (cdr (assoc ':*bbox list)) (cdr (assoc ':*color list)))
 				) ;t
 			);cond
 	;(format t "chunk: ~s~%" chunk)
@@ -152,7 +188,32 @@
 	;(setf list (json:decode-json-from-string string))
 		;(EVAL (READ-FROM-STRING (format nil "(car (define-chunks-fct (list (chunk-spec-to-chunk-def 
 			;(define-chunk-spec isa object type ~S color ~S bbox ~S vertices ~S)))))" type color bbox vertices)))
-;;;;;;;JSON
+
+;;;;;;;;;;;;;;;;;;;;;END JSON
+
+;;;;;;;;;;;;;;;;;;;MODULE DEFINITION
+
+(defstruct telepathy host port id)
+
+(defun telepathy-create (model-name)
+	(declare (ignore model-name))
+	(make-telepathy))
+
+(defun telepathy-reset (instance)
+	(declare (ignore instance))
+	(chunk-type listener turn)
+	(chunk-type bbox x1 y1 x2 y2)
+	(chunk-type vertices1p x1 y1 rad)
+	(chunk-type vertices3p x1 y1 x2 y2 x3 y3)
+	(chunk-type vertices4p x1 y1 x2 y2 x3 y3 x4 y4)
+	(chunk-type object type bbox color vertices)
+	(chunk-type qrcode type content)
+	(chunk-type marker type id attitude_angle quadrilateral qrstatus qrcode)
+)
+
+(defun telepathy-delete (instance)
+	(declare (ignore instance))
+)
 
 (defun telepathy-requests (instance buffer-name chunk-spec)
 	(case buffer-name
@@ -178,8 +239,8 @@
 							));if
 						)((equal command "getMarker")
 							(let ((str (receive (telepathy-id instance) "{\"cmd\":\"getMarker\"}" (telepathy-host instance) (telepathy-port instance))))
-							(if (eql str nil) nil	
-								(loop for elem in (with-input-from-string (s str) (json:decode-json s)) do; (print elem)
+							(if (eql str nil) nil	;TODO too many set-buffer-chunk!
+								(loop for elem in (with-input-from-string (s str) (json:decode-json s)) do (print str)
 									(EVAL (READ-FROM-STRING (format nil "(schedule-set-buffer-chunk 'comm '~S 0 :module 'comm)" (parse-json elem))))
 								);loop
 							));if
@@ -192,6 +253,7 @@
 							));if
 						);t
 					);case
+					(proc-display :clear t)
 				);receive
 				(t ;as default send the chunk to the server
 					; (print " \\ ")(print chunk-spec)(print " //")

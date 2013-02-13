@@ -84,7 +84,11 @@ Json::Value Object::getJson(){
 
 string Object::getChunk(){
 	Json::FastWriter writer;
-	return writer.write(this->getJson());
+	std::string s = writer.write(this->getJson());
+	if (!s.empty() && s[s.length()-1] == '\n') {
+		s.erase(s.length()-1);
+	}
+	return s;
 	/*string chunk = "{";
 	chunk.append("\"type\": \"BoundingBox\",");
 	chunk.append("\"x1\":");

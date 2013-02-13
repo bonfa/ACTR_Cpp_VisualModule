@@ -1,5 +1,10 @@
-(require :sb-bsd-sockets)
+#+sbcl (require :sb-bsd-sockets)
 (ql:quickload "cl-json")
+;#+clozure (defparameter ccl::fasl-version (ccl::target-fasl-version))
+;#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp.lisp")
+;#+clozure (quicklisp-quickstart:install :path "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp")
+;#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/telepathy.lisp")
+;;;;;;;;#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp/setup.lisp")
 #+sbcl (defun shell (x) (run-program "/bin/sh" (list "-c" x) :output t))
 (setq def-host "127.0.0.1");"132.230.17.10");
 (setq def-port 4114)
@@ -8,8 +13,8 @@
 ;screen resolution
 (setf XSCREEN 1280.0)
 (setf YSCREEN 720.0)
-(setf XVIEWPORT 200)
-(setf YVIEWPORT 200)
+(setf XVIEWPORT 800)
+(setf YVIEWPORT 800)
 (setf buttons ())
 
 ;;;;;;;;;;;;;;;;;MODEL INIT
@@ -41,13 +46,16 @@
 )
 
 (defun init-window () 
-	;(let* 	((size (+ (* 2 *margin*) *boardsize*)))
-	  (setf *screen* 	
-				(open-exp-window "RushHour"
+	(setf *screen* 	
+		#+sbcl 	(open-exp-window "RushHour"
 				:visible nil
 				:width XVIEWPORT
-				:height YVIEWPORT))
-	;)
+				:height YVIEWPORT)
+		#+clozure 	(open-exp-window "RushHour"
+				:visible t
+				:width XVIEWPORT
+				:height YVIEWPORT)
+	)
 	(install-device *screen*)
 )
 
@@ -57,6 +65,7 @@
 			(y (round (/ (* (cdadr (first bbox)) YVIEWPORT) YSCREEN)))
 			(width (- (round (/ (* (cdar (second bbox)) XVIEWPORT) XSCREEN)) x))
 			(height (- (round (/ (* (cdadr (second bbox)) YVIEWPORT) YSCREEN)) y)))
+	(format t "bbox: x ~S y ~S w ~S h ~S~%" x y width height)
 	(add-button-to-exp-window :x x :y y	:height height :width width	:text "" :color	(intern (string-upcase color)))
 	);let
 )
@@ -67,42 +76,54 @@
 (defvar stack ()) ;a list of lists (name (messages))
 ;(defvar proc nil)
        
-(defun connect (server port &optional)
+#+sbcl (defun connect (server port &optional)
 ;"Returns a socket connected to SERVER:PORT.  If an error occurs, or the attempt times out after TIMOUT (default 5) secons, nil is returned."
    (when (and server port)
-           (let ((socket (make-instance 'sb-bsd-sockets:inet-socket :type :stream :protocol :tcp)))
-             (sb-bsd-sockets::socket-connect socket server port)
-             socket)))
+        (let ((socket (make-instance 'sb-bsd-sockets:inet-socket :type :stream :protocol :tcp)))
+           	(sb-bsd-sockets::socket-connect socket server port)
+           	socket)
+    )
+)
 
 (defun send (client-name str &optional (host def-host) (port def-port))
 ;"Print LINE to SOCKET.  CRLF is added.  Returns the number of bytes written."
-	(let* ((addr (sb-bsd-sockets:make-inet-address host)) (socket (connect addr port)) (result nil))
-   	(when (and socket str)
-     	(sb-bsd-sockets::socket-send socket str nil)) ;(concatenate 'string str (list #\return #\newline)) nil))
-    ;(setq result (sb-bsd-sockets::socket-receive socket nil 1048576))
-    ;(format t "received ~s~%" result)
-    ))
+	#+sbcl 	(let* ((addr (sb-bsd-sockets:make-inet-address host)) (socket (connect addr port)) (result nil))
+   			(when (and socket str)
+     		(sb-bsd-sockets::socket-send socket str nil)))
+    #+clozure (ccl:with-open-socket (socket :address-family :internet :type :stream :connect :active :remote-host host :remote-port port)
+      				(format socket str))
+)
 
 (defun receive (client-name &optional (command def-comm) (host def-host) (port def-port) (maxsize 65536))
 ;"Reads one line from SOCKET, removes CRLF, and returns it.  The buffer size is 65536 bytes, unless MAXSIZE is specified.  If no result is received within TIMEOUT seconds (defaults to 5), nil is returned."
-   (let* ((addr (sb-bsd-sockets:make-inet-address host)) (socket (connect addr port)))
-   (when socket
-   		(progn (sb-bsd-sockets::socket-send socket command nil)
-   		;(sleep 2)
-       	(values (sb-bsd-sockets::socket-receive socket nil maxsize))))))
+   	#+sbcl (let* ((addr (sb-bsd-sockets:make-inet-address host)) (socket (connect addr port)))
+   		(when socket
+   			(progn (sb-bsd-sockets::socket-send socket command nil)
+   			;(sleep 2)
+       		(values (sb-bsd-sockets::socket-receive socket nil maxsize)))))
+	#+clozure (ccl:with-open-socket (socket :address-family :internet :type :stream :connect :active :remote-host host :remote-port port :external-format '(:character-encoding :ascii :line-termination :crlf))
+      				(format socket command)
+      				(finish-output socket)
+      				(read-line socket)
+      			)
+)
 
-(defun tcp-print (client-name object &optional (host def-host) (port def-port))
+;(loop while (not (equal #\] (elt str (- (length str) 1)))) do
+;	(setf str (concatenate 'string str (read-line socket)))
+;)
+
+;(defun tcp-print (client-name object &optional (host def-host) (port def-port))
 ;"Writes OBJECT to SOCKET so that it can be received using tcp-read."
-     (send client-name
-                    (let ((ostream (make-string-output-stream)))
-                      (print object ostream)
-                      (get-output-stream-string ostream)) host port))
+;     (send client-name
+;                   (let ((ostream (make-string-output-stream)))
+;                      (print object ostream)
+;                      (get-output-stream-string ostream)) host port))
 
-(defun tcp-read (client-name &optional (host def-host) (port def-port) (maxsize 1048576))
+;(defun tcp-read (client-name &optional (host def-host) (port def-port) (maxsize 1048576))
 ;"Reads and returns a lisp object from the connection SOCKET."
-     (let ((s (receive client-name host port maxsize)))
-       (when s
-         (with-input-from-string (istream s) (read istream nil nil)))))
+;     (let ((s (receive client-name host port maxsize)))
+;       (when s
+;         (with-input-from-string (istream s) (read istream nil nil)))))
 ;;;;;;;;;;;;;;;;;;END SOCKET
 
 ;;;;;;;;;;;;;;;;;;JSON decoding
@@ -232,6 +253,7 @@
 					(cond 
 						((equal command "getFeature")
 							(let ((str (receive (telepathy-id instance) "{\"cmd\":\"getFeature\"}" (telepathy-host instance) (telepathy-port instance))))
+							;(format t "~S" str)
 							(if (eql str nil) nil
 								(loop for elem in (with-input-from-string (s str) (json:decode-json s)) do ;(print str)
 									(EVAL (READ-FROM-STRING (format nil "(schedule-set-buffer-chunk 'comm '~S 0 :module 'comm)"	(parse-json elem))))

@@ -37,12 +37,12 @@ void Session::handle_read(const boost::system::error_code& error, size_t bytes_t
 
 			//If the command is getChunks
 			if(command.compare("getFeature") == 0){
-				proxyFeature = new Proxy(IMG_SHAPES);
+				proxyFeature = new Proxy(IMG_PATH_01);
 				setChunk(proxyFeature);
 				finalString = "[";
 				std::string joinedString = boost::algorithm::join(chunks, ",");
 				finalString.append(joinedString);
-				finalString.append("]");
+				finalString.append("]\n");
 				//cout << finalString;
 			}
 			else if(command.compare("getMarker") == 0){
@@ -51,7 +51,7 @@ void Session::handle_read(const boost::system::error_code& error, size_t bytes_t
 				finalString = "[";
 				std::string joinedString = boost::algorithm::join(chunks, ",");
 				finalString.append(joinedString);
-				finalString.append("]");
+				finalString.append("]\n");
 			}
 
 			boost::asio::async_write(socket_,

@@ -1,5 +1,8 @@
-;(load "/Users/stefano/quicklisp/setup.lisp")
-;(load "/Users/stefano/actr-sbcl/telepathy.lisp")
+;#+clozure (defparameter ccl::fasl-version (ccl::target-fasl-version))
+;#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp.lisp")
+; (quicklisp-quickstart:install :path "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp")
+;#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp/setup.lisp")
+;#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/telepathy.lisp")
 
 (clear-all)
 (define-model test-nxt-motor
@@ -48,7 +51,7 @@
 		buffer	empty
 	==>
 	=goal>
-		state 	fine
+		state 	start-reading
 )
 ; (spp nothing-to-read :u -10) ;grants the production "receive-chunk" to be run all the time it's needed
 
@@ -128,7 +131,7 @@
 	=goal>
 		isa 	goal
 		state 	read-qr
-	=comm>
+	=retrieval>
 		isa		qrcode
 		content	=s
 	==>
@@ -184,12 +187,12 @@
 		state 	read-bbox
 	=retrieval>
 		isa		bbox
-	>	x1		50
+	>=	x1		100
 		x1		=x1
-	>	x2		50
+	>	x2		100
 		x2		=x2
 	==>
-	!eval! (format t "right! ~S ~S" =x1 =x2)
+	!eval! (format t "right! ~S ~S moving of ~S" =x1 =x2)
 	=goal>
 		state 	start-reading
 )
@@ -200,12 +203,12 @@
 		state 	read-bbox
 	=retrieval>
 		isa		bbox
-	<	x1		50
+	<	x1		100
 		x1		=x1
-	<	x2		50
+	<=	x2		100
 		x2		=x2
 	==>
-	!eval! (format t "left! ~S ~S" =x1 =x2)
+	!eval! (format t "left! ~S ~S moving of ~S" =x1 =x2)
 	=goal>
 		state 	start-reading
 )
@@ -216,9 +219,9 @@
 		state 	read-bbox
 	=retrieval>
 		isa		bbox
-	<	x1		50
+	<=	x1		100
 		x1		=x1
-	>	x2		50
+	>=	x2		100
 		x2		=x2
 	==>
 	!eval! (format t "straight! ~S ~S" =x1 =x2)

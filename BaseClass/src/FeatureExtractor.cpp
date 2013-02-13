@@ -7,7 +7,7 @@
 
 #include "FeatureExtractor.h"
 
-#define MRG 25
+#define MRG 95
 
 
 

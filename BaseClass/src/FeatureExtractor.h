@@ -64,6 +64,8 @@ private:
 	//void recognizeTriangles();
 	/** Analizes the image and looks for ellipses in it. The ellipses found are added in the ellipseList //TODO*/
 	void recognizeEllipses();
+	void normalizeCoord(int& x, int& y);
+	void normalizeCoord(int& x);
 #ifdef ENRICO
 	/** Crops the part of the frame realtive to a Marker and sets is as its attribute */
 	cv::Mat * setCroppedImg(cv::Mat img, Quadrilateral * q);

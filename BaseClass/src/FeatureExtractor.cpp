@@ -153,6 +153,28 @@ string FeatureExtractor::getColorString(double gimpHue, double gimpSaturation, d
 	else return "unknown";
 }
 
+void FeatureExtractor::normalizeCoord(int& x, int& y){
+	//cout << "coords: " << x << " " << y << "\n";
+	int ratio = image.cols;
+	//use the bigger dimension as ratio to scale the coordinates
+	if (image.rows > image.cols) {
+		ratio = image.rows;
+	}
+	//cout << "image size: " << inputX << " " << inputY << "\n";
+	x = (x * 100)/(float)ratio;
+	y = (y * 100)/(float)ratio;
+	//cout << "new coords: " << x << " " << y << "\n";
+}
+
+void FeatureExtractor::normalizeCoord(int& x){
+	int ratio = image.cols;
+	//use the bigger dimension as ratio to scale the coordinates
+	if (image.rows > image.cols) {
+		ratio = image.rows;
+	}
+	x = (x * 100)/(float)ratio;
+}
+
 void FeatureExtractor::recognizeCircles(){
 	cv::Mat gray;
 	cv::Mat circleImg = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
@@ -175,13 +197,18 @@ void FeatureExtractor::recognizeCircles(){
 		int radius = cvRound(circles[i][2]);
 		
 		string color = this->getPointColor(center.x,center.y);
-		circleList.push_back(new Circle(radius, center.x,center.y,color));
-
+		
 		/// Draw the circles detected
 		// circle center
 		circle( circleImg, center, 3, cv::Scalar(0,255,0), -1, 8, 0 );
 		// circle outline
 		circle( circleImg, center, radius, cv::Scalar(0,0,255), 3, 8, 0 );
+		
+		//normalize the coordinates and create the circle
+		this->normalizeCoord(center.x, center.y);
+		this->normalizeCoord(radius);
+		//cout << "normalizing circle " << center.x << " " << center.y << "END\n";
+		circleList.push_back(new Circle(radius, center.x,center.y,color));
 	}
 
 	/// Show your results
@@ -297,10 +324,22 @@ void FeatureExtractor::recognizePoligon(int sides_number){
 			//q->setColor(color);
 			
 			//add each square to the quadrilaterl list
-			if (sides_number == 3)
+			if (sides_number == 3){
+				//normalize the coordinates and create the polygon
+				this->normalizeCoord(polys.at(i).at(0).x,polys.at(i).at(0).y);
+				this->normalizeCoord(polys.at(i).at(1).x,polys.at(i).at(1).y);
+				this->normalizeCoord(polys.at(i).at(2).x,polys.at(i).at(2).y);
+				//cout << "normalizing triangle " << polys.at(i).at(0).x << " " << polys.at(i).at(0).y << " " << polys.at(i).at(1).x << " " << polys.at(i).at(1).y << " " << polys.at(i).at(2).x << " " << polys.at(i).at(2).y << "\n";
 				this->triangleList.push_back(new Triangle(polys.at(i).at(0).x,polys.at(i).at(0).y,polys.at(i).at(1).x,polys.at(i).at(1).y,polys.at(i).at(2).x,polys.at(i).at(2).y,color));
-			else
+			}else{
+				//normalize the coordinates and create the polygon
+				this->normalizeCoord(polys.at(i).at(0).x,polys.at(i).at(0).y);
+				this->normalizeCoord(polys.at(i).at(1).x,polys.at(i).at(1).y);
+				this->normalizeCoord(polys.at(i).at(2).x,polys.at(i).at(2).y);
+				this->normalizeCoord(polys.at(i).at(3).x,polys.at(i).at(3).y);
+				//cout << "normalizing quad " << polys.at(i).at(0).x << " " << polys.at(i).at(0).y << " " << polys.at(i).at(1).x << " " << polys.at(i).at(1).y << " " << polys.at(i).at(2).x << " " << polys.at(i).at(2).y << " " << polys.at(i).at(3).x << " " << polys.at(i).at(3).y << "\n";
 				this->quadrilateralList.push_back(new Quadrilateral(polys.at(i).at(0).x,polys.at(i).at(0).y,polys.at(i).at(1).x,polys.at(i).at(1).y,polys.at(i).at(2).x,polys.at(i).at(2).y,polys.at(i).at(3).x,polys.at(i).at(3).y,color));
+			}
 		}
 	}
 	

@@ -89,6 +89,24 @@ Point Quadrilateral::getD(){
 	return this->d;
 }
 
+void Quadrilateral::setA(Point p){
+	this->a = p;
+}
+
+void Quadrilateral::setB(Point p){
+	this->b = p;
+}
+
+void Quadrilateral::setC(Point p){
+	this->c = p;
+}
+
+void Quadrilateral::setD(Point p){
+	this->d = p;
+}
+
+
+
 
 /**
  * @ATTENTION: @see Object.h for a better explanation of the 'rotation' parameter
@@ -171,6 +189,7 @@ string Quadrilateral::getChunk(){
 	if (!s.empty() && s[s.length()-1] == '\n') {
 		s.erase(s.length()-1);
 	}
+	//cout << s + "\n";
 	return s;
 	/*string chunk = "{";
 	chunk.append("\"type\": \"Quadrilateral\",");

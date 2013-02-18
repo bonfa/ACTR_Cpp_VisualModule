@@ -842,10 +842,15 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 
 		for(int i = 0; i < quadrilateralList.size();i++){
 			Marker * m = dynamic_cast<Marker*>(quadrilateralList.at(i));
-
+			//Converting the coordinates into percentual
+			Marker * m2 = new Marker((int)(m->getA().x * 100 / (float)frame->cols), (int)(m->getA().y * 100 / (float)frame->rows),
+									(int)(m->getB().x * 100 / (float)frame->cols), (int)(m->getB().y * 100 / (float)frame->rows),
+									(int)(m->getC().x * 100 / (float)frame->cols), (int)(m->getC().y * 100 / (float)frame->rows),
+									(int)(m->getD().x * 100 / (float)frame->cols), (int)(m->getD().y * 100 / (float)frame->rows),
+									m->getId(), m->getAngle());
 			/** Sets part of the frame as attribute of the Marker */
 			m->setImage(getCroppedImg(*frame, m));
-
+			m2->setImage(getCroppedImg(*frame, m));
 			/** Loads saved image and search for a QRCode */
 			qrs = new QRScanner(m->getImage());
 
@@ -854,6 +859,7 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				QRObject * qro;
 				qro = new QRObject(qrs->getQRCode());
 				m->setQr(qro);
+				m2->setQr(qro);
 				cv::Mat * withText = new cv::Mat(m->getImage()->clone());
 				//cv::putText(*withText, m->getQR()->getContent(), cvPoint(10,20),
 				    //cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255,0,0), 1, CV_AA);
@@ -901,20 +907,19 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 				}
 				//cv::waitKey();
 
+				quadrilateralList.at(i) = m2;
 
 		}
-		cout << "segfolta\n";
 		this->objectList.clear();
 		this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());
-		//Converting the coordinates into percentual
-		std::vector<Object *> objectList2;
-		for (int i=0; i< objectList.size(); i++) {
-			Quadrilateral *elem = dynamic_cast<Quadrilateral*>(objectList.at(i));
-			objectList2.push_back(new Quadrilateral((int)(elem->getA().x * 100 / (float)frame->cols), (int)(elem->getA().y * 100 / (float)frame->rows),
-												 (int)(elem->getB().x * 100 / (float)frame->cols), (int)(elem->getB().y * 100 / (float)frame->rows),
-												 (int)(elem->getC().x * 100 / (float)frame->cols), (int)(elem->getC().y * 100 / (float)frame->rows),
-												 (int)(elem->getD().x * 100 / (float)frame->cols), (int)(elem->getD().y * 100 / (float)frame->rows),
-												 elem->getColor()));
+		//std::vector<Object *> objectList2;
+		//for (int i=0; i< objectList.size(); i++) {
+			//Quadrilateral *elem = dynamic_cast<Quadrilateral*>(objectList.at(i));
+			//objectList2.push_back(new Quadrilateral((int)(elem->getA().x * 100 / (float)frame->cols), (int)(elem->getA().y * 100 / (float)frame->rows),
+			//									 (int)(elem->getB().x * 100 / (float)frame->cols), (int)(elem->getB().y * 100 / (float)frame->rows),
+			//									 (int)(elem->getC().x * 100 / (float)frame->cols), (int)(elem->getC().y * 100 / (float)frame->rows),
+			//									 (int)(elem->getD().x * 100 / (float)frame->cols), (int)(elem->getD().y * 100 / (float)frame->rows),
+			//									 elem->getColor()));
 			/*p = dynamic_cast<Quadrilateral*>(objectList.at(i))->getA();
 			(dynamic_cast<Quadrilateral*>(objectList.at(i)))->setA(new Point((int)(p.x * 100 / (float)frame->cols), (int)(p.y * 100 / (float)frame->rows)));
 			cout << "Punto A: x " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getA().x << " y " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getA().x << "\n";
@@ -927,9 +932,8 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 			p = dynamic_cast<Quadrilateral*>(objectList.at(i))->getD();
 			dynamic_cast<Quadrilateral*>(objectList.at(i))->setD(new Point((int)(p.x * 100 / (float)frame->cols), (int)(p.y * 100 / (float)frame->rows)));
 			cout << "Punto D: x " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getD().x << " y " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getD().x << "\n";*/
-		}
-		cout << "segfoltasdaf\n";
-		return objectList2;
+		//}
+		return objectList;
 	}
 #endif
 }

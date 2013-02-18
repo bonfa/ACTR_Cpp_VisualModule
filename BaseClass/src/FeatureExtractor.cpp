@@ -907,19 +907,19 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		this->objectList.clear();
 		this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());
 		//Converting the coordinates into percentual
-		for (int i=0; i< objectList.length; i++) {
-			Point p = objectList.at(i).getA();
-			objectList.at(i).setA(new Point((int)(p.x * 100 / (float)frame.cols), (int)(p.y * 100 / (float)frame.rows)));
-			cout << "Punto A: x " << objectList.at(i).getA().x << " y " << objectList.at(i).getA().x << "\n";
-			p = objectList.at(i).getB();
-			objectList.at(i).setB(new Point((int)(p.x * 100 / (float)frame.cols), (int)(p.y * 100 / (float)frame.rows)));
-			cout << "Punto B: x " << objectList.at(i).getB().x << " y " << objectList.at(i).getB().x << "\n";
-			p = objectList.at(i).getC();
-			objectList.at(i).setC(new Point((int)(p.x * 100 / (float)frame.cols), (int)(p.y * 100 / (float)frame.rows)));
-			cout << "Punto C: x " << objectList.at(i).getC().x << " y " << objectList.at(i).getC().x << "\n";
-			p = objectList.at(i).getD();
-			objectList.at(i).setD(new Point((int)(p.x * 100 / (float)frame.cols), (int)(p.y * 100 / (float)frame.rows)));
-			cout << "Punto D: x " << objectList.at(i).getD().x << " y " << objectList.at(i).getD().x << "\n";
+		for (int i=0; i< objectList.size(); i++) {
+			Point p = dynamic_cast<Quadrilateral*>(objectList.at(i))->getA();
+			(dynamic_cast<Quadrilateral*>(objectList.at(i)))->setA(new Point((int)(p.x * 100 / (float)frame->cols), (int)(p.y * 100 / (float)frame->rows)));
+			cout << "Punto A: x " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getA().x << " y " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getA().x << "\n";
+			p = dynamic_cast<Quadrilateral*>(objectList.at(i))->getB();
+			dynamic_cast<Quadrilateral*>(objectList.at(i))->setB(new Point((int)(p.x * 100 / (float)frame->cols), (int)(p.y * 100 / (float)frame->rows)));
+			cout << "Punto B: x " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getB().x << " y " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getB().x << "\n";
+			p = dynamic_cast<Quadrilateral*>(objectList.at(i))->getC();
+			dynamic_cast<Quadrilateral*>(objectList.at(i))->setC(new Point((int)(p.x * 100 / (float)frame->cols), (int)(p.y * 100 / (float)frame->rows)));
+			cout << "Punto C: x " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getC().x << " y " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getC().x << "\n";
+			p = dynamic_cast<Quadrilateral*>(objectList.at(i))->getD();
+			dynamic_cast<Quadrilateral*>(objectList.at(i))->setD(new Point((int)(p.x * 100 / (float)frame->cols), (int)(p.y * 100 / (float)frame->rows)));
+			cout << "Punto D: x " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getD().x << " y " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getD().x << "\n";
 		}
 		return objectList;
 	}

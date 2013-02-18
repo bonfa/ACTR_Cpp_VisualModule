@@ -41,13 +41,13 @@ public:
 	/** Returns the fourth vertex of the quadrilateral*/
 	Point getD();
 	/** Sets the first vertex of the quadrilateral*/
-	void setA(Point p);
+	void setA(Point* p);
 	/** Sets the second vertex of the quadrilateral*/
-	void setB(Point p);
+	void setB(Point * p);
 	/** Sets the third vertex of the quadrilateral*/
-	void setC(Point p);
+	void setC(Point* p);
 	/** Sets the fourth vertex of the quadrilateral*/
-	void setD(Point p);
+	void setD(Point * p);
 	/** Return a vector containing the four segment of the quadrilateral*/
 	std::vector<Segment> getEdgesLine();
 protected:

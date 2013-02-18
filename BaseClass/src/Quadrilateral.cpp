@@ -89,20 +89,24 @@ Point Quadrilateral::getD(){
 	return this->d;
 }
 
-void Quadrilateral::setA(Point p){
-	this->a = p;
+void Quadrilateral::setA(Point* p){
+	this->a.x = p->x;
+	this->a.y = p->y;
 }
 
-void Quadrilateral::setB(Point p){
-	this->b = p;
+void Quadrilateral::setB(Point* p){
+	this->b.x = p->x;
+	this->b.y = p->y;
 }
 
-void Quadrilateral::setC(Point p){
-	this->c = p;
+void Quadrilateral::setC(Point* p){
+	this->c.x = p->x;
+	this->c.y = p->y;
 }
 
-void Quadrilateral::setD(Point p){
-	this->d = p;
+void Quadrilateral::setD(Point* p){
+	this->d.x = p->x;
+	this->d.y = p->y;
 }
 
 

@@ -42,6 +42,8 @@ public:
 	double getRotation();
 	/** Set the color of the object //TODO testing*/
 	virtual void setColor(string color);
+	/** Returns the color of the object*/
+	string getColor(){return this->color;};
 protected:
 	/** Creates a Json object that contains the basic information about the quadrilateral*/
 	virtual Json::Value getJson();

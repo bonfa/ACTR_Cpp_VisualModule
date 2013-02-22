@@ -150,7 +150,7 @@ void distanceTest_07(){
 	Point a = Point(1,0);
 	Point b = Point(0,1);
 
-	ASSERT_EQUAL(sqrt(2),myDistance(a,b));
+	ASSERT_EQUAL_DELTA(sqrt(2),myDistance(a,b),0.000001);
 }
 
 
@@ -159,7 +159,7 @@ void distanceTest_08(){
 	Point a = Point(-1,-1);
 	Point b = Point(1,1);
 
-	ASSERT_EQUAL(2*sqrt(2),myDistance(a,b));
+	ASSERT_EQUAL_DELTA(2*sqrt(2),myDistance(a,b),0.000001);
 }
 
 

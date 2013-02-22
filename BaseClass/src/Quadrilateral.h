@@ -28,7 +28,7 @@
 class Quadrilateral: public Blob {
 public:
 	Quadrilateral();
-	Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy);
+	Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, string color);
 	virtual ~Quadrilateral();
 	/** Returns a string which contains the basic information about the quadrilateral*/
 	string getChunk();
@@ -40,9 +40,19 @@ public:
 	Point getC();
 	/** Returns the fourth vertex of the quadrilateral*/
 	Point getD();
+	/** Sets the first vertex of the quadrilateral*/
+	void setA(Point* p);
+	/** Sets the second vertex of the quadrilateral*/
+	void setB(Point * p);
+	/** Sets the third vertex of the quadrilateral*/
+	void setC(Point* p);
+	/** Sets the fourth vertex of the quadrilateral*/
+	void setD(Point * p);
 	/** Return a vector containing the four segment of the quadrilateral*/
 	std::vector<Segment> getEdgesLine();
 protected:
+	/** Creates a Json object that contains the basic information about the quadrilateral*/
+	virtual Json::Value getJson();
 	/** The first vertex*/
 	Point a;
 	/** The second vertex*/

@@ -8,6 +8,29 @@ using namespace std;
 using namespace zbar;
 using namespace cv;
 
+QRScanner::QRScanner(cv::Mat * img){
+	cv::Mat  greyMat;
+	cv::cvtColor(*img, greyMat, CV_BGR2GRAY);
+
+
+	CvMat tempImg = greyMat;
+
+	init((char*)tempImg.data.ptr,tempImg.width,tempImg.height);
+
+}
+
+void QRScanner::init(char *raw, int width,int height){
+	// create a reader
+	ImageScanner scanner;
+
+	// configure the reader
+	scanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1);
+
+	myImage = new Image(width, height, "Y800", raw, width * height);
+
+	// scan the image for barcodes
+	numLines = scanner.scan(*myImage);
+}
 
 QRScanner::QRScanner(std::string path){
 	if ( !boost::filesystem::exists( path ) )
@@ -17,23 +40,12 @@ QRScanner::QRScanner(std::string path){
 	else{
 		CvMat *cv_matrix = cvLoadImageM(path.c_str(),CV_LOAD_IMAGE_GRAYSCALE); //"./debian.or.jp.qr.jpg"
 
-		int width = cv_matrix->width;
-		int height= cv_matrix->height;
-		char *raw = (char*)cv_matrix->data.ptr;
-
-		// create a reader
-		ImageScanner scanner;
-
-		// configure the reader
-		scanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1);
-
-		myImage = new Image(width, height, "Y800", raw, width * height);
-
-		// scan the image for barcodes
-		numLines = scanner.scan(*myImage);
+		init((char*)cv_matrix->data.ptr,cv_matrix->width,cv_matrix->height);
 	}
 
 }
+
+
 
 QRScanner::~QRScanner(){
 	myImage->set_data(NULL, 0);

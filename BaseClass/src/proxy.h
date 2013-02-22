@@ -13,6 +13,11 @@
 #include "Triangle.h"
 #include "author.h"
 
+//value under which the boundingbox of one object (and the object itself) is considered invalid
+#define BBOX_THRESH_X 9
+#define BBOX_THRESH_Y 9
+//95 for the rush-hour images and 20 for the shapes image
+
 class Proxy {
 public:
 	Proxy(string imgPath);

@@ -17,7 +17,7 @@
  * 4) set the bounding box
  * 5) the center of the bounding box is the center of the circle
  * */
-Circle::Circle(int rad, int x, int y) {
+Circle::Circle(int rad, int x, int y, string color) {
 	//TODO mettere a posto questo controllo!!!!
 	if(x < 0 || y < 0 || rad <= 0 || x-rad <0 || y-rad <0)
 		throw InputException(("Negative values in the points coordinates"));
@@ -27,10 +27,35 @@ Circle::Circle(int rad, int x, int y) {
 	area = rad * rad * M_PI;
 	setBbox(x-rad, y-rad, 2*rad, 2*rad);
 	this->setRotation();
+	this->setColor(color);
+}
+
+Json::Value Circle::getJson(){
+	Json::Value obj;
+	Json::Value c;
+	c["x"] = this->center.x;
+	c["y"] = this->center.y;
+	Json::Value rad;
+	rad["rad"] = this->radius;
+	//creating the vertices' array
+	Json::Value vertices(Json::arrayValue);
+	vertices.append(c);
+	vertices.append(rad);
+	//put all together in the hierarchy
+	obj["Bbox"]=Object::getJson();
+	obj["Vertices"]=vertices;
+	obj["Type"]="Circle";
+	obj["Color"]=this->color;
+	return obj;
 }
 
 string Circle::getChunk(){
-	return "cianc, Circle\n";
+	Json::FastWriter writer;
+	std::string s = writer.write(this->getJson());
+	if (!s.empty() && s[s.length()-1] == '\n') {
+		s.erase(s.length()-1);
+	}
+	return s;
 }
 
 

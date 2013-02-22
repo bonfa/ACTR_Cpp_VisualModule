@@ -57,12 +57,15 @@ public:
 private:
 	/**Analizes the image and looks for circles in it. The circles found are added in the circleList*/
 	void recognizeCircles();
+	void recognizePoligon(int sides_number);
 	/** Analizes the image and looks for quadrilateral in it. The circles found are added in the quadrilateralList*/
-	void recognizeSquares();
+	//void recognizeSquares();
 	/** Analizes the image and looks for triangles in it. The circles found are added in the triangleList*/
-	void recognizeTriangles();
+	//void recognizeTriangles();
 	/** Analizes the image and looks for ellipses in it. The ellipses found are added in the ellipseList //TODO*/
 	void recognizeEllipses();
+	void normalizeCoord(int& x, int& y);
+	void normalizeCoord(int& x);
 #ifdef ENRICO
 	/** Crops the part of the frame realtive to a Marker and sets is as its attribute */
 	cv::Mat * setCroppedImg(cv::Mat img, Quadrilateral * q);

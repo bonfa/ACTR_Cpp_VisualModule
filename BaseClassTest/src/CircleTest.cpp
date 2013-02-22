@@ -10,7 +10,7 @@ struct ConstructorError{
 		int ay = 6;
 		int radius = 3;
 
-		ASSERT_THROWS(new Circle(radius,ax,ay),InputException);
+		ASSERT_THROWS(new Circle(radius,ax,ay,""),InputException);
 	}
 
 
@@ -19,7 +19,7 @@ struct ConstructorError{
 		int ay = -6;
 		int radius = 3;
 
-		ASSERT_THROWS(new Circle(radius,ax,ay),InputException);
+		ASSERT_THROWS(new Circle(radius,ax,ay,""),InputException);
 	}
 
 
@@ -28,13 +28,13 @@ struct ConstructorError{
 		int ay = 6;
 		int radius = -3;
 
-		ASSERT_THROWS(new Circle(radius,ax,ay),InputException);
+		ASSERT_THROWS(new Circle(radius,ax,ay,""),InputException);
 	}
 };
 
 struct CircleTest_01{
 
-	CircleTest_01(): c(3,5,5){
+	CircleTest_01(): c(3,5,5,""){
 		expectedAx = 5;
 		expectedAy = 5;
 		expectedRadius = 3;
@@ -88,7 +88,7 @@ struct CircleTest_01{
 
 struct CircleTest_02{
 
-	CircleTest_02(): c(3,5,6){
+	CircleTest_02(): c(3,5,6,""){
 		expectedAx = 5;
 		expectedAy = 6;
 		expectedRadius = 3;

@@ -16,7 +16,7 @@
  * 5) set the bounding box
  * 6) set the center of the bounding box
  * */
-Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy){
+Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy,string color){
 	if(ax<0 || ay<0 || bx<0 || by<0 || cx<0 || cy<0)
 		throw InputException(("Negative values in the points coordinates"));
 
@@ -33,6 +33,7 @@ Triangle::Triangle(int ax,int ay,int bx,int by,int cx,int cy){
 	this->setBoundingBox();
 	this->setCenter();
 	this->setRotation();
+	this->setColor(color);
 }
 
 
@@ -49,9 +50,69 @@ void Triangle::setBoundingBox() {
 	setBbox(minX, minY, maxY - minY, maxX - minX);
 }
 
+Json::Value Triangle::getJson(){
+	Json::Value obj;
+	//creating the vertices
+	Json::Value p1;
+	p1["x"] = this->a.x;
+	p1["y"] = this->a.y;
+	Json::Value p2;
+	p2["x"] = this->b.x;
+	p2["y"] = this->b.y;
+	Json::Value p3;
+	p3["x"] = this->c.x;
+	p3["y"] = this->c.y;
+	//creating the vertices' array
+	Json::Value vertices(Json::arrayValue);
+	vertices.append(p1);
+	vertices.append(p2);
+	vertices.append(p3);
+	//put all together in the hierarchy
+	obj["Bbox"]=Object::getJson();
+	obj["Vertices"]=vertices;
+	obj["Type"]="Triangle";
+	obj["Color"]=this->color;
+	return obj;
+}
 
 string Triangle::getChunk(){
-	return "cianc, traingle\n";
+	Json::FastWriter writer;
+	std::string s = writer.write(this->getJson());
+	if (!s.empty() && s[s.length()-1] == '\n') {
+		s.erase(s.length()-1);
+	}
+	return s;
+	
+	/*string chunk = "{";
+	chunk.append("\"type\": \"Triangle\",");
+		chunk.append("\"bbox\": {");
+		chunk.append("\"x1\":");
+		chunk.append("\"");
+		chunk.append(intToString(this->bbox.x));
+		chunk.append("\",");
+	
+		chunk.append("\"y1\":");
+		chunk.append("\"");
+		chunk.append(intToString(this->bbox.y));
+		chunk.append("\",");
+	
+		chunk.append("\"x2\":");
+		chunk.append("\"");
+		chunk.append(intToString(this->bbox.x+this->bbox.width));
+		chunk.append("\",");
+	
+		chunk.append("\"y2\":");
+		chunk.append("\"");
+		chunk.append(intToString(this->bbox.y+this->bbox.height));
+		chunk.append("\"");
+		chunk.append("}");
+	chunk.append(",");
+	chunk.append("\"color\": ");
+	chunk.append("\"");
+	chunk.append(this->color);
+	chunk.append("\"");
+	chunk.append("}");
+	return 	chunk;*/
 }
 
 

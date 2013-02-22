@@ -6,6 +6,7 @@
 
 
 #include "MarkerDetector.h"
+MarkerDetector* MarkerDetector::instance_ptr = 0;
 
 
 //double 	vertex[4][2];
@@ -14,14 +15,8 @@
 
 IplImage *image;
 CvSize *size;
-int channels, maxlength;
-IplImage *m_pEdge;  // result of canny edge detection
-IplImage *m_pGray;  // result of conversion to grayscale
-IplImage *img;		// tmp prescale gray
-IplImage *pyr;		// tmp afterscale gray
+int channels;
 cv::Mat *currentFrame;
-int canny_thres;
-CvPoint myCenter;
 ARUint8         *dataPtr;
 
 typedef struct {
@@ -41,9 +36,11 @@ OBJECT_T   object[2] = {
            };
 
 /* set up the video format globals */
-
+#define XSIZE 1280
+#define YSIZE 720
 //Variabile d'ambiente per usare la webcam, buildare le librerie con gstreamer, cambiare device=/dev/video0 in device=/dev/video1 per usare la seconda webcam
-char			*vconf = "v4l2src device=/dev/video1 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=640,height=480 ! identity name=artoolkit ! fakesink";
+char			*vconf = "v4l2src device=/dev/video0 use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=1280,height=720 ! identity name=artoolkit ! fakesink";
+
 
 
 int             xsize, ysize;
@@ -58,7 +55,10 @@ static void   init(void);
 static void   cleanup(void);
 static void   keyEvent( unsigned char key, int x, int y);
 static void   mainLoop(void);
-static void   draw( int object, double trans[3][4] );
+static void   draw( int object, double trans[3][4], double vetrexes[4][2] );
+
+static ARUint8		*gARTImage = NULL;
+static ARUint8		*gARTsaveImage = NULL;
 
 void startDetection(){//boost::mutex& mutex){
 
@@ -67,11 +67,25 @@ void startDetection(){//boost::mutex& mutex){
 	char *argv[] = {"./fake"};
 	//char const*[]={"./fake"};
 	glutInit(&argc, argv);
+
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+	glutInitWindowSize(XSIZE, YSIZE);
+
+	//glutCreateWindow(argv[0]);
+	// Setup argl library for current context.
+	if ((gArglSettings = arglSetupForCurrentContext()) == NULL) {
+		fprintf(stderr, "main(): arglSetupForCurrentContext() returned error.\n");
+		exit(-1);
+	}
+
+	arMalloc(gARTsaveImage, ARUint8, XSIZE* YSIZE * AR_PIX_SIZE_DEFAULT);
+
+
 	init();
 	printf("Setup done\n");
-    arVideoCapStart();
-    printf("Capture started\n");
-    argMainLoop( NULL, keyEvent, mainLoop );
+	arVideoCapStart();
+	printf("Capture started\n");
+	argMainLoop( NULL, keyEvent, mainLoop );
 
 }
 
@@ -91,7 +105,7 @@ static void   keyEvent( unsigned char key, int x, int y)
 
 
 
-int initMarkersData(){
+int MarkerDetector::initMarkersData(){
 	/** Use the lock to prevent race conditions */
 	boost::mutex::scoped_lock lock(io_mutex);
 
@@ -107,23 +121,11 @@ int initMarkersData(){
 	return 0;
 }
 
-cv::Mat * getFrame(){
+cv::Mat * MarkerDetector::getFrame(){
 	return currentFrame;
 }
 
-std::vector<Quadrilateral *> getMarkers(){
-
-
-	/*for(int i = 0 ; i < markersList.size();i++){
-		cv::Mat crp = cropImg(markersList.at(i));
-		dynamic_cast<Marker*>(markersList.at(i))->setImage(crp);
-	}
-    //TODO: check if file is writeable
-	if ( ! boost::filesystem::is_regular_file( IMG_PATH ) )
-		{
-			std::cerr << "QRScanner: Can't read file: " << IMG_PATH  << std::endl;
-		}*/
-
+std::vector<Quadrilateral *> MarkerDetector::getMarkers(){
 	return markersList;
 	}
 
@@ -159,60 +161,67 @@ static void mainLoop(void)
 
     arVideoCapNext();
 
-	#ifndef NO_IMG
+#ifndef NO_IMG
     argDrawMode3D();
     argDraw3dCamera( 0, 0 );
     glClearDepth( 1.0 );
     glClear(GL_DEPTH_BUFFER_BIT);
-	#endif
-	
-	markersList.clear();
-	
-    /* check for object visibility */
-    for( i = 0; i < 2; i++ ) {
-        k = -1;
-        for( j = 0; j < marker_num; j++ ) {
-            if( object[i].patt_id == marker_info[j].id ) {
-                if( k == -1 ) k = j;
-                else if( marker_info[k].cf < marker_info[j].cf ) k = j;
-            }
-        }
-        object[i].visible = k;
+#endif
+    std::vector<Quadrilateral *> backupList;
+    try{
+    	for(int i=0; i <markersList.size(); i++)
+    		backupList.push_back(markersList.at(i));
+    	markersList.clear();
 
-        if( k >= 0 ) {
-			
-            arGetTransMat(&marker_info[k], object[i].center, object[i].width, object[i].trans);
+    	/* check for object visibility */
+    	for( i = 0; i < 2; i++ ) {
+    		k = -1;
+    		for( j = 0; j < marker_num; j++ ) {
+    			if( object[i].patt_id == marker_info[j].id ) {
+    				if( k == -1 ) k = j;
+    				else if( marker_info[k].cf < marker_info[j].cf ) k = j;
+    			}
+    		}
+    		object[i].visible = k;
 
-			markersList.push_back(dynamic_cast<Quadrilateral*>(new Marker((int)(marker_info[k].vertex[0][0]),(int)(marker_info[k].vertex[0][1]), (int)(marker_info[k].vertex[1][0]),(int)(marker_info[k].vertex[1][1]), (int)(marker_info[k].vertex[2][0]),(int)(marker_info[k].vertex[2][1]), (int)(marker_info[k].vertex[3][0]),(int)(marker_info[k].vertex[3][1]), object[i].model_id, asin(object[i].trans[1][2]))));
+    		if( k >= 0 ) {
 
-	#ifndef NO_IMG
-            draw( object[i].model_id, object[i].trans );
-	#endif
-        }
+    			arGetTransMatCont(&marker_info[k], object[i].trans, object[i].center, object[i].width, object[i].trans);
+
+    			markersList.push_back(dynamic_cast<Quadrilateral*>(new Marker(
+    			(int)(marker_info[k].vertex[0][0]), (int)(marker_info[k].vertex[0][1]), 
+    			(int)(marker_info[k].vertex[1][0]), (int)(marker_info[k].vertex[1][1]), 
+    			(int)(marker_info[k].vertex[2][0]), (int)(marker_info[k].vertex[2][1]), 
+    			(int)(marker_info[k].vertex[3][0]), (int)(marker_info[k].vertex[3][1]), 
+    			object[i].model_id, asin(object[i].trans[1][2]))));
+
+#ifndef NO_IMG
+
+    			draw( object[i].model_id, object[i].trans, marker_info[k].vertex );
+#endif
+    		}
+    	}}
+    catch(...){
+    	markersList.clear();
+    	for(int i=0; i <markersList.size(); i++)
+    		markersList.push_back(backupList.at(i));
     }
     lock.unlock();
-    
+
     argSwapBuffers();
 
     if( object[0].visible >= 0
-     && object[1].visible >= 0 ) {
-        double  wmat1[3][4], wmat2[3][4];
+    		&& object[1].visible >= 0 ) {
+    	double  wmat1[3][4], wmat2[3][4];
 
-        arUtilMatInv(object[0].trans, wmat1);
-        arUtilMatMul(wmat1, object[1].trans, wmat2);
-
-        /*
-        for( j = 0; j < 3; j++ ) {
-            for( i = 0; i < 4; i++ ) printf("%8.4f ", wmat2[j][i]);
-            printf("\n");
-        }
-        printf("\n\n");*/
+    	arUtilMatInv(object[0].trans, wmat1);
+    	arUtilMatMul(wmat1, object[1].trans, wmat2);
     }
 }
 
 static void init( void )
 {
-    ARParam  wparam;
+	ARParam  wparam;
     int      i;
     // Setup argl library for current context.
     	if ((gArglSettings = arglSetupForCurrentContext()) == NULL) {
@@ -247,26 +256,12 @@ static void init( void )
     argInit( &cparam, 1.0, 0, 0, 0, 0 );
 
     //Opencv init
-    m_pGray = m_pEdge = NULL;
     channels = 3;
     size = new CvSize();
     size->width = xsize;
     size->height = ysize;
     image = cvCreateImage(*size, IPL_DEPTH_8U, channels );
-    //IplImage imagedf =  cvCreateImage(*size, IPL_DEPTH_8U, channels );
 
-    canny_thres = 50;
-    //cvInitImageHeader( image, *size, IPL_DEPTH_8U, channels );
-
-    m_pGray = cvCreateImage( *size, IPL_DEPTH_8U , 1);
-    int byte_per_pixel = (IPL_DEPTH_8U & 255) >> 3 ;
-    img = cvCreateImage(	*size,
-    		byte_per_pixel*8,
-    		1 );
-
-    pyr = cvCreateImage(	cvSize(size->width/2, size->height/2),
-    		byte_per_pixel*8,
-    		1 );
 }
 
 /* cleanup function called when program exits */
@@ -277,7 +272,7 @@ static void cleanup(void)
     argCleanup();
 }
 
-/*
+
 static void endOrtho2D(void) {
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -324,110 +319,77 @@ void lineSeg(double x1, double y1, double x2, double y2, ARGL_CONTEXT_SETTINGS_R
     glFlush();
 }
 
-static void draw2(int object, double trans[3][4], double vertexes[4][2])
+//disegna figure
+static void draw( int object, double trans[3][4], double vertexes[4][2])
 {
-	// Select correct buffer for this context.
+	double    gl_para[16];
+	GLfloat   mat_ambient[]     = {0.0, 0.0, 1.0, 1.0};
+	GLfloat   mat_flash[]       = {0.0, 0.0, 1.0, 1.0};
+	GLfloat   mat_flash_shiny[] = {50.0};
+	GLfloat   light_position[]  = {100.0,-200.0,200.0,0.0};
+	GLfloat   ambi[]            = {0.1, 0.1, 0.1, 0.1};
+	GLfloat   lightZeroColor[]  = {0.9, 0.9, 0.9, 0.1};
+
+	argDrawMode3D();
+	argDraw3dCamera( 0, 0 );
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	/* load the camera transformation matrix */
+	argConvGlpara(trans, gl_para);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixd( gl_para );
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambi);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightZeroColor);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_flash);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_flash_shiny);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+	glMatrixMode(GL_MODELVIEW);
 	glDrawBuffer(GL_BACK);
-	glClear(GL_COLOR_BUFFER_BIT); // Clear the buffers for new frame.
 
-	//arglDispImage(gARTImage, &gARTCparam, 1.0, gArglSettings);	// zoom = 1.0.
-	arVideoCapNext();
-	//gARTImage = NULL; // Image data is no longer valid after calling arVideoCapNext().
+	arglDispImage(gARTImage, &cparam, 1.0, gArglSettings);	// zoom = 1.0.
 
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_2D);
+	beginOrtho2D(XSIZE, YSIZE);
+	glLineWidth(4.0f);
 
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-		glDisable(GL_TEXTURE_2D);
-		beginOrtho2D(10, 10);
-        glLineWidth(2.0f);
-        glColor3d(0.0, 1.0, 0.0);
-        lineSeg(vertexes[0][0], vertexes[0][1],
-           		vertexes[1][0], vertexes[1][1], gArglSettings, cparam, 1.0);
-           lineSeg(vertexes[3][0], vertexes[3][1],
-           		vertexes[0][0], vertexes[0][1], gArglSettings, cparam, 1.0);
-           glColor3d(1.0, 0.0, 0.0);
-           lineSeg(vertexes[1][0], vertexes[1][1],
-           		vertexes[2][0], vertexes[2][1], gArglSettings, cparam, 1.0);
-           lineSeg(vertexes[2][0], vertexes[2][1],
-           		vertexes[3][0], vertexes[3][1], gArglSettings, cparam, 1.0);
-		endOrtho2D();
+	glColor3d(0.0, 1.0, 0.0);
 
+	switch( object ) {
+	case 0:
+		glColor3d(0.0, 1.0, 0.0);
+		break;
+	case 1:
+		glColor3d(1.0, 0.0, 0.0);
+		break;
+	case 2:
+		glColor3d(0.0, 0.0, 1.0);
+		break;
+	default:
+		glColor3d(0.5, 1.0, 0.2);
+		break;
+	}
+	lineSeg(vertexes[0][0], vertexes[0][1],
+			vertexes[1][0], vertexes[1][1], gArglSettings, cparam, 1.0);
+	lineSeg(vertexes[3][0], vertexes[3][1],
+			vertexes[0][0], vertexes[0][1], gArglSettings, cparam, 1.0);
+
+	lineSeg(vertexes[1][0], vertexes[1][1],
+			vertexes[2][0], vertexes[2][1], gArglSettings, cparam, 1.0);
+
+	lineSeg(vertexes[2][0], vertexes[2][1],
+			vertexes[3][0], vertexes[3][1], gArglSettings, cparam, 1.0);
+	endOrtho2D();
 
 	glutSwapBuffers();
-}*/
 
-//disegna figure
-static void draw( int object, double trans[3][4] )
-{
-    double    gl_para[16];
-    GLfloat   mat_ambient[]     = {0.0, 0.0, 1.0, 1.0};
-    GLfloat   mat_flash[]       = {0.0, 0.0, 1.0, 1.0};
-    GLfloat   mat_flash_shiny[] = {50.0};
-    GLfloat   light_position[]  = {100.0,-200.0,200.0,0.0};
-    GLfloat   ambi[]            = {0.1, 0.1, 0.1, 0.1};
-    GLfloat   lightZeroColor[]  = {0.9, 0.9, 0.9, 0.1};
-    
-    argDrawMode3D();
-    argDraw3dCamera( 0, 0 );
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    
-    /* load the camera transformation matrix */
-    argConvGlpara(trans, gl_para);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixd( gl_para );
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambi);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightZeroColor);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_flash);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_flash_shiny);	
-    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    glMatrixMode(GL_MODELVIEW);
-
-/**
-    glDrawBuffer(GL_BACK);
-    glClear(GL_COLOR_BUFFER_BIT); // Clear the buffers for new frame.
-
-    beginOrtho2D(1, 1);
-    glLineWidth(2.0f);
-    glColor3d(0.0, 1.0, 0.0);
-    lineSeg(vertexes[0][0], vertexes[0][1],
-    		vertexes[1][0], vertexes[1][1], gArglSettings, cparam, 1.0);
-    lineSeg(vertexes[3][0], vertexes[3][1],
-    		vertexes[0][0], vertexes[0][1], gArglSettings, cparam, 1.0);
-    glColor3d(1.0, 0.0, 0.0);
-    lineSeg(vertexes[1][0], vertexes[1][1],
-    		vertexes[2][0], vertexes[2][1], gArglSettings, cparam, 1.0);
-    lineSeg(vertexes[2][0], vertexes[2][1],
-    		vertexes[3][0], vertexes[3][1], gArglSettings, cparam, 1.0);
-    endOrtho2D();
-
-    glutSwapBuffers();**/
-
-
-
-    switch( object ) {
-    case 0:
-        glTranslatef( 0.0, 0.0, 25.0 );
-        glutSolidCube(50.0);
-        break;
-      case 1:
-        glTranslatef( 0.0, 0.0, 40.0 );
-        glutSolidSphere(40.0, 24, 24);
-        break;
-      case 2:
-        glutSolidCone(25.0, 100.0, 20, 24);
-        break;
-      default:
-        glTranslatef( 0.0, 0.0, 10.0 );
-        glutSolidTorus(10.0, 40.0, 24, 24);
-        break;
-    }
-
-    glDisable( GL_LIGHTING );
-    glDisable( GL_DEPTH_TEST );
+	glDisable( GL_LIGHTING );
+	glDisable( GL_DEPTH_TEST );
 }
 #endif //ENRICO

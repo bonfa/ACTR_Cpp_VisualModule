@@ -50,6 +50,7 @@ StraightLine::StraightLine(int xa, int ya, int xb, int yb){
 	}
 }
 
+//TODO reuse the previous function
 
 /**
  * 1) Check if the points are not the same point

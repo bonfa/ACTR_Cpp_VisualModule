@@ -7,7 +7,7 @@
 
 #include "FeatureExtractor.h"
 
-#define MRG 25
+#define MRG 95
 
 
 
@@ -153,6 +153,28 @@ string FeatureExtractor::getColorString(double gimpHue, double gimpSaturation, d
 	else return "unknown";
 }
 
+void FeatureExtractor::normalizeCoord(int& x, int& y){
+	//cout << "coords: " << x << " " << y << "\n";
+	int ratio = image.cols;
+	//use the bigger dimension as ratio to scale the coordinates
+	if (image.rows > image.cols) {
+		ratio = image.rows;
+	}
+	//cout << "image size: " << inputX << " " << inputY << "\n";
+	x = (x * 100)/(float)ratio;
+	y = (y * 100)/(float)ratio;
+	//cout << "new coords: " << x << " " << y << "\n";
+}
+
+void FeatureExtractor::normalizeCoord(int& x){
+	int ratio = image.cols;
+	//use the bigger dimension as ratio to scale the coordinates
+	if (image.rows > image.cols) {
+		ratio = image.rows;
+	}
+	x = (x * 100)/(float)ratio;
+}
+
 void FeatureExtractor::recognizeCircles(){
 	cv::Mat gray;
 	cv::Mat circleImg = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
@@ -173,14 +195,20 @@ void FeatureExtractor::recognizeCircles(){
 	for( size_t i = 0; i < circles.size(); i++ ) {
 		cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
 		int radius = cvRound(circles[i][2]);
-
-		circleList.push_back(new Circle(radius, center.x,center.y));
-
+		
+		string color = this->getPointColor(center.x,center.y);
+		
 		/// Draw the circles detected
 		// circle center
 		circle( circleImg, center, 3, cv::Scalar(0,255,0), -1, 8, 0 );
 		// circle outline
 		circle( circleImg, center, radius, cv::Scalar(0,0,255), 3, 8, 0 );
+		
+		//normalize the coordinates and create the circle
+		this->normalizeCoord(center.x, center.y);
+		this->normalizeCoord(radius);
+		//cout << "normalizing circle " << center.x << " " << center.y << "END\n";
+		circleList.push_back(new Circle(radius, center.x,center.y,color));
 	}
 
 	/// Show your results
@@ -193,20 +221,145 @@ void FeatureExtractor::recognizeCircles(){
 }
 
 
-
-void FeatureExtractor::recognizeSquares(){
+void FeatureExtractor::recognizePoligon(int sides_number){
 	// create the structure that contains the squares
-	cv::vector<cv::vector<cv::Point> > squares;
-
+	cv::vector<cv::vector<cv::Point> > polys;
+	
 	// blur will enhance edge detection
 	cv::Mat blurred(image);
 	cv::medianBlur(image, blurred, 9);
-
+	
 	// create two gray images
 	cv::Mat gray0(blurred.size(), CV_8U), gray;
 	// create the structure that contains contours
 	cv::vector<cv::vector<cv::Point> > contours;
+	
+	// find polygons in every color plane of the image (only gray plane)
+	for (int c = 0; c < 3; c++) {
+		int ch[] = {c, 0};
+		// extract the single colour level in gray0
+		cv::mixChannels(&blurred, 1, &gray0, 1, ch, 1);
+		
+		// try several threshold levels (0,1 and 2)
+		const int threshold_level = 2;
+		for (int l = 0; l < threshold_level; l++) {
+			// Use Canny instead of zero threshold level!
+			// Canny helps to catch squares with gradient shading
+			if (l == 0) {
+				Canny(gray0, gray, 10, 20, 3); //
+				
+				// Dilate helps to remove potential holes between edge segments
+				cv::dilate(gray, gray, cv::Mat(), cv::Point(-1,-1));
+			}
+			else {
+				gray = gray0 >= (l+1) * 255 / threshold_level;
+			}
+			
+			// Find contours and store them in a list
+			cv::findContours(gray, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+			
+			// Test contours
+			cv::vector<cv::Point> approx;
+			//cout << contours.size();
+			for (size_t i = 0; i < contours.size(); i++) {
+				// approximate contour with accuracy proportional to the contour perimeter
+				cv::approxPolyDP(cv::Mat(contours[i]), approx, arcLength(cv::Mat(contours[i]), true)*0.02, true);
+				
+				// Note: absolute value of an area is used because area may be positive or negative - in accordance with the
+				// contour orientation
+				if (approx.size() == sides_number && cv::isContourConvex(cv::Mat(approx))) {
+					polys.push_back(approx);
+				}
+			}
+		}
+	}
+	
+	//draw polygons
+	cv::Mat polyImg;
+	polyImg = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
+	
+	
+	//sort clockwise the points of each square
+	for ( unsigned int i = 0; i< polys.size(); i++ ) {
+		polys.at(i) = sort4PointsClockwise(polys.at(i));
+	}
+	
+	
+	//delete squares with two points too close one to each other
+	if (sides_number == 3)
+		polys = deleteFalseTriangles(polys);
+	else
+		polys = deleteFalseSquares(polys);
+	
+	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
+	polys = squaresSort(polys);
+	
+	//delete overlapped squares
+	polys = deleteOverlapped(polys);
+	
+	
+	//draw each square with its bounding box on the image
+	if (polys.size() > 0) {
+		for (unsigned int i = 0; i< polys.size(); i++ ) {
+			// draw square
+			cv::drawContours(polyImg, polys, i, cv::Scalar(255,0,0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point()); //blue
+			
+			// draw bounding rect
+			cv::Rect rect = boundingRect(cv::Mat(polys[i]));
+			cv::rectangle(polyImg, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
+			
+			/*
+			 //prints the coordinates of the square
+			 printf("F %d: ",i+1);
+			 for (unsigned int j=0;j<squares.at(i).size();j++){
+			 printf("(%d,%d)  ",squares.at(i).at(j).x,squares.at(i).at(j).y);
+			 }
+			 printf("\n\n");
+			 */
+			//create the quadrilateral
+			string color = this->getPointColor(rect.x+rect.width/2,rect.y+rect.height/2);
+			
+			//calculate the color of the quadrilateral
+			//add the color to the quadrilateral
+			//q->setColor(color);
+			
+			//add each square to the quadrilaterl list
+			if (sides_number == 3){
+				//normalize the coordinates and create the polygon
+				this->normalizeCoord(polys.at(i).at(0).x,polys.at(i).at(0).y);
+				this->normalizeCoord(polys.at(i).at(1).x,polys.at(i).at(1).y);
+				this->normalizeCoord(polys.at(i).at(2).x,polys.at(i).at(2).y);
+				//cout << "normalizing triangle " << polys.at(i).at(0).x << " " << polys.at(i).at(0).y << " " << polys.at(i).at(1).x << " " << polys.at(i).at(1).y << " " << polys.at(i).at(2).x << " " << polys.at(i).at(2).y << "\n";
+				this->triangleList.push_back(new Triangle(polys.at(i).at(0).x,polys.at(i).at(0).y,polys.at(i).at(1).x,polys.at(i).at(1).y,polys.at(i).at(2).x,polys.at(i).at(2).y,color));
+			}else{
+				//normalize the coordinates and create the polygon
+				this->normalizeCoord(polys.at(i).at(0).x,polys.at(i).at(0).y);
+				this->normalizeCoord(polys.at(i).at(1).x,polys.at(i).at(1).y);
+				this->normalizeCoord(polys.at(i).at(2).x,polys.at(i).at(2).y);
+				this->normalizeCoord(polys.at(i).at(3).x,polys.at(i).at(3).y);
+				//cout << "normalizing quad " << polys.at(i).at(0).x << " " << polys.at(i).at(0).y << " " << polys.at(i).at(1).x << " " << polys.at(i).at(1).y << " " << polys.at(i).at(2).x << " " << polys.at(i).at(2).y << " " << polys.at(i).at(3).x << " " << polys.at(i).at(3).y << "\n";
+				this->quadrilateralList.push_back(new Quadrilateral(polys.at(i).at(0).x,polys.at(i).at(0).y,polys.at(i).at(1).x,polys.at(i).at(1).y,polys.at(i).at(2).x,polys.at(i).at(2).y,polys.at(i).at(3).x,polys.at(i).at(3).y,color));
+			}
+		}
+	}
+	
+#ifndef NO_IMG_SHOW
+	cv::imshow("polygons",polyImg);
+	cv::waitKey(0);
+#endif
+}
 
+
+/*void FeatureExtractor::recognizeSquares(){
+	// create the structure that contains the squares
+	cv::vector<cv::vector<cv::Point> > squares;
+	// blur will enhance edge detection
+	cv::Mat blurred(image);
+	cv::medianBlur(image, blurred, 9);
+	// create two gray images
+	cv::Mat gray0(blurred.size(), CV_8U), gray;
+	// create the structure that contains contours
+	cv::vector<cv::vector<cv::Point> > contours;
 	// find squares in every color plane of the image (only gray plane)
 	for (int c = 0; c < 3; c++) {
 		int ch[] = {c, 0};
@@ -246,28 +399,19 @@ void FeatureExtractor::recognizeSquares(){
 			}
 		}
 	}
-
 	//draw squares
 	cv::Mat rects;
 	rects = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
-
-
 	//sort clockwise the points of each square
 	for ( unsigned int i = 0; i< squares.size(); i++ ) {
 		squares.at(i) = sort4PointsClockwise(squares.at(i));
 	}
-
-
 	//delete squares with two points too close one to each other
 	squares = deleteFalseSquares(squares);
-
 	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
 	squares = squaresSort(squares);
-
 	//delete overlapped squares
 	squares = deleteOverlapped(squares);
-
-
 	//draw each square with its bounding box on the image
 	if (squares.size() > 0) {
 		for (unsigned int i = 0; i< squares.size(); i++ ) {
@@ -277,22 +421,13 @@ void FeatureExtractor::recognizeSquares(){
 			// draw bounding rect
 			cv::Rect rect = boundingRect(cv::Mat(squares[i]));
 			cv::rectangle(rects, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
-
-/*
-			//prints the coordinates of the square
-			printf("F %d: ",i+1);
-			for (unsigned int j=0;j<squares.at(i).size();j++){
-				printf("(%d,%d)  ",squares.at(i).at(j).x,squares.at(i).at(j).y);
-			}
-			printf("\n\n");
-*/
 			//create the quadrilateral
-			Quadrilateral *q = new Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y);
+			string color = this->getPointColor(rect.x+rect.width/2,rect.y+rect.height/2);
+			Quadrilateral *q = new Quadrilateral(squares.at(i).at(0).x,squares.at(i).at(0).y,squares.at(i).at(1).x,squares.at(i).at(1).y,squares.at(i).at(2).x,squares.at(i).at(2).y,squares.at(i).at(3).x,squares.at(i).at(3).y,color);
 
 			//calculate the color of the quadrilateral
-			string color = this->getPointColor(q->getCenter().x,q->getCenter().y);
 			//add the color to the quadrilateral
-			q->setColor(color);
+			//q->setColor(color);
 
 			//add each square to the quadrilaterl list
 			this->quadrilateralList.push_back(q);
@@ -310,23 +445,19 @@ void FeatureExtractor::recognizeSquares(){
 void FeatureExtractor::recognizeTriangles(){
 	// create the structure that contains the triangles
 	cv::vector<cv::vector<cv::Point> > triangles;
-
 	// blur will enhance edge detection
 	cv::Mat blurred(image);
 	cv::medianBlur(image, blurred, 9);
-
 	// create two gray images
 	cv::Mat gray0(blurred.size(), CV_8U), gray;
 	// create the structure that contains contours
 	cv::vector<cv::vector<cv::Point> > contours;
-
 	// find triangles in every color plane of the image
 	for (int c = 0; c < 3; c++)
 	{
 		int ch[] = {c, 0};
 		// extract the single colour level in gray0
 		cv::mixChannels(&blurred, 1, &gray0, 1, ch, 1);
-
 		// try several threshold levels (0,1 and 2)
 		const int threshold_level = 2;
 		for (int l = 0; l < threshold_level; l++)
@@ -335,23 +466,19 @@ void FeatureExtractor::recognizeTriangles(){
 			// Canny helps to catch squares with gradient shading
 			if (l == 0) {
 				Canny(gray0, gray, 10, 20, 3); //
-
 				// Dilate helps to remove potential holes between edge segments
 				cv::dilate(gray, gray, cv::Mat(), cv::Point(-1,-1));
 			}
 			else {
 				gray = gray0 >= (l+1) * 255 / threshold_level;
 			}
-
 			// Find contours and store them in a list
 			cv::findContours(gray, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-
 			// Test contours
 			cv::vector<cv::Point> approx;
 			for (size_t i = 0; i < contours.size(); i++) {
 					// approximate contour with accuracy proportional to the contour perimeter
 					cv::approxPolyDP(cv::Mat(contours[i]), approx, arcLength(cv::Mat(contours[i]), true)*0.02, true);
-
 					// Note: absolute value of an area is used because area may be positive or negative - in accordance with the
 					// contour orientation
 					if (approx.size() == 3 && cv::isContourConvex(cv::Mat(approx)))  {
@@ -360,53 +487,37 @@ void FeatureExtractor::recognizeTriangles(){
 			}
 		}
 	}
-
 	//draw triangles
 	cv::Mat triangleImg;
 	triangleImg = cv::Mat::zeros(image.rows,image.cols,CV_8UC3);
-
-
 	//sort clockwise the points of each triangle
 	for ( unsigned int i = 0; i< triangles.size(); i++ ) {
 		triangles.at(i) = sort4PointsClockwise(triangles.at(i));
 	}
-
-
 	//delete triangles with two points too close one to each other
 	triangles = deleteFalseTriangles(triangles);
-
 	//ordino secondo il vettore secondo la coordinata x e poi y del primo punto
 	triangles = squaresSort(triangles);
-
 	//delete overlapped triangles
 	triangles = deleteOverlapped(triangles);
-
 	//draw each triangle with its bounding box on the image
 	if (triangles.size() > 0) {
 		for (unsigned int i = 0; i< triangles.size(); i++ ) {
-
 			// draw contour
 			cv::drawContours(triangleImg, triangles, i, cv::Scalar(255,0,0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point()); //blue
-
 			// draw bounding rect
 			cv::Rect rect = boundingRect(cv::Mat(triangles[i]));
 			cv::rectangle(triangleImg, rect.tl(), rect.br(), cv::Scalar(0,255,0), 2, 8, 0); //verde
-			/*
-			printf("F %d: ",i+1);
-			for (unsigned int j=0;j<triangles.at(i).size();j++){
-				printf("(%d,%d)  ",triangles.at(i).at(j).x,triangles.at(i).at(j).y);
-			}
-			printf("\n\n");
-			*/
 			//add each square to the quadrilaterl list
-			this->triangleList.push_back(new Triangle(triangles.at(i).at(0).x,triangles.at(i).at(0).y,triangles.at(i).at(1).x,triangles.at(i).at(1).y,triangles.at(i).at(2).x,triangles.at(i).at(2).y));
+			string color = this->getPointColor(rect.x+rect.width/2,rect.y+rect.height/2);
+			this->triangleList.push_back(new Triangle(triangles.at(i).at(0).x,triangles.at(i).at(0).y,triangles.at(i).at(1).x,triangles.at(i).at(1).y,triangles.at(i).at(2).x,triangles.at(i).at(2).y,color));
 		}
 	}
 #ifndef NO_IMG_SHOW
 	cv::imshow("triangles",triangleImg);
 	cv::waitKey(0);
 #endif
-}
+}*/
 
 /*
  *  One way to tell if an object is an ellipse is to look at the relationship
@@ -505,6 +616,55 @@ void FeatureExtractor::recognizeEllipses(){
 }
 
 #ifdef ENRICO
+
+//TODO add definitions in header
+
+cv::Mat OpenWarpPerspective(const cv::Mat& _image
+  , const cv::Point2f& _lu
+  , const cv::Point2f& _ru
+  , const cv::Point2f& _rd
+  , const cv::Point2f& _ld
+  , const cv::Point2f& _lu_result
+  , const cv::Point2f& _ru_result
+  , const cv::Point2f& _rd_result
+  , const cv::Point2f& _ld_result
+  , int _width
+  , int _height)
+{
+  // todo do some checks on input.
+
+  cv::Point2f source_points[4];
+  cv::Point2f dest_points[4];
+
+
+  source_points[0] = _lu;
+  source_points[1] = _ru;
+  source_points[2] = _rd;
+  source_points[3] = _ld;
+
+  dest_points[0] = _lu_result;
+  dest_points[1] = _ru_result;
+  dest_points[2] = _rd_result;
+  dest_points[3] = _ld_result;
+
+  cv::Mat dst;
+  cv::Mat _transform_matrix = cv::getPerspectiveTransform(source_points, dest_points);
+  cv::warpPerspective(_image, dst, _transform_matrix, cv::Size(_width, _height));
+
+  return dst;  
+}
+
+cv::Mat OpenWarpPerspective(
+		const cv::Mat& _image,
+		cv::Point2f source[4],
+		cv::Point2f des[4],
+		int _width,
+		int _height ){
+
+	return OpenWarpPerspective(_image, source[0], source[1], source[2], source[3], des[0], des[1], des[2], des[3], _width, _height);
+}
+
+
 cv::Mat * getCroppedImg(cv::Mat img, Quadrilateral * q){
 
 	Marker * m = dynamic_cast<Marker*>(q);
@@ -523,10 +683,106 @@ cv::Mat * getCroppedImg(cv::Mat img, Quadrilateral * q){
 	return croppedImage;
 	//cv::imwrite(path, croppedImage);
 }
+
+cv::Mat * getCroppedFlatImg(cv::Mat img, Quadrilateral * q){
+
+	Marker * m = dynamic_cast<Marker*>(q);
+	int height =0;
+	int max = m->getBbox().height>  m->getBbox().width ?  m->getBbox().height: m->getBbox().width;
+	/** If position of the image to crop exceed the border of the image, reduce it */
+	if (m->getBbox().y + max *2 >  max)
+		height = img.size().height-(  m->getBbox().y + max ) -1;
+	else
+		height = max;
+
+	cv::Rect roi(m->getBbox().x, m->getBbox().y + max , (int)(max * 1.4) , max);
+	cv::Mat * croppedImage = new cv::Mat(img(roi).clone());
+	//m->setImage(croppedImage);
+
+	return croppedImage;
+	//cv::imwrite(path, croppedImage);
+}
+
+/*
+int getMin(Marker * m){
+		int minx=m->getA().x;
+		minx=(m->getA().x<minx)?m->getA().x:minx;
+		minx=(m->getB().x<minx)?m->getB().x:minx;
+		minx=(m->getC().x<minx)?m->getC().x:minx;
+		minx=(m->getD().x<minx)?m->getD().x:minx;
+		return minx;
+}*/
+
+void  getLeftPoints(Point p[4],Point infx[2]){
+	int meanx = 0;
+	for(int i=0; i<4; i++)
+		meanx += (int) (p[i].x);
+	meanx = meanx /4;
+
+	int j = 0;
+	for (int i=0;i<4;i++){
+		if((p[i].x)< meanx){
+			infx[j] = p[i];
+			j++;
+			if(j==2)
+				break;
+		}
+	}
+}
+
+int calculateShift(Point infy, Marker * m){
+	int shift = 0;
+
+	if(infy.x == m->getA().x && infy.y == m->getA().y){
+		shift = 0;
+		//std::cout << "AAAAAA\n";
+	}
+	else if(infy.x == m->getB().x && infy.y == m->getB().y){
+		shift = 1;
+		//std::cout << "BBBBB\n";
+	}
+	else if(infy.x == m->getC().x && infy.y == m->getC().y){
+		//slide = 1;
+		shift = 2;
+		//std::cout << "CCCCC\n";
+	}
+	else if(infy.x == m->getD().x && infy.y == m->getD().y){
+		shift = 3;
+		//std::cout << "DDDDDDA\n";
+	}
+	else
+		std::cerr << "Error in calculating shift \n";
+
+
+	return shift;
+}
+
+void shiftPoints(Point p[4], int shift, Point sortedP[4]){
+	for(int j=0; j<4;j++){
+		int resto = ((j+shift)%4) ;
+		//std::cout << "RESTO:" << ((j+shift)%4) << "\n";
+		sortedP[j]=p[resto];
+	}
+}
+
+void pointToPoint2f(Point sortedP[4], cv::Point2f source[4], cv::Point2f destination[4],int maxSize){
+	source[0] = cv::Point2f(sortedP[0].x,sortedP[0].y);
+	source[1] = cv::Point2f(sortedP[1].x,sortedP[1].y);
+	source[2] = cv::Point2f(sortedP[2].x,sortedP[2].y);
+	source[3] = cv::Point2f(sortedP[3].x,sortedP[3].y);
+
+	destination[0] = cv::Point2f(source[0].x,source[0].y);
+	destination[1] = cv::Point2f(source[0].x + maxSize,source[0].y);
+	destination[2] = cv::Point2f(source[0].x +maxSize,source[0].y + maxSize);
+	destination[3] = cv::Point2f(source[0].x,source[0].y +maxSize);
+}
+
 #endif
 
 std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 #ifdef ENRICO
+
+
 
 	//Modifica il comportamento: separa le parti che usano ARToolkit da quelle che non lo usano
 	if(!findMarkers){
@@ -549,14 +805,21 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
  */
 
 		this->recognizeCircles();
-		this->recognizeSquares();
-		this->recognizeTriangles();
+		this->recognizePoligon(3);
+		this->recognizePoligon(4);
+		//this->recognizeSquares();
+		//this->recognizeTriangles();
 		this->recognizeEllipses();
 
 		//concatenate everything in a vector of objects
 		this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());
 		this->objectList.insert(objectList.end(),this->triangleList.begin(),this->triangleList.end());
 		this->objectList.insert(objectList.end(),this->circleList.begin(),this->circleList.end());
+		//debug
+		/*cout << "circle-list:" + circleList.at(0)->getChunk() + "\n";
+		for (int i=0; i<objectList.size(); i++) {
+			cout << objectList.at(i)->getChunk() + "\n";
+		}*/
 
 		return objectList;
 #ifdef ENRICO
@@ -566,114 +829,110 @@ std::vector<Object *> FeatureExtractor::getExtractedFeature(){
 		bool allWithQr = true;
 		std::vector<Quadrilateral *> newList;
 		std::vector<Quadrilateral *> oldList;
-		// = new QRScanner("./img.jpg");
-		int N_MARKERS = 2;
-		int FRAME_TO_PARSE = 10;
 
-#ifdef ALTRO_CODICE
-		for(int i= 0; i < FRAME_TO_PARSE; i++){
-			initMarkersData();
-			newList.clear();
-			newList = getMarkers();
-			cv::Mat * frame = getFrame();
-			allWithQr = true;
+		MarkerDetector ma = * MarkerDetector::get_instance();
+		//MarkerDetector ma = MarkerDetector();
+		ma.initMarkersData();
+		quadrilateralList = ma.getMarkers();
+		cv::Mat * frame = ma.getFrame();
 
-			for(int i = 0; i < newList.size();i++){
-				Marker * m = dynamic_cast<Marker*>(newList.at(i));
-
-				/** Sets part of the frame as attribute of the Marker */
-				m->setImage(getCroppedImg(*frame, m));
-
-				/** Saves part of the frame to disk */
-				string path = "temp.jpg";
-				cv::imwrite(path, *m->getImage());
-
-				/** Loads saved image and search for a QRCode */
-				QRScanner * qrs = new QRScanner(path);
-
-				/** If a QRCode is found creates a QRObjects and sets it as attribute of Marker */
-				if(qrs->QRDetected()){
-					QRObject * qro;
-					qro = new QRObject(qrs->getQRCode());
-					m->setQr(qro);
-				}
-				allWithQr &= qrs->QRDetected();
-			}
-
-			if(allWithQr && newList.size()== N_MARKERS)
-				return newList;
-			else{
-				std::vector<Marker *> bestList;
-				for(int i = 0; i < newList.size();i++){
-						 Marker * newMarker = dynamic_cast<Marker*>(newList.at(i));
-						 Marker * oldMarker = NULL;
-						 for(int j =0; j<oldList.size(); j++)
-							 if( (dynamic_cast<Marker*>(oldList.at(j)))->getId()== newMarker->getId()){
-								 oldMarker = dynamic_cast<Marker*>(oldList.at(j));
-								 break;
-							 }
-						 if(oldMarker == NULL)
-							 bestList.push_back(newMarker);
-						 else if(newMarker->getQRStatus())
-							 bestList.push_back(newMarker);
-						 else if(oldMarker->getQRStatus())
-							 bestList.push_back(oldMarker);
-						 else
-							 bestList.push_back(newMarker);
-						 //TODO manca il caso in cui non c'è nella lista nuova
-				}
-				oldList.clear();
-				std::copy(bestList.begin(), bestList.end(), oldList.begin());
-				bool allWithQRcode = true;
-				for(int i = 0; i < oldList.size();i++)
-					allWithQRcode &= (dynamic_cast<Marker*>(oldList.at(i))->getQRStatus());
-
-				if(oldList.size() == N_MARKERS && allWithQRcode)
-					return oldList;
-				//oldList = bestList;
-			}
-		}
-		return oldList;
-#endif
-
-		initMarkersData();
-		quadrilateralList = getMarkers();
-		cv::Mat * frame = getFrame();
-
-		cv::imwrite(IMG_PATH, *frame);
+		cv::imwrite("01OriginalFrame.jpg", *frame);
 
 		QRScanner * qrs;
 
-
-
 		for(int i = 0; i < quadrilateralList.size();i++){
 			Marker * m = dynamic_cast<Marker*>(quadrilateralList.at(i));
-
+			//Converting the coordinates into percentual
+			Marker * m2 = new Marker((int)(m->getA().x * 100 / (float)frame->cols), (int)(m->getA().y * 100 / (float)frame->rows),
+									(int)(m->getB().x * 100 / (float)frame->cols), (int)(m->getB().y * 100 / (float)frame->rows),
+									(int)(m->getC().x * 100 / (float)frame->cols), (int)(m->getC().y * 100 / (float)frame->rows),
+									(int)(m->getD().x * 100 / (float)frame->cols), (int)(m->getD().y * 100 / (float)frame->rows),
+									m->getId(), m->getAngle());
 			/** Sets part of the frame as attribute of the Marker */
 			m->setImage(getCroppedImg(*frame, m));
-
-			/** Saves part of the frame to disk */
-			string path = "temp.jpg";
-			cv::imwrite(path, *m->getImage());
-
+			m2->setImage(getCroppedImg(*frame, m));
 			/** Loads saved image and search for a QRCode */
-			qrs = new QRScanner(path);
+			qrs = new QRScanner(m->getImage());
 
 			/** If a QRCode is found creates a QRObjects and sets it as attribute of Marker */
 			if(qrs->QRDetected()){
 				QRObject * qro;
 				qro = new QRObject(qrs->getQRCode());
 				m->setQr(qro);
+				m2->setQr(qro);
+				cv::Mat * withText = new cv::Mat(m->getImage()->clone());
+				//cv::putText(*withText, m->getQR()->getContent(), cvPoint(10,20),
+				    //cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255,0,0), 1, CV_AA);
+				cv::imwrite("02qrCode.jpg",*(withText));
+				//cv::waitKey();
 			}
+			
+
+
+				int meanx = (int)((m->getA().x + m->getB().x +m->getC().x+ m->getD().x)/4.0);
+				int meany = (int)((m->getA().y + m->getB().y +m->getC().y+ m->getD().y)/4.0);
+
+				Point p[4];
+				p[0] = m->getA();
+				p[1] = m->getB();
+				p[2] = m->getC();
+				p[3] = m->getD();
+
+				Point infx[2];
+				getLeftPoints(p, infx);
+
+				Point infy = infx[0].y<infx[1].y ? infx[0]:infx[1];
+
+				int shift = calculateShift(infy, m);
+
+				Point sortedP[4] ;
+				shiftPoints(p, shift, sortedP);
+
+				int maxSize = (m->getBbox().height > m->getBbox().width ? m->getBbox().height : m->getBbox().width);
+				cv::Point2f source[4];
+				cv::Point2f destination[4];
+
+				pointToPoint2f(sortedP,source , destination, maxSize);
+
+
+				cv ::Mat matto = OpenWarpPerspective( *frame,source, destination, frame->size.p[1] + maxSize, frame->size.p[0] +maxSize  );
+
+				cv::imwrite("03flat.jpg", matto);
+
+				cv::Mat *flatCrop = getCroppedFlatImg(matto, m);
+				if(m->getQRStatus()){
+					cv::putText(*flatCrop, m->getQR()->getContent(), cvPoint(35,20),
+								    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255,0,0), 1, CV_AA);
+				cv::imwrite("04withText.jpg", *flatCrop);
+				}
+				//cv::waitKey();
+
+				quadrilateralList.at(i) = m2;
 
 		}
-
-
-		//qrs->QRDetected();
-		//qrs->getQRCode();
-
 		this->objectList.clear();
 		this->objectList.insert(objectList.end(),this->quadrilateralList.begin(),this->quadrilateralList.end());
+		//std::vector<Object *> objectList2;
+		//for (int i=0; i< objectList.size(); i++) {
+			//Quadrilateral *elem = dynamic_cast<Quadrilateral*>(objectList.at(i));
+			//objectList2.push_back(new Quadrilateral((int)(elem->getA().x * 100 / (float)frame->cols), (int)(elem->getA().y * 100 / (float)frame->rows),
+			//									 (int)(elem->getB().x * 100 / (float)frame->cols), (int)(elem->getB().y * 100 / (float)frame->rows),
+			//									 (int)(elem->getC().x * 100 / (float)frame->cols), (int)(elem->getC().y * 100 / (float)frame->rows),
+			//									 (int)(elem->getD().x * 100 / (float)frame->cols), (int)(elem->getD().y * 100 / (float)frame->rows),
+			//									 elem->getColor()));
+			/*p = dynamic_cast<Quadrilateral*>(objectList.at(i))->getA();
+			(dynamic_cast<Quadrilateral*>(objectList.at(i)))->setA(new Point((int)(p.x * 100 / (float)frame->cols), (int)(p.y * 100 / (float)frame->rows)));
+			cout << "Punto A: x " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getA().x << " y " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getA().x << "\n";
+			p = dynamic_cast<Quadrilateral*>(objectList.at(i))->getB();
+			dynamic_cast<Quadrilateral*>(objectList.at(i))->setB(new Point((int)(p.x * 100 / (float)frame->cols), (int)(p.y * 100 / (float)frame->rows)));
+			cout << "Punto B: x " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getB().x << " y " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getB().x << "\n";
+			p = dynamic_cast<Quadrilateral*>(objectList.at(i))->getC();
+			dynamic_cast<Quadrilateral*>(objectList.at(i))->setC(new Point((int)(p.x * 100 / (float)frame->cols), (int)(p.y * 100 / (float)frame->rows)));
+			cout << "Punto C: x " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getC().x << " y " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getC().x << "\n";
+			p = dynamic_cast<Quadrilateral*>(objectList.at(i))->getD();
+			dynamic_cast<Quadrilateral*>(objectList.at(i))->setD(new Point((int)(p.x * 100 / (float)frame->cols), (int)(p.y * 100 / (float)frame->rows)));
+			cout << "Punto D: x " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getD().x << " y " << dynamic_cast<Quadrilateral*>(objectList.at(i))->getD().x << "\n";*/
+		//}
 		return objectList;
 	}
 #endif

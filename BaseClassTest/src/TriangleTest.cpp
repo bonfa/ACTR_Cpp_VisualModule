@@ -12,7 +12,7 @@ void TriangleTest_Constructor_01(){
 	int cx = 6;
 	int cy = 5;
 
-	Triangle *t = new Triangle(ax,ay,bx,by,cx,cy);
+	Triangle *t = new Triangle(ax,ay,bx,by,cx,cy,"");
 	ASSERT(t!=NULL);
 }
 
@@ -26,7 +26,7 @@ void TriangleTest_Parameters_01(){
 	int cy = 2;
 	string expectedChunkString = "cianc, traingle\n";
 
-	Triangle *t = new Triangle(ax,ay,bx,by,cx,cy);
+	Triangle *t = new Triangle(ax,ay,bx,by,cx,cy,"");
 	ASSERT_EQUAL(Point(ax,ay),t->getA());
 	ASSERT_EQUAL(Point(bx,by),t->getB());
 	ASSERT_EQUAL(Point(cx,cy),t->getC());
@@ -46,7 +46,7 @@ void TriangleTest_Error_01(){
 	int cx = 5;
 	int cy = 6;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 
@@ -58,7 +58,7 @@ void TriangleTest_Error_02(){
 	int cx = 5;
 	int cy = 6;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 
@@ -70,7 +70,7 @@ void TriangleTest_Error_03(){
 	int cx = 5;
 	int cy = 6;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 
@@ -82,7 +82,7 @@ void TriangleTest_Error_04(){
 	int cx = 5;
 	int cy = 6;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 
@@ -94,7 +94,7 @@ void TriangleTest_Error_05(){
 	int cx = -5;
 	int cy = 6;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 
@@ -106,7 +106,7 @@ void TriangleTest_Error_06(){
 	int cx = 5;
 	int cy = -6;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 
@@ -118,7 +118,7 @@ void TriangleTest_ErrorAllineatedPoints_01(){
 	int cx = 5;
 	int cy = 6;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 
@@ -130,7 +130,7 @@ void TriangleTest_ErrorCoincidentPoints_01(){
 	int cx = 1;
 	int cy = 1;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 
@@ -142,7 +142,7 @@ void TriangleTest_ErrorCoincidentPoints_02(){
 	int cx = 0;
 	int cy = 0;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 
@@ -154,7 +154,7 @@ void TriangleTest_ErrorCoincidentPoints_03(){
 	int cx = 1;
 	int cy = 1;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 void TriangleTest_ErrorCoincidentPoints_04(){
@@ -165,7 +165,7 @@ void TriangleTest_ErrorCoincidentPoints_04(){
 	int cx = 1;
 	int cy = 1;
 
-	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy),InputException);
+	ASSERT_THROWS(new Triangle(ax,ay,bx,by,cx,cy,""),InputException);
 }
 
 cute::suite make_suite_TriangleTest(){

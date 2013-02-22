@@ -26,7 +26,7 @@ Quadrilateral::~Quadrilateral() {
  * 6) set the bounding box
  * 7) set the center of the bounding box
  * */
-Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy){
+Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,int dy, string color){
 	//TODO sistemare questo controllo!!!
 	if(ax<0 || ay<0 || bx<0 || by<0 || cx<0 || cy<0 || dx<0 || dy<0)
 		throw InputException("Negative coordinate");
@@ -64,6 +64,7 @@ Quadrilateral::Quadrilateral(int ax,int ay,int bx,int by,int cx,int cy,int dx,in
 	setBbox(minX, minY, maxY - minY, maxX-minX);
 	this->setCenter();
 	this->setRotation();
+	this->setColor(color);
 }
 
 
@@ -87,6 +88,28 @@ Point Quadrilateral::getC(){
 Point Quadrilateral::getD(){
 	return this->d;
 }
+
+void Quadrilateral::setA(Point* p){
+	this->a.x = p->x;
+	this->a.y = p->y;
+}
+
+void Quadrilateral::setB(Point* p){
+	this->b.x = p->x;
+	this->b.y = p->y;
+}
+
+void Quadrilateral::setC(Point* p){
+	this->c.x = p->x;
+	this->c.y = p->y;
+}
+
+void Quadrilateral::setD(Point* p){
+	this->d.x = p->x;
+	this->d.y = p->y;
+}
+
+
 
 
 /**
@@ -134,60 +157,74 @@ std::vector<Segment> Quadrilateral::getEdgesLine(){
 	return lineList;
 }
 
+Json::Value Quadrilateral::getJson(){
+	Json::Value obj;
+	//creating the vertices
+	Json::Value p1;
+	p1["x"] = this->a.x;
+	p1["y"] = this->a.y;
+	Json::Value p2;
+	p2["x"] = this->b.x;
+	p2["y"] = this->b.y;
+	Json::Value p3;
+	p3["x"] = this->c.x;
+	p3["y"] = this->c.y;
+	Json::Value p4;
+	p4["x"] = this->d.x;
+	p4["y"] = this->d.y;
+	//creating the vertices' array
+	Json::Value vertices(Json::arrayValue);
+	vertices.append(p1);
+	vertices.append(p2);
+	vertices.append(p3);
+	vertices.append(p4);
+	//put all together in the hierarchy
+	obj["Bbox"]=Object::getJson();
+	obj["Vertices"]=vertices;
+	obj["Type"]="Quadrilateral";
+	obj["Color"]=this->color;
+	return obj;
+}
+
+
 string Quadrilateral::getChunk(){
-	//return "cianc, Quadrilateral\n";
-
-	string chunk = "{";
-		chunk.append("\"object\"");
-		chunk.append(":");
-		chunk.append("{");
-		chunk.append("\"type\": \"Quadrilateral\",");
-		chunk.append("\"bbox\": {");
-			chunk.append("\"x1\":");
-			chunk.append("\"");
-			chunk.append(intToString(this->bbox.x));
-			chunk.append("\",");
-
-			chunk.append("\"y1\":");
-			chunk.append("\"");
-			chunk.append(intToString(this->bbox.y));
-			chunk.append("\",");
-
-			chunk.append("\"x2\":");
-			chunk.append("\"");
-			chunk.append(intToString(this->bbox.x+this->bbox.width));
-			chunk.append("\",");
-
-			chunk.append("\"y2\":");
-			chunk.append("\"");
-			chunk.append(intToString(this->bbox.y+this->bbox.height));
-			chunk.append("\"");
-		chunk.append("}");
-		chunk.append(",");
-		chunk.append("\"color\": ");
+	Json::FastWriter writer;
+	std::string s = writer.write(this->getJson());
+	if (!s.empty() && s[s.length()-1] == '\n') {
+		s.erase(s.length()-1);
+	}
+	//cout << s + "\n";
+	return s;
+	/*string chunk = "{";
+	chunk.append("\"type\": \"Quadrilateral\",");
+	chunk.append("\"bbox\": {");
+		chunk.append("\"x1\":");
 		chunk.append("\"");
-		chunk.append(this->color);
+		chunk.append(intToString(this->bbox.x));
+		chunk.append("\",");
+
+		chunk.append("\"y1\":");
 		chunk.append("\"");
-		chunk.append("}");
+		chunk.append(intToString(this->bbox.y));
+		chunk.append("\",");
+
+		chunk.append("\"x2\":");
+		chunk.append("\"");
+		chunk.append(intToString(this->bbox.x+this->bbox.width));
+		chunk.append("\",");
+
+		chunk.append("\"y2\":");
+		chunk.append("\"");
+		chunk.append(intToString(this->bbox.y+this->bbox.height));
+		chunk.append("\"");
 	chunk.append("}");
-
-	/*
-	 *
-	 string chunk = "expectedChunkList.push_back(prepareChunk(";
-	chunk.append(intToString(this->bbox.x));
 	chunk.append(",");
-	chunk.append(intToString(this->bbox.y));
-	chunk.append(",");
-	chunk.append(intToString(this->bbox.x+this->bbox.width));
-	chunk.append(",");
-	chunk.append(intToString(this->bbox.y+this->bbox.height));
-	chunk.append(",\"");
+	chunk.append("\"color\": ");
+	chunk.append("\"");
 	chunk.append(this->color);
-	chunk.append("\"));");
-	*/
-
-
-	return 	chunk;
+	chunk.append("\"");
+	chunk.append("}");
+	return 	chunk;*/
 }
 
 

@@ -18,7 +18,7 @@
 
 class Circle: public Blob {
 public:
-	Circle(int rad, int x, int y);
+	Circle(int rad, int x, int y, string color);
 	/** Returns a string which contains the basic information about the circle*/
 	string getChunk();
 	/** Returns the x coordinate of the center*/
@@ -30,6 +30,9 @@ public:
 	/** Returns the center of the circle*/
 	Point getCenter();
 	virtual ~Circle();
+protected:
+	/** Creates a Json object that contains the basic information about the quadrilateral*/
+	virtual Json::Value getJson();
 private:
 	/** The area of the circle*/
 	double area;

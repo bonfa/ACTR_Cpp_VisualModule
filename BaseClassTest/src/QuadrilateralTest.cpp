@@ -55,7 +55,7 @@ struct ConstructorError{
 		int dx = 0;
 		int dy = 3;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -69,7 +69,7 @@ struct ConstructorError{
 		int dx = 0;
 		int dy = 3;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -83,7 +83,7 @@ struct ConstructorError{
 		int dx = 0;
 		int dy = 3;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -97,7 +97,7 @@ struct ConstructorError{
 		int dx = 0;
 		int dy = 3;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -111,7 +111,7 @@ struct ConstructorError{
 		int dx = 0;
 		int dy = 3;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -125,7 +125,7 @@ struct ConstructorError{
 		int dx = 0;
 		int dy = 3;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -139,7 +139,7 @@ struct ConstructorError{
 		int dx = -1;
 		int dy = 3;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -153,7 +153,7 @@ struct ConstructorError{
 		int dx = 0;
 		int dy = -3;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -167,7 +167,7 @@ struct ConstructorError{
 		int dx = 1;
 		int dy = 12;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -181,7 +181,7 @@ struct ConstructorError{
 		int dx = 0;
 		int dy = 0;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -195,7 +195,7 @@ struct ConstructorError{
 		int dx = 0;
 		int dy = 0;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -209,7 +209,7 @@ struct ConstructorError{
 		int dx = 0;
 		int dy = 0;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -223,7 +223,7 @@ struct ConstructorError{
 		int dx = 4;
 		int dy = 5;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 	void twoCoincidentPoints_02(){
@@ -236,7 +236,7 @@ struct ConstructorError{
 		int dx = 4;
 		int dy = 5;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -250,7 +250,7 @@ struct ConstructorError{
 		int dx = 1;
 		int dy = 1;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -264,7 +264,7 @@ struct ConstructorError{
 		int dx = 4;
 		int dy = 5;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -278,7 +278,7 @@ struct ConstructorError{
 		int dx = 1;
 		int dy = 1;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -292,7 +292,7 @@ struct ConstructorError{
 		int dx = 4;
 		int dy = 5;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -306,7 +306,7 @@ struct ConstructorError{
 		int dx = 4;
 		int dy = 5;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -320,7 +320,7 @@ struct ConstructorError{
 		int dx = 2;
 		int dy = 2;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -334,7 +334,7 @@ struct ConstructorError{
 		int dx = 2;
 		int dy = 2;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 
 
@@ -348,14 +348,14 @@ struct ConstructorError{
 		int dx = 2;
 		int dy = 2;
 
-		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy),InputException);
+		ASSERT_THROWS(new Quadrilateral(ax,ay,bx,by,cx,cy,dx,dy,""),InputException);
 	}
 };
 
 
 struct QuadrilateralTest_01{
 
-	QuadrilateralTest_01(): q(0,0,2,0,2,2,0,2){
+	QuadrilateralTest_01(): q(0,0,2,0,2,2,0,2,""){
 		expectedArea = 4;
 		expectedA = Point(0,0);
 		expectedB = Point(2,0);
@@ -433,7 +433,7 @@ struct QuadrilateralTest_01{
 
 struct QuadrilateralTest_02{
 
-	QuadrilateralTest_02(): q(0,0,2,0,2,3,0,3){
+	QuadrilateralTest_02(): q(0,0,2,0,2,3,0,3,""){
 		expectedArea = 6.0;
 		expectedA = Point(0,0);
 		expectedB = Point(2,0);
@@ -511,7 +511,7 @@ struct QuadrilateralTest_02{
 
 struct QuadrilateralTest_03{
 
-	QuadrilateralTest_03(): q(0,0,1,1,1,2,0,1){
+	QuadrilateralTest_03(): q(0,0,1,1,1,2,0,1,""){
 		expectedArea = 1.0;
 		expectedA = Point(0,0);
 		expectedB = Point(1,1);
@@ -588,7 +588,7 @@ struct QuadrilateralTest_03{
 
 struct QuadrilateralTest_04{
 
-	QuadrilateralTest_04(): q(2,0,2,1,1,2,1,1){
+	QuadrilateralTest_04(): q(2,0,2,1,1,2,1,1,""){
 		expectedArea = 1.0;
 		expectedA = Point(2,0);
 		expectedB = Point(2,1);

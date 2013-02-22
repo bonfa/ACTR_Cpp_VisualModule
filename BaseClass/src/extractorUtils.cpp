@@ -13,7 +13,7 @@ double angle( cv::Point pt1, cv::Point pt2, cv::Point pt0 ) {
 
 
 double myDistance(cv::Point a, cv::Point b){
-	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+	return sqrt(pow((float)(a.x - b.x), 2) + pow((float)(a.y - b.y), 2));
 }
 
 
@@ -50,7 +50,7 @@ bool similar(cv::vector<cv::Point> a, cv::vector<cv::Point> b){
 
 
 bool tooClose(cv::Point a, cv::Point b){
-	if (myDistance(a,b) < 15)
+	if (myDistance(a,b) < 15) //TODO set thresholds as global variables
 			return true;
 	return false;
 }
@@ -241,7 +241,7 @@ int FourPointsSorter::getFirstPointPosition(){
 
 
 double FourPointsSorter::getDistance(cv::Point p){
-	return (sqrt(pow(p.x,2)+pow(p.y,2)));
+	return (sqrt(pow((float)(p.x),2)+pow((float)(p.y),2)));
 }
 
 

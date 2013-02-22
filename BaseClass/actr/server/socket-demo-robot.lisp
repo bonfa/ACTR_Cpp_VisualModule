@@ -1,8 +1,7 @@
-;#+clozure (defparameter ccl::fasl-version (ccl::target-fasl-version))
-;#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp.lisp")
-; (quicklisp-quickstart:install :path "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp")
-;#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp/setup.lisp")
-;#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/telepathy.lisp")
+#+clozure (defparameter ccl::fasl-version (ccl::target-fasl-version))
+;(quicklisp-quickstart:install :path "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp")
+#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/quicklisp/setup.lisp")
+#+clozure (load "/Users/stefano/ACT-R\ 6\ Standalone/telepathy.lisp")
 
 (clear-all)
 (define-model test-nxt-motor
@@ -40,7 +39,9 @@
 		state 	receive-chunk
 	+comm>
 		isa receive
-		command "getFeature"
+		command "getMarker"
+	+nxt-move>
+		ISA emergency-stop
 )
 
 (p nothing-to-read
@@ -187,14 +188,18 @@
 		state 	read-bbox
 	=retrieval>
 		isa		bbox
-	>=	x1		100
+	>=	x1		400
 		x1		=x1
-	>	x2		100
+	>	x2		400
 		x2		=x2
 	==>
-	!eval! (format t "right! ~S ~S" =x1 =x2)
+	!bind! =move (/ (- =x2 =x1) 200.0)
+	!eval! (format t "right! ~S ~S moving of ~S" =x1 =x2 =move)
 	=goal>
 		state 	start-reading
+	+nxt-move>
+		ISA turn-right
+		duration =move
 )
 
 (p turn-left
@@ -203,14 +208,18 @@
 		state 	read-bbox
 	=retrieval>
 		isa		bbox
-	<	x1		100
+	<	x1		400
 		x1		=x1
-	<=	x2		100
+	<=	x2		400
 		x2		=x2
 	==>
-	!eval! (format t "left! ~S ~S" =x1 =x2)
+	!bind! =move (/ (- =x2 =x1) 200.0)
+	!eval! (format t "left! ~S ~S moving of ~S" =x1 =x2 =move)
 	=goal>
 		state 	start-reading
+	+nxt-move>
+		ISA turn-left
+		duration =move
 )
 
 (p go-straight
@@ -219,14 +228,17 @@
 		state 	read-bbox
 	=retrieval>
 		isa		bbox
-	<=	x1		100
+	<=	x1		400
 		x1		=x1
-	>=	x2		100
+	>=	x2		400
 		x2		=x2
 	==>
 	!eval! (format t "straight! ~S ~S" =x1 =x2)
 	=goal>
 		state 	start-reading
+	+nxt-move>
+		ISA move-forward
+		duration 10
 )
 
 (p no-bbox

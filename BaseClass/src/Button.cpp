@@ -38,9 +38,19 @@ Button::Button(int x,int y, int height, int width, string txt) :text(""){
 	this->setCenter();
 }
 
+Json::Value Button::getJson(){
+	Json::Value obj = Quadrilateral::getJson();
+	obj["text"]=this->text;
+	return obj;
+}
 
 string Button::getChunk(){
-	return "cianc, bottone\n";
+	Json::FastWriter writer;
+	std::string s = writer.write(this->getJson());
+	if (!s.empty() && s[s.length()-1] == '\n') {
+		s.erase(s.length()-1);
+	}
+	return s;
 }
 
 string Button::getText(){

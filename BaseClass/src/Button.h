@@ -30,6 +30,9 @@ public:
 	string getChunk();
 	/** Returns a string which contains the text of the button */
 	string getText();
+protected:
+	/** Creates a Json object that contains the basic information about the quadrilateral*/
+	virtual Json::Value getJson();
 private:
 	/** The text of the button */
 	string text;
